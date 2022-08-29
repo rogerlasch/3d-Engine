@@ -1,0 +1,108 @@
+
+
+Aqui é é onde descrevemos o funcionamento geral da classe do servidor.
+
+Principais atribuições:
+*Permitir conexões de clientes, sejam eles bots, ou não. No caso de serem bots, isto deve ficar explícito;
+*Ser capaz de gerenciar uma fila de eventos;
+*Processar comandos provenientes do cliente, sejam eles a nível de protocolo, ou comandos que devem ser interpretados;
+*Analisar a situação de cada objeto no mundo e ser capaz de movimenta-lo de acordo com seu comportamento padrão;
+
+Descrição detalhada sobre os recursos a cima:
+
+Rede:
+
+A parte de rede será responsável por conversar com todos os clientes atualmente
+conectados. Quando um cliente se conecta o servidor primeiro deve aceitar esta
+conexão, e então gerará um evento de conexão que será enfileirado na fila de
+eventos. Quando o evento de conexão for processado, recursos devem ser criados
+para lidar com esta nova conexão. Quando a conexão for completamente
+estabelecida, o servidor deve perguntar ao cliente em uma única requisição se
+possível, qual o nome que ele deseja usar, e se é um bot que se está
+conectando.
+Depois deste pacote inicial enviado, o servidor aguarda por cerca de 10 a 15
+segundos a conclusão da autenticação. Caso o pacote contendo as informações de
+nome, e o tipo de cliente não cheguem dentro do prazo, a conexão deve ser
+finalizada e os recursos limpos.
+Uma vez  a conexão estabelecida e autenticada, o cliente pode começar de enviar
+comandos normalmente, seja comandos a nível de protocolo, como comandos a nível de usuário.
+Comandos a nível de protocolo são todos os comandos que o usuário não pode
+executar diretamente como por exemplo, o cliente envia um pacote ping, e o
+servidor responde. Ou o cliente envia uma atualização da posição do jogador.
+Comandos a nível de usuário são todos os comandos que o cliente pode digitar,
+seja o comando por extenso, como resultado do pressionamento de uma tecla.
+
+Sistema de eventos:
+
+Talvez poderá ser um dos sistemas mais importantes do servidor também. Sempre
+que algo acontecer, um evento deve ser gerado e postado na fila de eventos.
+Esta fila deve ser lida regularmente e ter seus eventos tratados de acordo com o tipo de evento, e parâmetros passados.
+
+Principais atributos da classe de evento:
+
+*Hora, em millisegundos em que o evento foi postado na fila...
+*Tempo limite, em millisegundos em que o evento precisa ser processado, se for 0, não haverá tempo limite...
+*Origem do evento... Isto será um ponteiro para um jogador npcs,objeto, ou qualquer outra coisa capaz de gerar um evento.
+*tipo do evento: Isto é um inteiro que identifica o tipo do evento que está sendo processado... Por exemplo, um evento de conexão ou desconexão...
+*argumentos: São os argumentos do evento... Precisa ser melhor discutido.
+
+Um exemplo de uso disto:
+
+Uma nova conexão foi aceita, então a função gerará um evento do tipo conexão,
+com os seguintes atributos:
+O atributo origem pode ser null porque não sabemos direito de onde veio isto,
+ainda.
+O tipo de evento é conexão, ou nova conexão, e os argumentos é o identificador
+da conexão. Isto varia da biblioteca de rede usada.
+
+Gerenciamento de comandos:
+
+Outra característica importante é o de processamento de comandos, seja a nível
+de protocolo, como a nível de usuário.
+
+Sugestões de atributos para a classe de comando:
+
+Nome: indica o nome do comando, consequentemente, o que deve ser digitado para executar ele.
+quem: Quem está tentando executar o comando...
+código: Ponteiro de função para a função que deve ser executada ao se digitar o comando.
+flags: As flags que determinam o comportamento do comando: se é um comando a nível de protocolo, se pode ser executado em baixo de água, por exemplo, e etc...
+
+Quando o servidor iniciar, uma tabela com todos os comandos disponíveis deve
+ser gerada. Existem duas formas de fazer isto. Primeiro, no atributo código
+definir um ponteiro como void*. Este é o jeito mais fácil, porém é bbem
+antiquado e uma conversão explícita deve ser feita ao invocar a função de
+destino. Além de tudo que esta forma é muito mamis complicada de ser chamada
+de dentro de classes. Digo, de chamar métodos como callbacks. Outra solução é usar std::function e padronizar as funções como por
+exemplo:
+void server::do_chat(basic_player* ch, const std::string& args);
+Isto é mais moderno e mais fácil de se manter em atualizações futuras.
+
+Para representar a tabela de comandos, recomendo que um std::unordered_map sega utilizado pois tem a busca mais rápida do que um std::map.
+
+Exemplo de definição:
+
+std::unordered_map<std::string, Command*> cmd_table;
+
+Recomendo também um método de registro de função, pois definir a tabela é um
+pouco cançativa.
+
+O processamento de comandos normalmente segue estas etapas:
+
+Sempre que um pacote for recebido dos clientes, um evento de recebimento é
+gerado. Então os parâmetros são analizados e o nome do comando deve ser encontrado.
+Em seguida, o comando deve ser pesquisado na tabela de comandos. Caso encontre,
+as validações necessárias devem ser feitas como por exemplo, o usuário que
+gerou este evento de recebimento tem todos os requisitos necessários para
+executar o comando x? Se sim, então o comando pode ser executado normalmente
+passando como argumentos o usuário responsável pela execução, e os argumentos
+restantes para o comando.
+Os objetos/conexões também devem ter um método especial que irão enfileirar um
+comando a ser executado.
+
+funcionamento do mundo:
+
+O mundo pode, ou não ser um lugar agitado com vários objetos se movendo e
+colidindo entre si. O servidor também deve ser capaz de analisar o contexto do
+objeto que está sendo iterado e dar continuidade a sua tarefa atual. Como por
+exemplo, se um carro estiver se movimentando para o leste, o servidor deve
+aplicar o algoritmo responsável pela movimentação para que a ação continue.

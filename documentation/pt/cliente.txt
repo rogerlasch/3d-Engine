@@ -1,0 +1,19 @@
+
+
+Aqui descreveremos a arquitetura do cliente.
+
+O cliente é a parte do nosso mecanismo que irá interagir diretamente com o
+usuário. Ele não terá telas, e nem funções de pressionamento de teclas e nem
+nada do tipo. Isto ficará a cargo do usuário final decidir  qual a melhor
+estratégia para o seu jogo. Tudo o que o cliente deverá fazer é o seguinte:
+
+*Se conectar ao servidor, mesmo sendo singleplayer;
+*Trocar mensagens com o servidor;
+*No caso de jogo multiplayer cujo o servidor seja um servidor remoto, ele deve fornecer mecanismos básicos para diminuir ao máximo a latência.
+*Deve ter um bom mecanismo de som...
+
+O cliente trocará mensagens com o servidor por meio de um protocolo
+pré-estabelecido. As mensagens podem ser, mas não se limitando a atualização da
+posição do jogador, ping, autenticação, pacotes de mensagens simples entre outros.
+O servidor pode enviar uma mensagem de som dizendo algo do tipo:
+"Preciso que você toque o som j nas coordenadas x, y e z. Ele tem o Id 2 e deve tocar em loop até eu dizer para parar."

@@ -1,0 +1,69 @@
+
+
+aqui é onde descreveremos nosso protocolo de rede.
+
+O protocolo será uma parte fundamental do mecanismo, pois será responsável por
+fazer o cliente e servidor se comunicarem armonicamente, se possível.
+O protocolo deve ter as seguintes propriedades, que são sugeitas a expanção
+futuramente.
+
+tipo: Isto indicará o tipo de pacote
+hora de envio: a hora em que o pacote foi enviado...
+timeout: o tempo máximo em que o pacote pode ser processado depois do envio...
+Dados: os dados serializados de alguma forma para o tipo específico...
+flags: Uma ou mais flags que o servidor ou o cliente deve analisar ao processar o pacote...
+
+O protocolo deve ter funções, ou métodos para a criação de pacotes específicos
+para que o empacotamento seja o mais simples possível.
+O protocolo deve suportar pelo menos, os seguintes tipos de pacotes:
+ping: É um pacote vazio, e o receptor deve apenas responder com um pacote pong igualmente vazio.
+alt: É um pacote de altenticação que o cliente envia para o servidor. Ele deve conter o nome do cliente, que o usuário pode ou não escolher, um boleano indicando que essa conexão se trata de um bot ou um jogador regular, e possivelmente algum hash que o servidor tenha como comparar e dizer que a conexão está usando nosso cliente e não se conectando externamente.
+waitable: É um tipo de pacote especial, que o cliente envia ao servidor e
+espera até obter uma resposta. Por exemplo, o cliente envia para o servidor:
+"Quanto é 5 + 5?" Então aguarda até o servidor responder com a resposta 10. O servidor responderá com um pacote answer_waitable, que conterá a resposta. O
+servidor de jeito nenhum pode enviar pacotes waitable para o cliente.
+answer_waitable: É o pacote que o servidor envia em resposta ao cliente que
+enviou um pacote do tipo waitable.
+
+O cliente só pode enviar um pacote waitable por vez. Ele pode ser usado nas
+seguintes ocasiões:
+O jogo é multiplayer e o servidor está em uma máquina remota. O cliente se
+conecta, e deseja carregar o mapa local para o jogador poder se movimentar.
+Então o cliente manda o pacote waitable, e fica preso em um loop esperando a
+resposta do servidor com os dados do mapa. Quando o cliente receber o pacote
+answer_waitable, então o loop é encerrado e o carregamento do mapa localmente
+pode começar. Este tipo de pacote é utilizado para coisas mais pesadas.
+
+typed_command: Este tipo de pacote é enviado quando o jogador digitou algum
+comando ou pressionou alguma tecla, depende. Por exemplo, se o jogador digitou
+chat "Olá", o pacote será enviado diretamente ao interpretador de comandos. O
+cliente também pode enviar este tipo de comandos em resposta a um
+pressionamento de tecla por exemplo. O jogador teclou F2 para enviar uma
+mensagem, então um pacote typed_command é gerado com o prefixo chat, ou alguma
+outra forma de identificação.
+
+game_command: Este pacote é enviado pelo cliente ou pelo servidor especificando
+um comando que deve ser executado. Vamos supor, o cliente envia para o servidor
+a posição atual do cliente para ser atualizada. Então o servidor interpreta
+este comando de acordo e atualiza a posição x, y e z do jogador. De forma
+alguma o usuário pode digitar estes tipos de comandos/pacotes.
+
+sound_command: Este é um pacote de som que o servidor envia para o usuário. Por
+exemplo, alguém mudou de posição com um passo. O servidor envia um pacote de
+som com as coordenadas atuais, e o tipo de terreno e o cliente tocará o som
+apropriado.
+
+Sobre bibliotecas:
+
+Sugiro usarmos a GameNetworkingSocketsLibrary da Valve para nossa comunicação
+de rede. Ela tem nomes de métodos e funções um pouco irritantes de se ler, mas
+é muito eficiente e atenderá bem aos nossos propósitos. Poderiamos usar a Enet
+também por mais simplicidade, porém, Em alguns projetos por aqui tive uma
+péssima experiência com ela como por exemplo, não lidar adequadamente com
+multithreading.
+
+Para transmitirmos nossos pacotes pela rede sugiro serializarmos nossos pacotes
+no formato json. É simples, leve e rápido.
+Exemplo de um pacote serializado:
+
+{"type":3,"timestamp":1646372745326,"timeout":0,"data":"Dados do pacote aqui, pode ser outro json...","flags":0}

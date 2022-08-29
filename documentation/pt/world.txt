@@ -1,0 +1,82 @@
+
+
+Descrição do mundo:
+
+O mecanismo do mundo será responsável por toda a simulação inteligente dos
+objetos contidos nele. Ele será composto por diversas classes que devem
+interagir bem entre si.
+
+Aqui segue uma lista de classes e uma descrição do comportamento geral delas.
+
+shape:
+
+Conterá as coordenadas de posicionamento como x, y e z, bem como a largura,
+altura e comprimento da forma. Também conterá uma propriedade que dirá a
+direção que a forma está voltada. Por exemplo, para o leste.
+Acho que peso também será algo bom e necessário.
+Também terá flags especiais que controlarão seu comportamento como por exemplo,
+se ela for uma forma sólida, ela deve colidir com outra forma sólida e etc...
+Também deve ter alguns métodos básicos como calcular a distância entre outras
+formas, e calcular seu ângulo em relação a elas.
+Também seria interessante se tivesse métodos para verificar se esta forma é
+capaz de conter outra forma por inteiro, verificar se outra forma está
+conflitando com o espaço usado por this, e verificar se as coordenadas x, y e z
+estão dentro dos limites.
+
+BaseObject:
+Deriva da classe shape a cima.
+Classe que conterá atributos comuns a todas as outras classes derivadas. Ela
+deve conter os seguintes atributos:
+
+Vnum: (uint32) O vnum do objeto. Isto é um número exclusivo. Veja vnums para mais detalhes.
+subvnum: (uint32) o subvnum do objeto.
+tipo: (uint32) usado para identificar a qual classe pertence. Por exemplo, zone, object, personagem, etc...
+Nome: o Nome do objeto.
+shortDesc: Uma descrição curta que será mostrada quando se olhará de longe o objeto.
+LongDesc: A descrição detalhada do objeto que será mostrada ao se examinar de perto.
+Adicione mais atributos se achar necessário.
+
+zone, room, ou tile:
+
+Deve herdar da classe BaseObject a cima.
+Esta classe será como nosso mundo será construído. Imagine essa classe sendo
+uma caixas capaz de conter qualquer tipo de coisa, incluindo outras caixas desde que caibam dentro dela,
+objetos, npcs, etc...
+esta classe deve ter obrigatoriamente os seguintes atributos:
+Pai: É um ponteiro para a zona/sala pai que contém ela.
+filhas: Salas ou zonas filhas, ou sejam, que estão dentro dela.
+Piso: Um objeto de piso em que o jogador estará pisando.
+Quando uma zona for destruída, todas suas zonas filhas também devem ser destruídas.
+Uma zona pode ser sólida ou não. Por exemplo, uma praça que você pode entrar
+tranquilamente sem maiores dificuldades. Você também pode ter a opção de que
+ela seja cercada por paredes e tenha um telhado.
+Adicione mais comportamentos que julgar necessário...
+
+
+Floor:
+
+Este é o piso do nosso mundo. Ele só deve fazer parte de uma zona por enquanto.
+Ele a princípio não herdará de nenhuma outra classe.
+Ele conterá os seguintes atributos:
+type: O id do tipo de solo, como por exemplo, grama, pedras, areia, neve, etc...
+nome: O nome descritivo do terreno que deverá estar associado ao tipo.
+flags: As flags associadas ao tipo de terreno que irão conferir comportamentos especiais ao se movimentar por ele.
+autura da escada: Não gosto dessa ideia de representar escadas, mas em fim.
+Isto será a altura da escada, caso as flags determinem isso. Então o jogador
+poderá subir com pageup e pagedown.
+E talvez seja preciso de mais atributos.
+
+
+Personagem, ou jogador
+Herdará da classe BasicObj.
+Aqui será onde representaremos um jogador que está em nosso mundo. Ele será
+instanciado a sim que uma conexão for aberta. O jogador deve se mover e
+interagir com os mais variados objetos que existirem no nosso mundo.
+Ele terá um objeto de conexão associado a ele para que possa enviar  dados
+também de um lado para o outro.
+Em uma fase inicial, apenas os atributos herdados são suficientes mas no
+futuro, mais podem ser adicionados.
+
+Acho que estas são as principais classes por hora nesta etapa. Quando o mundo
+for construído e todo o sistema de cliente/servidor/eventos estiver funcional,
+poderemos modelar as classes restantes.

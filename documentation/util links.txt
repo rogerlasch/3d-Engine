@@ -1,0 +1,9 @@
+
+Videogame Phisics III
+https://www.toptal.com/game/video-game-physics-part-i-an-introduction-to-rigid-body-dynamics
+Videogame Phisics II
+https://www.toptal.com/game/video-game-physics-part-ii-collision-detection-for-solid-objects
+Videogame Phisics IIII
+https://www.toptal.com/game/video-game-physics-part-iii-constrained-rigid-body-simulation
+Angle Between Two Vectors Calculator:
+https://www.omnicalculator.com/math/angle-between-two-vectors

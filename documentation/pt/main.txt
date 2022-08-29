@@ -1,0 +1,82 @@
+
+
+Aqui é onde temos uma visão completa sobre o sistema, e uma visão geral sobre
+as classes principais.
+
+Esta biblioteca tem como objetivo principal modelar ambientes 3d para jogos.
+Ela deve ser flexível o suficiente para construir jogos de diferentes gêneros rapidamente sem precisar recriar o mecanismo básico todo instante.
+Por natureza, a biblioteca deve suportar multiplayer. Mesmo um jogo
+singleplayer fará uso da tecnologia cliente/servidor para atender a estes
+objetivos.
+A biblioteca básica deverá ter os seguintes componentes:
+
+*Biblioteca de mundo: Esta biblioteca é onde toda parte fantasiosa deve existir, como por exemplo, geografia do mundo, definição de player, objetos, npcs, e etc...
+*Servidor: Classe base que deverá implementar um protocolo de comunicação, deve se comunicar com os clientes conectados ouvindo e respondendo a solicitações e manter e gerenciar a biblioteca de mundo.
+*Cliente: Responsável por tentar entender a entrada do usuário, se conectar ao servidor, enviar dados, receber dados e interpretar os eventos.
+
+Visão geral das classes:
+Primeiramente: seja em modo single ou multiplayer, o servidor deve ser
+inicializado. Ele irá construir o mundo, e começar a ouvir as conexões. Ele não
+irá lidar com contas nem nada do tipo. Caso queira lidar com contas, a classe
+base do servidor deve ser estendida e especializada. Um jogador se conectará
+apenas com um nome de usuário. Não haverá persistência de dados de jogadores
+pois isto pode ser diferente para cada tipo de jogo. Então isto fica de fora.
+No caso de um jogo singleplayer, um nome de jogador padrão pode ser gerado, para uso e identificação.
+Com o servidor configurado corretamente, é hora do cliente entrar em ação.
+O cliente se conectará ao servidor seja localmente ou de forma remota, e irá
+iniciar o envio/recebimento de eventos. O cliente tem as seguintes responsabilidades:
+Se conectar ao servidor, ler a entrada do usuário, e fazer o envio, também
+interpretar os eventos recebidos do servidor, seja falar uma mensagem, ou tocar
+um som específico em determinada posição x y z.
+O cliente também deve ter como construir um mapa para diminuir a latência e de
+servidores remotos. No caso de conexão local, isto é dispensável.
+Pensei em uma arquitetura cliente/servidor mesmo em singleplayer pois pode
+facilitar a criação de bots para jogarem contra o usuário. Por exemplo, em um
+jogo de estratégia, o jogo pode instanciar um ou mais bots, todos eles se
+conectam ao servidor que faz todo o processamento.
+
+A baixo, deixo um sample de código de como isto funcionaria em um jogo
+singleplayer.
+
+
+//Exemplo de jogo singleplayer utilizando cliente/servidor...
+
+Cliente* client=NULL;
+Server* server=NULL;
+
+int main()
+{
+server=new Server();
+server->setPort(2500);
+server->setMaxPlayer(250);
+server->createWorld();
+if(!server->start())
+{
+_log("Erro, o servidor não pode ser iniciado.");
+return 0;
+}
+client=new Client();
+client->setAddress("localhost");
+client->setPort(2500);
+if(!client->connect())
+{
+_log("Erro ao se conectar ao servidor.");
+return 0;
+}
+while(true)
+{
+//Leia conexões, faça todo o serviço de rede, e gerencie o mundo fazendo as coisas se moverem, colidirem, etc...
+server->update();
+//Faça o cliente ler a entrada do usuário, como pressionamento de teclas, e etc...
+client->loop();
+}
+return 0;
+}
+
+Com o exemplo a sima, acho que fica claro de como gostaria que funcionasse a
+arquitetura. Para adicionar um inimigo inteligente por exemplo, bastaria
+escrever uma classe herdando de cliente e implementar a lógica. Depois, esta
+classe derivada se conectaria ao servidor normalmente e jogaria como se fosse
+um jogador real. O mesmo vale para o servidor, se ele precisar persistir dados,
+ou fazer coisas mais complexas e complicadas, basta herdar do servidor base e
+implementar estes recursos.

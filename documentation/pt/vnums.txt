@@ -1,0 +1,26 @@
+
+
+Vnums, ou virtual numbers são identificadores especiais para as classes de
+objeto que usamos. Ele parte do princípio que no mundo não podem existir 2
+objetos com o mesmo vnum desde que sejam da mesma classe de objeto.
+Por exemplo, não podem existir duas zones com o vnum 1. Mas um objeto com vnum
+1 e uma zona com vnum 1 podem existir tranquilamente. Quando uma área ou zone
+nova é criada, ela deve alocar uma faixa de vnums que será exclusiva ddela para
+poder criar seus próprios objetos e a fins. A definição de vnums deve ser feita
+de forma estática para um melhor controle da situação.
+Cada vez que um objeto é criado a partir de um vnum, ele deve ser completamente
+independente, porém deve compartilhar  alguns atributos comuns ao objeto
+original. Com isso, surge a necessidade de enumerar estas cópias. Com isso em
+mente, tive a ideia de criar uma segunda classe de vnums, que são chamados de
+subvnums. Estes sim, podem ser criados de forma dinâmica ou estática,
+dependendo a situação.
+
+Dois objetos da mesma classe podem sim ter o mesmo subvnum, pois o que irá
+diferenciar eles é seu vnum principal.
+Basicamente, por aqui então teremos uma matriz para armazenar este tipo de
+coisa. Onde as linhas serão o vnum principal, e as colunas são os subvnums.
+Isto seria perfeitamente bom para utilizarmos. Mas existe outro problema.
+Quando o primeiro objeto, que serve de modelo para suas cópias for modificado
+de alguma forma, ou for removido da matriz, o mesmo deve acontecer com todas
+suas cópias. Também deve ter alguma forma de criar e destruir cópias de forma
+mais fácil. Com isso em mente,
