@@ -80,3 +80,20 @@ futuro, mais podem ser adicionados.
 Acho que estas são as principais classes por hora nesta etapa. Quando o mundo
 for construído e todo o sistema de cliente/servidor/eventos estiver funcional,
 poderemos modelar as classes restantes.
+
+
+Aqui deixo um modelo de classe de mundo que andei pensando. Com as duas
+estruturas que mencionei em vnums.txt.
+
+class World
+{
+private:
+//Para gerenciamento, adição, exclusão, ou recuperação de dados.
+std::map<uint32, VnumIndex<Object>*> objects;
+std::map<uint32, VnumIndex<Zone>*> zones;
+//Estrutura do mundo. Conterá em ordem espacial tudo o que for criado.
+Zone* hglobal;
+public:
+World();
+//Métodos...
+};

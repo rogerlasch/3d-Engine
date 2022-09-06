@@ -23,4 +23,50 @@ Isto seria perfeitamente bom para utilizarmos. Mas existe outro problema.
 Quando o primeiro objeto, que serve de modelo para suas cópias for modificado
 de alguma forma, ou for removido da matriz, o mesmo deve acontecer com todas
 suas cópias. Também deve ter alguma forma de criar e destruir cópias de forma
-mais fácil. Com isso em mente,
+mais fácil. Com isso em mente, pensei em uma classe de vnums com os seguintes
+atributos:
+*vnum: (uint32) Um número entre 1 e 4000000000
+*Mestre: Um objeto que armazenará os valores originais. Caso algo seja modificado aqui, a mesma mudança deve ser aplicada a suas cópias.
+*Cópias: Um mapa que conterá ponteiros para as cópias criadas.
+
+As cópias são relativamente independentes elas devem compartilhar apenas
+atributos fundamentais como vnum, nome, flags e etc. Porém uma cópia pode estar
+em qualquer zone.
+Uma cópia terá 2 atributos para formar um identificador. Vnum, e subvnum. O
+vnum, é sempre o mesmo do que o vnum da cópia principal. O subvnum é a mesma
+coisa, porém os subvnums podem se repetir.
+Esta classe de vnum também precisa ter métodos para inicializar, criar cópia,
+destruir cópia, recuperar uma cópia e aplicar as mudanças
+Como esta classe poderá ser usada por vários tipos de classes como zones,
+objetos, npcs, e outros, deve ser implementada com templates. Deixo a baixo um
+modelinho básico:
+
+template<class T>
+class VnumIndex
+{
+uint32 vnum;
+uint32 subvnum
+T* master;
+std::map<uint32, T*> copies;
+public:
+VnumIndex();
+~VnumIndex();
+T* create();
+T* createCopy();
+T* getMaster();
+T* getCopy(uint32 subvnum);
+//Mais métodos aqui...
+};
+
+//Então a indexação funcionaria a sim:
+
+map<uint32, VnumINdex<Zone>*> zones;
+//Ou se ficar melhor...
+map<uint32, shared_ptr<VnumIndex<Zone>>> zones;
+
+Então com um sistema a sim posso dizer algo como, preciso recuperar o ponteiro
+para a zone de vnum 50, e subvnum 30. Então a busca pode ser bem rápida na
+checagem se uma determinada coisa existe.
+Eu vejo duas estruturas de dados principais. Esta de pesquisa que é eficiente
+para recuperação de dados, e uma segunda que será basicamente o mundo montado
+em forma de árvore que é eficiente e útil na movimentação de corpos.
