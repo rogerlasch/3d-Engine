@@ -16,6 +16,8 @@ LOG_MSG=0,
 LOG_FAILURE=1,
 };
 
+void log_open_file(const std::string& filename);
+bool log_is_open();
 void log_write(uint32 type, const std::string& msg);
 void log_write_except(const std::string& filename, const std::string& func_name, const std::string& edesc);
 void log_write_assert(const std::string& filename, const std::string& func_name, uint32 line, const std::string expression);
@@ -34,7 +36,7 @@ return final;
 }
 
 #define _LOG_EXCEPT(edesc) log_write_except(__FILE__, __FUNCTION__, edesc)
-#define _GASSERT(expr, msg) \
+#define _GASSERT(expr) \
 if(!(expr))\
 log_write_assert(__FILE__, __FUNCTION__, __LINE__, #expr);
 //End macro...

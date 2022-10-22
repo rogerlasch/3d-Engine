@@ -1,0 +1,16 @@
+Nome: Mundo
+Id: Vnum: 1, SubVnum: 0 Type: 1Limites: 0.00:500.00, 0.00:500.00
+Pai: NULL
+Nome: Praça
+Id: Vnum: 2, SubVnum: 0 Type: 1Limites: 20.00:40.00, 20.00:40.00
+Pai: Mundo
+Nome: Fonte da praça
+Id: Vnum: 3, SubVnum: 0 Type: 1Limites: 25.00:35.00, 25.00:35.00
+Pai: Praça
+
+
+
+Vnum: 1, SubVnum: 0 Type: 0
+Vnum: 1, SubVnum: 2 Type: 0
+Vnum: 2, SubVnum: 0 Type: 1
+Vnum: 3, SubVnum: 2 Type: 1

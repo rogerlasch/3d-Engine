@@ -1,0 +1,9 @@
+Tempo total de execução: 32661 ms.
+Total de funções monitoradas: 7
+gpp::basic_server::pollNet: Tempo total: 151, Total de invocações: 6029
+gpp::basic_peer::sendReliable: Tempo total: 0, Total de invocações: 12
+gpp::event::event: Tempo total: 0, Total de invocações: 2
+gpp::basic_peer::sendAnswerSuccess: Tempo total: 0, Total de invocações: 2
+gpp::event::~event: Tempo total: 0, Total de invocações: 2
+gpp::basic_server::peerDisconnectAll: Tempo total: 0, Total de invocações: 1
+gpp::basic_server::run: Tempo total: 32643, Total de invocações: 1

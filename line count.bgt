@@ -1,0 +1,36 @@
+
+
+void main()
+{
+string [] folders={"gpp", "world"};
+uint final=0;
+uint arquivos=0;
+for(uint i=0; i<folders.length; i++)
+{
+string [] files=find_files(folders[i]+"/*.*");
+if(files.length==0)
+{
+continue;
+}
+for(uint i1=0; i1<files.length; i1++)
+{
+if((string_contains(files[i1], ".cpp", 1)>0)||(string_contains(files[i1], ".h", 1)>0))
+{
+arquivos++;
+final+=getlines(folders[i]+"/"+files[i1]);
+}
+}
+}
+alert("Info", "O projeto conta com um total de: "+final+" linhas em
+"+arquivos+" arquivos.");
+}
+
+uint getlines(string filename)
+{
+file f;
+f.open(filename, "rb");
+string s=(f.read());
+f.close;
+string [] lines=string_split(s, "\r\n", false);
+return lines.length;
+}

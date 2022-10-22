@@ -20,7 +20,7 @@ SERVER_FINISHED
 #define GPP_SERVER_DEFAULT_MAX_PLAYERS 100
 
 
-class basic_server : public GppSteamBase
+class basic_server : public GppClientServerBase
 {
 private:
 std::atomic<uint32> hstate;
@@ -35,12 +35,18 @@ basic_server(const basic_server& bs)=delete;
 basic_server& operator=(const basic_server& bs)=delete;
 virtual ~basic_server();
 uint32 getPort()const;
+uint32 playerCount()const;
 uint32 getMaxPlayers()const;
 uint32 getHstate()const;
 bool start(uint32 port=GPP_SERVER_DEFAULT_PORT, uint32 max_players=GPP_SERVER_DEFAULT_MAX_PLAYERS);
 bool shutdown();
-bool run();
-void update();
+virtual void run();
+virtual void update();
+virtual void pollNet();
+virtual void pollEvents();
+virtual void processSimpleNetMessage(basic_peer* peer, const std::string& msg);
+virtual void processPackagedNetMessage(basic_peer* peer, const std::string& msg);
+virtual void dispatchEvent(event* ev);
 bool peerDisconnect(uint32 peer_id);
 bool peerDisconnectNow(uint32 peer_id);
 void peerDisconnectAll();

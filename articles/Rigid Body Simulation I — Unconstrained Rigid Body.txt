@@ -1,0 +1,1021 @@
+An Introduction to Physically Based Modeling:
+Rigid Body Simulation I--Unconstrained Rigid Body
+Dynamics
+David Baraff
+Robotics Institute
+Carnegie Mellon University
+Please note: This document is ©1997 by David Baraff. This chapter may be freely
+duplicated and distributed so long as no consideration is received in return, and this
+copyright notice remains intact.
+                              Rigid Body Simulation
+                                              David Baraff
+                                           Robotics Institute
+                                     Carnegie Mellon University
+Introduction
+This portion of the course notes deals with the problem of rigid body dynamics. To help get you
+started simulating rigid body motion, we've provided code fragments that implement most of the
+concepts discussed in these notes. This segment of the course notes is divided into two parts. The first
+part covers the motion of rigid bodies that are completely unconstrained in their allowable motion;
+that is, simulations that aren't concerned about collisions between rigid bodies. Given any external
+forces acting on a rigid body, we'll show how to simulate the motion of the body in response to these
+forces. The mathematical derivations in these notes are meant to be fairly informal and intuitive.
+    The second part of the notes tackles the problem of constrained motion that arises when we
+regard bodies as solid, and need to disallow inter-penetration. We enforce these non-penetration
+constraints by computing appropriate contact forces between contacting bodies. Given values for
+these contact forces, simulation proceeds exactly as in the unconstrained case: we simply apply all
+the forces to the bodies and let the simulation unfold as though the motions of bodies are completely
+unconstrained. If we have computed the contact forces correctly, the resulting motion of the bodies
+will be free from inter-penetration. The computation of these contact forces is the most demanding
+component of the entire simulation process.1
+    1Collision detection (i.e. determining the points of contact between bodies) runs a close second though!
+                                                         D1
+                 Part I. Unconstrained Rigid Body Dynamics
+1 Simulation Basics
+This portion of the course notes is geared towards a full implementation of rigid body motion. In this
+section, we'll show the basic structure for simulating the motion of a rigid body. In section 2, we'll
+define the terms, concepts, and equations we need to implement a rigid body simulator. Following
+this, we'll give some code to actually implement the equations we need. Derivations for some of the
+concepts and equations we will be using will be left to appendix A.
+The only thing you need to be familiar with at this point are the basic concepts (but not the numer-
+ical details) of solving ordinary differential equations. If you're not familiar with this topic, you're
+in luck: just turn back to the beginning of these course notes, and read the section on "Differential
+Equation Basics." You also might want to read the next section on "Particle Dynamics" as well,
+although we're about to repeat some of that material here anyway.
+Simulating the motion of a rigid body is almost the same as simulating the motion of a particle,
+so let's start with particle simulation. The way we simulate a particle is as follows. We let a function
+x(t) denote the particle's location in world space (the space all particles or bodies occupy during
+simulation)  at  time  t.  The  function  v(t)  =  x(t )  =  d   x(t  )  gives  the  velocity  of  the  particle  at  time  t.
+                                                             dt
+The state of a particle at time t is the particle's position and velocity. We generalize this concept by
+defining a state vector Y(t) for a system: for a single particle,
+                                                Y(t) =       x(t)        .                                            (1­1)
+                                                             v(t)
+When we're talking about an actual implementation, we have to "flatten" out Y(t) into an array.
+For a single particle, Y(t) can be described as an array of six numbers: typically, we'd let the first
+three elements of the array represent x(t), and the last three elements represent v(t). Later, when we
+talk about state vectors Y(t) that contain matrices as well as vectors, the same sort of operation is
+done to flatten Y(t) into an array. Of course, we'll also have to reverse this process and turn an array
+of numbers back into a state vector Y(t). This all comes down to pretty simple bookkeeping though,
+so henceforth, we'll assume that we know how to convert any sort of state vector Y(t) to an array
+(of the appropriate length) and vice versa. (For a simple example involving particles, look through
+the "Particle System Dynamics" section of these notes.)
+For a system with n particles, we enlarge Y(t) to be
+                                                             x1 (t )
+                                          Y(t) =                         
+                                                             v1 (t )                                                  (1­2)
+                                                               ...
+                                                             xn(t)
+                                                             vn(t)
+SIGGRAPH '97 COURSE NOTES                                 D2 PHYSICALLY BASED MODELING
+where xi(t) and vi(t) are the position and velocity of the ith particle. Working with n particles is no
+harder than working with one particle, so we'll let Y(t) be the state vector for a single particle for
+now (and when we get to it later, a single rigid body).
+    To actually simulate the motion of our particle, we need to know one more thing--the force
+acting on the particle at time t. We'll define F(t) as the force acting on our particle at time t. The
+function F(t) is the sum of all the forces acting on the particle: gravity, wind, spring forces, etc. If
+the particle has mass m, then the change of Y over time is given by
+                                d Y(t) = d               x(t)     =        v(t)       .                              (1­3)
+                                dt dt                    v(t)            F(t)/m
+Given any value of Y(t), equation (1­3) describes how Y(t) is instantaneously changing at time t.
+A simulation starts with some initial conditions for Y(0), (i.e. values for x(0) and v(0)) and then
+uses a numerical equation solver to track the change or "flow" of Y over time, for as long as we're
+interested in. If all we want to know is the particle's location one second from now, we ask the solver
+to compute Y(1), assuming that time units are in seconds. If we're going to animate the motion of
+the  particle,  we'd  want  to  compute  Y(310   ),  Y(  2   )  and  so  on.
+                                                         30
+     The numerical method used by the solver is relatively unimportant with respect to our actual
+implementation. Let's look at how we'd actually interact with a numerical solver, in a C++-like
+language. Assume we have access to a numerical solver, which we'll generically write as a function
+named ode. Typically, ode has the following specification:
+     typedef void *dydt_funcdouble t, double y , double ydot ;
+     void       odedouble y0 , double yend , int len, double t0,
+                         double t1, dydt_func dydt;
+     We pass an initial state vector to ode as an array y0. The solver ode knows nothing about the
+inherent structure of y0. Since solvers can handle problems of arbitrary dimension, we also have to
+pass the length len of y0. (For a system of n particles, we'd obviously have len = 6n.) We also
+pass the solver the starting and ending times of the simulation, t0 and t1. The solver's goal is to
+compute the state vector at time t1 and return it in the array yend.
+     We also pass a function dydt to ode. Given an array y that encodes a state vector Y(t) and a
+time  t,  dydt  must  compute   and  return  d   Y(t  )  in  the  array  ydot.  (The  reason  we  must  pass  t  to  dydt
+                                             dt
+is that we may have time-varying forces acting in our system. In that case, dydt would have to know
+"what time it is" to determine the value of those forces.) In tracing the flow of Y(t) from t0 to t1,
+the solver ode is allowed to call dydt as often as it likes. Given that we have such a routine ode,
+the only work we need to do is to code up the routine dydt which we'll give as a parameter to ode.
+    Simulating rigid bodies follows exactly the same mold as simulating particles. The only differ-
+ence is that the state vector Y(t) for a rigid body holds more information, and the derivativeddt Y(t) is
+a little more complicated. However, we'll use exactly the same paradigm of tracking the movement
+of a rigid body using a solver ode, which we'll supply with a function dydt.
+2 Rigid Body Concepts
+The goal of this section is to develop an analogue to equation (1­3), for rigid bodies. The final
+differential equation we develop is given in section 2.11. In order to do this though, we need to define
+SIGGRAPH '97 COURSE NOTES                                    D3 PHYSICALLY BASED MODELING
+a lot of concepts first and relations first. Some of the longer derivations are found in appendix A. In
+the next section, we'll show how to write the function dydt needed by the numerical solver ode to
+compute  the   derivative  d   Y(t)  developed  in  this  section.
+                           dt
+2.1 Position and Orientation
+The location of a particle in space at time t can be described as a vector x(t), which describes the
+translation of the particle from the origin. Rigid bodies are more complicated, in that in addition to
+translating them, we can also rotate them. To locate a rigid body in world space, we'll use a vector
+x(t), which describes the translation of the body. We must also describe the rotation of the body,
+which we'll do (for now) in terms of a 3 × 3 rotation matrix R(t). We will call x(t) and R(t) the
+spatial variables of a rigid body.
+    A rigid body, unlike a particle, occupies a volume of space and has a particular shape. Because a
+rigid body can undergo only rotation and translation, we define the shape of a rigid body in terms of
+a fixed and unchanging space called body space. Given a geometric description of the body in body
+space, we use x(t) and R(t) to transform the body-space description into world space (figure 1). In
+order to simplify some equations we'll be using, we'll require that our description of the rigid body
+in body space be such that the center of mass of the body lies at the origin, (0, 0, 0). We'll define the
+center of mass more precisely later, but for now, the center of mass can be thought of as a point in the
+rigid body that lies at the geometric center of the body. In describing the body's shape, we require
+that this geometric center lie at (0, 0, 0) in body space. If we agree that R(t) specifies a rotation of
+the body about the center of mass, then a fixed vector r in body space will be rotated to the world-
+space vector R(t)r at time t. Likewise, if p0 is an arbitrary point on the rigid body, in body space,
+then the world-space location p(t) of p0 is the result of first rotating p0 about the origin and then
+translating it:
+                                     p(t) = R(t) p0 + x(t).         (2­1)
+Since the center of mass of the body lies at the origin, the world-space location of the center of
+mass is always given directly by x(t). This lets us attach a very physical meaning to x(t) by saying
+that x(t) is the location of the center of mass in world space at time t. We can also attach a physical
+meaning to R(t). Consider the x axis in body space i.e. the vector (1, 0, 0). At time t, this vector
+has direction
+                                                         1
+                                                R(t)  0 
+                                                          0
+in world space. If we write out the components of R(t) as           (2­2)
+                                                       rxx ryx rzx
+                                          R(t) =  rxy ryy rzy  ,
+                                                       rxz ryz rzz
+then
+                                                                    (2­3)
+                                              1 rxx
+                                     R(t)  0  =  rxy 
+                                                    0 rxz
+SIGGRAPH '97 COURSE NOTES                           D4 PHYSICALLY BASED MODELING
+      body space                                     world space  y'
+y
+                     z                                 x(t)                 z'
+                         p0            y                                p(t)
+0                                                 z               x'
+                                                     x
+                       x
+Figure 1: The center of mass is transformed to the point x(t) in world space, at time t. The fixed x, y,
+and z axes of the body in body space transform to the vectors x = R(t)x, y = R(t)y and z = R(t)z.
+The fixed point p0 in body space is transformed to the point p(t) = R(t) p0 + x(t).
+which is the first column of R(t). The physical meaning of R(t) is that R(t)'s first column gives the
+direction that the rigid body's x axis points in, when transformed to world space at time t. Similarly,
+the second and third columns of R(t),
+                             ryx rzx
+                      ryy  and  rzy 
+                             ryz rzz
+are the directions of the y and z axes of the rigid body in world space at time t (figure 2).
+2.2 Linear Velocity
+For simplicity, we'll call x(t) and R(t) the position and orientation of the body at time t. The next
+thing we need to do is define how the position and orientation change over time. This means we
+need expressions for x(t) and R (t). Since x(t) is the position of the center of mass in world space,
+x(t) is the velocity of the center of mass in world space. We'll define the linear velocity v(t) as this
+velocity:
+                                       v(t) = x(t).                                            (2­4)
+If we imagine that the orientation of the body is fixed, then the only movement the body can undergo
+is a pure translation. The quantity v(t) gives the velocity of this translation.
+2.3 Angular Velocity
+In addition to translating, a rigid body can also spin. Imagine however that we freeze the position of
+the center of mass in space. Any movement of the points of the body must therefore be due to the
+SIGGRAPH '97 COURSE NOTES              D5 PHYSICALLY BASED MODELING
+                                                           world space              y'
+R(t) = [ x' y' z' ]
+                                                                                        z'
+                                           y                                        x'
+                                                      z
+                                                          x
+Figure 2: Physical interpretation of the orientation matrix R(t). At time t, the columns of R(t) are
+the world-space directions that the body-space x, y, and z axes transform to.
+body spinning about some axis that passes through the center of mass. (Otherwise the center of mass
+would itself be moving). We can describe that spin as a vector (t). The direction of (t) gives the
+direction of the axis about which the body is spinning (figure 3). The magnitude of (t), |(t)|, tells
+how fast the body is spinning. |(t)| has the dimensions of revolutions/time; thus, |(t)| relates the
+angle through which the body will rotate over a given period of time, if the angular velocity remains
+constant. The quantity (t) is called the angular velocity.
+    For linear   velocity, x(t)  and v(t   ) are  related  by  v(t)  =  d   x(t ).  How are R(t) and    (t) related?
+(Clearly, R (t)  cannot be (t    ), since  R(t)                         dt  ) is a  vector.) To answer  this question,
+                                                  is a matrix, and (t
+let's remind ourselves of the physical meaning of R(t). We know that the columns of R(t) tell us
+the directions of the transformed x, y and z body axes at time t. That means that the columns ofR (t)
+must describe the velocity with which the x, y, and z axes are being transformed. To discover the
+relationship between (t) and R(t), let's examine how the change of an arbitrary vector in a rigid
+body is related to the angular velocity (t).
+Figure 4 shows a rigid body with angular velocity (t). Consider a vector r(t) at time t specified
+in world space. Suppose that we consider this vector fixed to the body; that is, r(t) moves along with
+the rigid body through world space. Since r(t) is a direction, it is independent of any translational
+effects; in particular, r(t) is independent of v(t). To study r(t), we decompose r(t) into vectors a
+and b, where a is parallel to (t) and b is perpendicular to (t). Suppose the rigid body were to
+maintain a constant angular velocity, so that the tip of r(t) traces out a circle centered on the (t) axis
+(figure 4). The radius of this circle is |b|. Since the tip of the vector r(t) is instantaneously moving
+along this circle, the instantaneous change of r(t) is perpendicular to both b and (t). Since the tip
+of r(t) is moving in a circle of radius b, the instantaneous velocity of r(t) has magnitude |b||(t)|.
+Since b and (t) are perpendicular, their cross product has magnitude
+                                           |(t) × b| = |(t)| |b|.                                       (2­5)
+SIGGRAPH '97 COURSE NOTES                         D6 PHYSICALLY BASED MODELING
+                                                                (t )
+                                                                       v(t)
+                           x(t)
+y
+           z
+               x
+Figure 3: Linear velocity v(t) and angular velocity (t) of a rigid body.
+Putting this together, we can write r(t) = (t) × (b). However, since r(t) = a + b and a is parallel
+to (t), we have (t) × a = 0 and thus
+                  r(t) = (t) × b = (t) × b + (t) × a = (t) × (b + a).                     (2­6)
+Thus, we can simply express the rate of change of a vector as
+                           r(t) = (t) × r(t).                                             (2­7)
+    Let's put all this together now. At time t, we know that the direction of the x axis of the rigid
+body in world space is the first column of R(t), which is
+                                                         rxx
+                                                      rxy  .
+                                                         rxz
+At time t, the derivative of the first column of R(t) is just the rate of change of this vector: using the
+cross product rule we just discovered, this change is
+                                                             rxx
+                                                (t) ×  rxy  .
+                                                             rxz
+The same obviously holds for the other two columns of R(t). This means that we can write
+                  rxx ryx rzx
+R = (t) ×  rxy  (t) ×  ryy  (t) ×  rzy  .
+                                                                                          (2­8)
+                  rxz ryz rzz
+SIGGRAPH '97 COURSE NOTES        D7 PHYSICALLY BASED MODELING
+                                              (t)
+                                                            (t) × b
+                                           b
+                           a
+                                      r(t) = a + b
+Figure 4: The rate of change of a rotating vector. As the tip of r(t) spins about the (t) axis, it traces
+out a circle of diameter |b|. The speed of the tip of r(t) is |(t)||b|.
+    This is too cumbersome an expression to tote around though. To simplify things, we'll use the
+following trick. If a and b are 3-vectors, then a × b is the vector
+                                                   aybz - byaz
+                                               -axbz + bxaz  .
+                                                   axby - bxay
+Given the vector a, let us define a to be the matrix
+                                                  0 -az ay
+                                             az 0 -ax  .
+                                                -ay ax 0
+Then2
+         0 -az ay                      aybz - byaz                   
+                                   bx
+       ab =  az 0 -ax   by  =  -axbz + bxaz  = a × b.
+                                                                       (2­9)
+         -ay ax 0                  bz  axby - bxay
+Using the "" notation, we can rewrite R (t) more simply as
+                                                                       (2­10)
+                             rxx              ryx             rzx
+       R (t) = (t)  rxy            (t)  ryy        (t)  rzy  .
+                              rxz             ryz             rzz
+    2This looks a little too "magical" at first. Did someone discover this identity accidentally? Is it a relation that just
+happens to work? This construct can be derived by considering what's known as infinitesimal rotations. The interested
+reader might wish to read chapter 4.8 of Goldstein[10] for a more complete derivation of the a matrix.
+SIGGRAPH '97 COURSE NOTES          D8 PHYSICALLY BASED MODELING
+By the rules of matrix multiplication, we can factor this into                        (2­11)
+                                                                   rzx
+                                                   rxx ryx
+                                                                 rzy 
+                            R (t) = (t)  rxy   ryy                  rzz
+                                                   rxz ryz
+which is a matrix-matrix multiplication. But since the matrix on the right is R(t) itself, we get simply
+that
+                            R (t) = (t) R(t).                                         (2­12)
+This, at last, gives us the relation we wanted between R (t) and (t). Note the correspondence
+between r(t) = (t) × r(t) for a vector, and R (t) = (t) R(t) for the rotation matrix.
+2.4 Mass of a Body
+In order to work out some derivations, we'll need to (conceptually) perform some integrations over
+the volume of our rigid body. To make these derivations simpler, we're going to temporarily imagine
+that a rigid body is made up of a large number of small particles. The particles are indexed from
+1 to N. The mass of the ith particle is mi, and each particle has a (constant) location r0i in body
+space. The location of the ith particle in world space at time t, denoted ri(t), is therefore given by
+the formula
+                            ri(t) = R(t)r0i + x(t).                                   (2­13)
+The total mass of the body, M, is the sum
+                                                                                  N   (2­14)
+                                                    M = mi.
+                                                                                 i=1
+(Henceforth, summations are assumed to be summed from 1 to N with index variable i.)
+2.5 Velocity of a Particle
+The velocity ri(t) of the ith particle is obtained by differentiating equation (2­13): using the relation
+R (t) =  R(t), we obtain
+                            ri(t) =  R(t)r0i + v(t).                                  (2­15)
+We can rewrite this as
+                        ri(t) = (t) R(t)r0i + v(t)                                    (2­16)
+                              = (t) ( R(t)r0i + x(t) - x(t)) + v(t)
+                              = (t) (ri(t) - x(t)) + v(t)
+using the definition of ri(t) from equation (2­13). Recall from the definition of the "" operator that
+(t)a = (t) × a for any vector a. Using this, we can simply write
+                            ri(t) = (t) × (ri(t) - x(t)) + v(t).                      (2­17)
+Note that this separates the velocity of a point on a rigid body into two components (figure 5): a
+linear component v(t), and an angular component  × (ri(t) - x(t)).
+SIGGRAPH '97 COURSE NOTES                  D9 PHYSICALLY BASED MODELING
+                                                                   (t )
+y                                              x(t)
+                            v(t) ri(t)
+           z
+               x                                                      (t) × (ri(t) ­ x(t))
+                            v(t) + (t) × (ri(t) ­ x(t))     v(t)
+Figure 5: The velocity of the ith point of a rigid body in world space. The velocity of ri(t) can be
+decomposed into a linear term v(t) and an angular term (t) × (ri(t) - x(t)).
+2.6 Center of Mass
+Our definition of the center of mass is going to enable us to likewise separate the dynamics of bodies
+into linear and angular components. The center of mass of a body in world space is defined to be
+                                          miri(t)                                           (2­18)
+                                           M
+where M is the mass of the body (i.e. the sum of the individual masses mi). When we say that we
+are using a center of mass coordinate system, we mean that in body space,
+                                                         0
+                                   mir0i  =  0  =        0  .                               (2­19)
+                                   M0
+Note that this implies that mir0i = 0 as well.
+    We have spoken of x(t) as being the location of the center of mass at time t. Is this true? Yes:
+since the ith particle has position ri(t) = R(t)r0i + x(t) at time t, the center of mass at time t is
+miri(t) = mi( R(t)r0i + x(t)) = R(t) mir0i + mix(t) = x(t) mi = x(t).
+MM                                                 MM
+Additionally, the relation
+               mi(ri(t) - x(t)) =  mi( R(t)r0i + x(t) - x(t)) = R(t)     mir0i = 0          (2­20)
+is also very useful.
+SIGGRAPH '97 COURSE NOTES                 D10                  PHYSICALLY BASED MODELING
+                                                               i(t) = (ri(t) ­ x(t)) × Fi(t)
+y                          x(t) ri(t)
+           z                                                Fi(t)
+x
+Figure 6: The torque i(t) due to a force Fi(t) acting at ri(t) on a rigid body.
+2.7 Force and Torque
+When we imagine a force acting on a rigid body due to some external influence (e.g. gravity, wind,
+contact forces), we imagine that the force acts on a particular particle of the body. (Remember that
+our particle model is conceptual only. We can have a force act at any geometrical location on or inside
+the body, because we can always imagine that there happens to be a particle at that exact location.)
+The location of the particle the force acts on defines the location at which the force acts. We will let
+Fi(t) denote the total force from external forces acting on the ith particle at time t. Also, we define
+the external torque i(t) acting on the ith particle as
+                      i(t) = (ri(t) - x(t)) × Fi(t).                                          (2­21)
+    Torque differs from force in that the torque on a particle depends on the location ri(t) of the
+particle, relative to the center of mass x(t). We can intuitively think of the direction of i(t) as
+being the axis the body would spin about due to Fi(t), if the center of mass were held firmly in place
+(figure 6).
+    The total external force F(t) acting on the body is the sum of the Fi(t):
+                                                 F(t) = Fi(t)                                 (2­22)
+while the total external torque is defined similarly as
+              (t) = i(t) = (ri(t) - x(t)) × Fi(t).                                            (2­23)
+Note that F(t) conveys no information about where the various forces acted on the body; however,
+(t) does tell us something about the distribution of the forces Fi(t) over the body.
+SIGGRAPH '97 COURSE NOTES  D11 PHYSICALLY BASED MODELING
+2.8 Linear Momentum
+The linear momentum p of a particle with mass m and velocity v is defined as
+                           p = mv.                                            (2­24)
+The total linear momentum P(t) of a rigid body is the sum of the products of the mass and velocity
+of each particle:
+                           P(t) = miri(t).                                    (2­25)
+From equation (2­17), the velocity ri(t) of the ith particle is ri(t) = v(t) + (t) × (ri(t) - x(t)).
+Thus, the total linear momentum of the body is
+P(t) =                     miri (t )                                          (2­26)
+      =                     miv(t) + mi(t) × (ri(t) - x(t))
+      =                    miv(t) + (t) × mi (ri(t) - x(t)) .
+Because we are using a center of mass coordinate system, we can apply equation (2­20) and ob-
+tain
+P(t) = miv(t) = mi v(t) = Mv(t).                                              (2­27)
+This gives us the nice result that the total linear momentum of our rigid body is the same as if the
+body was simply a particle with mass M and velocity v(t). Because of this, we have a simple trans-
+formation between P(t) and v(t): P(t) = Mv(t) and v(t) = P(t)/M. Since M is a constant,
+                           v(t) = P (t) .                                     (2­28)
+                                     M
+    The concept of linear momentum lets us express the effect of the total force F(t) on a rigid body
+quite simply. Appendix A derives the relation
+                           P (t) = F(t)                                       (2­29)
+which says that the change in linear momentum is equivalent to the total force acting on a body. Note
+that P(t) tells us nothing about the rotational velocity of a body, which is good, because F(t) also
+conveys nothing about the change of rotational velocity of a body!
+    Since the relationship between P(t) and v(t) is simple, we will be using P(t) as a state variable
+for our rigid body, instead of v(t). We could of course let v(t) be a state variable, and use the
+relation
+                           v(t) = F(t) .                                      (2­30)
+                                     M
+However, using P(t) instead of v(t) as a state variable will be more consistent with the way we will
+be dealing with angular velocity and acceleration.
+SIGGRAPH '97 COURSE NOTES  D12              PHYSICALLY BASED MODELING
+2.9 Angular Momentum
+While the concept of linear momentum is pretty intuitive (P(t) = Mv(t)), the concept of angular mo-
+mentum (for a rigid body) is not. The only reason that one even bothers with the angular momentum
+of a rigid body is that it lets you write simpler equations than you would get if you stuck with angular
+velocity. With that in mind, it's probably best not to worry about attaching an intuitive physical
+explanation to angular momentum--all in all, it's a most unintuitive concept. Angular momentum
+ends up simplifying equations because it is conserved in nature, while angular velocity is not: if you
+have a body floating through space with no torque acting on it, the body's angular momentum is
+constant. This is not true for a body's angular velocity though: even if the angular momentum of a
+body is constant, the body's angular velocity may not be! Consequently, a body's angular velocity
+can vary even when no force acts on the body. Because of this, it ends up being simpler to choose
+angular momentum as a state variable over angular velocity.
+    For linear momentum, we have the relation P(t) = Mv(t). Similarly, we define the total angular
+momentum L(t) of a rigid body by the equation L(t) = I(t)(t), where I(t) is a 3 × 3 matrix (tech-
+nically a rank-two tensor) called the inertia tensor, which we will describe momentarily. The inertia
+tensor I(t) describes how the mass in a body is distributed relative to the body's center of mass. The
+tensor I(t) depends on the orientation of a body, but does not depend on the body's translation. Note
+that for both the angular and the linear case, momentum is a linear function of velocity--it's just that
+in the angular case the scaling factor is a matrix, while it's simply a scalar in the linear case. Note
+also that L(t) is independent of any translational effects, while P(t) is independent of any rotational
+effects.
+    The relationship between L(t) and the total torque (t) is very simple: appendix A derives
+                                               L (t) = (t),                                        (2­31)
+analogous to the relation P (t) = F(t).
+2.10 The Inertia Tensor
+The inertia tensor I(t) is the scaling factor between angular momentum L(t) and angular veloc-
+ity (t). At a given time t, let ri be the displacement of the ith particle from x(t) by defining
+ri = ri(t) - x(t). The tensor I(t) is expressed in terms of ri as the symmetric matrix
+                           mi  (ri       2  +  ri2z  )   -mirixri y       -miri xri z            
+                                         y              mi(ri2x + ri2z )  -miri yriz             
+I(t) =                     -miri yrix                                                              (2­32)
+                           -miri zri x                  -mirizri y        mi(ri  2  +  ri  2  )
+                                                                                 x         y
+    For an actual implementation, we replace the finite sums with integrals over a body's volume in
+world space. The mass terms mi are replaced by a density function. At first glance, it seems that
+we would need to evaluate these integrals to find I(t) whenever the orientation R(t) changes. This
+would be prohibitively expensive to do during a simulation unless the body's shape was so simple
+(for example, a sphere or cube) that that the integrals could be evaluated symbolically.
+    Fortunately, by using body-space coordinates we can cheaply compute the inertia tensor for any
+orientation R(t) in terms of a precomputed integral in body-space coordinates. (This integral is typ-
+ically computed before the simulation begins and should be regarded as one of the input parameters
+SIGGRAPH '97 COURSE NOTES                               D13               PHYSICALLY BASED MODELING
+describing  a  physical  property  of  the    body.)     Using          the  fact   that riTri        =   ri  2  + ri2y  +    ri2z ,  we  can  rewrite
+                                                                                                              x
+I(t) as the difference
+                                                 0   0                       miri2x           mirixri y          miri xri z   
+                                      1          1   0     -                miri yrix                            miri yriz
+               I(t) =                                                                           miri      2                                    (2­33)
+                         miriTri  0                                                                       y
+                                           001                              mirizrix mirizri y                   miri      2
+                                                                                                                           z
+Taking the outer product multiplication of ri with itself, that is
+                                                                                       ri  2       rixri y       ri xri z  
+                                                                            =              x                     ri xri z
+                            ri x           ri x     ri y     ri z                                                          
+               riri T    =  ri y                                                                          2
+                                                                                    ri yrix           ri  y                                    (2­34)
+                            riz                                                     ri zri x       rizri y       ri  2
+                                                                                                                     z
+and letting 1 denote the 3 × 3 identity matrix, we can express I(t) simply as
+                                       I(t) = mi((riTri )1 - ririT )                                                                           (2­35)
+How does this help?
+    Since ri(t) = R(t)r0i + x(t) where r0i is a constant, ri = R(t)r0i. Then, since R(t)R(t)T = 1,
+               I(t) =              mi((ri Tri )1 - riri T )                                                                                    (2­36)
+                    =              mi(( R(t)r0i)T ( R(t)r0i)1 - ( R(t)r0i)( R(t)r0i)T )
+                    =              mi(r0iT R(t)T R(t)r0i1 - R(t)r0ir0iT R(t)T )
+                    =              mi((r0iTr0i )1 - R(t)r0ir0iT R(t)T ).
+Since r0iTr0i is a scalar, we can rearrange things by writing
+                         I(t) = mi((r0iTr0i )1 - R(t)r0ir0iT R(t)T )
+                            =          mi  (  R(t  )(r0   T  r0i  )  R(t    )T  1   -  R(t    )r0  ir0  T    R(t)T )                           (2­37)
+                                                          i                                             i
+                            = R(t)               mi  ((r0    T  r0   i  )1  -   r0ir0  T   )    R(t )T .
+                                                             i                         i
+If we define Ibody as the matrix
+                                   Ibody =              mi   ((r0       T  r0i  )1  -  r0  ir0  T  )                                           (2­38)
+                                                                        i                       i
+then from the previous equation we have
+                                              I(t) = R(t)Ibody R(t)T .                                                                         (2­39)
+Since Ibody is specified in body-space, it is constant over the simulation. Thus, by precomputing bIody
+for a body before the simulation begins, we can easily compute I(t) from Ibody and the orientation
+matrix R(t). Section 5.1 derives the body-space inertia tensor for a rectangular object in terms of an
+integral over the body's volume in body space.
+SIGGRAPH '97 COURSE NOTES                                    D14                              PHYSICALLY BASED MODELING
+   Also, the inverse of I(t) is given by the formula
+                                      I-1(t) = R(t)IbodyR(t)T -1                                       (2­40)
+                                              = R(t)T -1 Ib-o1dy R(t)-1
+                                              = R(t)Ib-o1dyR(t)T
+since, for rotation matrices, R(t)T = R(t)-1 and R(t)T T = R(t). Clearly, Ib-o1dy is also a constant
+during the simulation.
+2.11 Rigid Body Equations of Motion
+Finally, we have covered all the concepts we need to define the state vector Y(t)! For a rigid body,
+we will define Y(t) as
+                                                          x(t)
+                                           Y(t) =          R(t)   .                                    (2­41)
+                                                           P(t)
+                                                           L(t)
+Thus, the state of a rigid body is its position and orientation (describing spatial information), and its
+linear and angular momentum (describing velocity information). The mass M of the body and body-
+space inertia tensor Ibody are constants, which we assume we know when the simulation begins. At
+any given time, the auxiliary quantities I(t), (t) and v(t) are computed by
+           v(t) = P(t),            I(t) = R(t)IbodyR(t)T         and       (t) = I(t)-1 L(t).          (2­42)
+                     M
+The  derivative  d   Y(t  )  is
+                 dt
+                                                 x(t) v(t)
+                                 d Y(t) =  d     R(t)   =        (t) R(t)         .                    (2­43)
+                                 dt        dt    P(t)               F(t)
+                                                 L(t) (t)
+The  next  section   gives   an  implementation  for  the  function  dydt  that  computes  d   Y(t ).
+                                                                                           dt
+   One final note: rather than represent the orientation of the body as a matrix R(t) in Y(t), it is
+better to use quaternions. Section 4 discusses using quaternions in place of rotation matrices. Briefly,
+a quaternion is a type of four element vector that can be used to represent a rotation. If we replace
+R(t) in Y(t) with a quaternion q(t), we can treat R(t) as an auxiliary variable that is computed
+directly from q(t), just as (t) is computed from L(t). Section 4 derives a formula analogous to
+R (t) = (t) R(t), that expresses q(t) in terms of q(t) and (t).
+3    Computing            d   Y(t  )
+                          dt
+Lets consider an implementation of the function dydt for rigid bodies. The code is written in C++,
+and we'll assume that we have datatypes (classes) called matrix and triple which implement,
+respectively, 3 × 3 matrices and points in 3-space. Using these datatypes, we'll represent a rigid
+SIGGRAPH '97 COURSE NOTES                             D15             PHYSICALLY BASED MODELING
+body by the structure
+struct RigidBody
+   * Constant quantities *
+   double mass;                      * mass M *
+   matrix Ibody,                     * Ibody *
+                 Ibodyinv;           * Ib-o1dy inverse of Ibody *
+    * State variables *              * x(t) *
+   triple x;                         * R(t) *
+   matrix R;                         * P(t) *
+   triple P,                         * L(t) *
+                 L;
+   * Derived quantities auxiliary variables *
+   matrix Iinv;                      * I-1(t) *
+   triple v,                         * v(t) *
+                       omega;        * (t) *
+   * Computed quantities *
+   triple force,                     * F(t) *
+                       torque;       * (t) *
+;
+and assume a global array of bodies
+RigidBody Bodies NBODIES ;
+    The constant quantities mass, Ibody and Ibodyinv are assumed to have been calculated for
+each member of the array Bodies, before simulation begins. Also, the initial conditions for each
+rigid body are specified by assigning values to the state variables x, R, P and L of each member of
+Bodies. The implementation in this section represents orientation with a rotation matrix; section 4
+describes the changes necessary to represent orientation by a quaternion.
+    We communicate with the differential equation solver ode by passing arrays of real numbers.
+Several bookkeeping routines are required:
+ * Copy the state information into an array *
+void State_to_ArrayRigidBody *rb, double *y
+   *y++ = rb- x 0 ;                       * x component of position *
+   *y++ = rb- x 1 ;
+   *y++ = rb- x 2 ;                       * etc. *
+   forint i = 0; i 3; i++ * copy rotation matrix *
+                 forint j = 0; j 3; j++
+                                *y++ = rb- R i,j ;
+SIGGRAPH '97 COURSE NOTES            D16         PHYSICALLY BASED MODELING
+     *y++ = rb- P 0 ;
+     *y++ = rb- P 1 ;
+     *y++ = rb- P 2 ;
+     *y++ = rb- L 0 ;
+     *y++ = rb- L 1 ;
+     *y++ = rb- L 2 ;
+and
+      * Copy information from an array into the state variables *
+     void Array_to_StateRigidBody *rb, double *y
+     rb- x 0     = *y++;
+     rb- x 1     = *y++;
+     rb- x 2     = *y++;
+     forint i = 0; i 3; i++
+                   forint j = 0; j 3; j++
+                                  rb- R i,j = *y++;
+     rb- P 0     = *y++;
+     rb- P 1     = *y++;
+     rb- P 2     = *y++;
+     rb- L 0     = *y++;
+     rb- L 1     = *y++;
+     rb- L 2     = *y++;
+     * Compute auxiliary variables... *
+     *  v(t)  =  P(t)  *
+                  M
+     rb- v = rb- P mass;
+      * I-1(t) = R(t)Ib-o1dy R(t)T*
+     rb- Iinv = R * Ibodyinv * TransposeR;
+      * (t) = I-1(t)L(t) *
+     rb- omega = rb- Iinv * rb- L;
+Note that Array_to_State is responsible for computing values for the auxiliary variables Iinv, v
+and omega. We'll assume that the appropriate arithmetic operations have been defined between real
+numbers, triple's and matrix's, and that Transpose returns the transpose of a matrix.
+SIGGRAPH '97 COURSE NOTES  D17                       PHYSICALLY BASED MODELING
+    Examining these routines, we see that each rigid body's state is represented by 3+ 9 + 3 + 3 = 18
+numbers. Transfers between all the members of Bodies and an array y of size 18 · NBODIES are
+implemented as
+    define STATE_SIZE                        18
+    void Array_to_Bodiesdouble y 
+               forint i = 0; i NBODIES; i++
+                             Array_to_State&Bodies i , &y i * STATE_SIZE ;
+and
+     void Bodies_to_Arraydouble y 
+                    forint i = 0; i NBODIES; i++
+                                   State_to_Array&Bodies i , &y i * STATE_SIZE ;
+    Now we can implement dydt. Let's assume that the routine
+    void Compute_Force_and_Torquedouble t, RigidBody *rb;
+computes the force F(t) and torque (t) acting on the rigid body *rb at time t, and stores F(t)
+and (t) in rb- force and rb- torque respectively. Compute_Force_and_Torque takes into
+account all forces and torques: gravity, wind, interaction with other bodies etc. Using this routine,
+we'll define dydt as
+    void dydtdouble t, double y , double ydot 
+                * put data in y into Bodies                            *
+               Array_to_Bodiesy;
+               forint i = 0; i NBODIES; i++
+                                Compute_Force_and_Torquet, &Bodies i ;
+                                ddt_State_to_Array&Bodies i ,
+                                                                  &ydot i * STATE_SIZE ;
+The numerical solver ode calls calls dydt and is responsible for allocating enough space for the
+arrays y, and ydot (STATE_SIZE · NBODIES worth for each). The function which does the real work
+of  computing  d   Y(t  )  and  storing  it  in  the  array  ydot  is  ddt_State_to_Array:
+               dt
+SIGGRAPH '97 COURSE NOTES                                    D18          PHYSICALLY BASED MODELING
+     void ddt_State_to_ArrayRigidBody *rb, double *ydot
+              *  copy   d        x(t  )  =  v(t  )  into  ydot   *
+                        dt
+              *ydot++ = rb- v 0 ;
+              *ydot++ = rb- v 1 ;
+              *ydot++ = rb- v 2 ;
+               * Compute R (t) = (t) R(t) *
+              matrix Rdot = Starrb- omega * rb- R;
+               * copy R (t) into array *
+              forint i = 0; i 3; i++
+                            forint j = 0; j 3; j++
+                                           *ydot++ = Rdot i,j ;
+              *ydot++ = rb- force 0 ;                               *      d   P(t)    =  F(t)     *
+              *ydot++ = rb- force 1 ;                                      dt
+              *ydot++ = rb- force 2 ;
+              *ydot++ = rb- torque 0 ;                              *      d   L(t  )  =    (t  )  *
+              *ydot++ = rb- torque 1 ;                                     dt
+              *ydot++ = rb- torque 2 ;
+     The routine Star, used to calculate R (t) is defined as
+     matrix Startriple a;
+and returns the matrix
+                                                       -a 2                   
+                                                    0         0
+                                                                      a1
+                                          a2             a0
+                                                                    -a 0  .
+                                             -a 1
+                                                                           0
+     Given all of the above, actually performing a simulation is simple. Assume that the state vari-
+ables of all NBODIES rigid bodies are initialized by a routine InitStates. We'll have our simulation
+run  for  10  seconds,  calling  a  routine  DisplayBodies          every  1   th  of  a  second      to  display  the  bodies:
+                                                                           30
+     void RunSimulation
+              double y0 STATE_SIZE * NBODIES ,
+                            yfinal STATE_SIZE * NBODIES ;
+              InitStates;
+              Bodies_to_Arrayyfinal;
+SIGGRAPH '97 COURSE NOTES                                 D19                  PHYSICALLY BASED MODELING
+fordouble t = 0; t 10.0; t += 1. 30.
+ * copy yfinal back to y0 *
+forint i = 0; i STATE_SIZE * NBODIES; i++
+              y0 i = yfinal i ;
+odey0, yfinal, STATE_SIZE * NBODIES,
+       t, t+1. 30., dydt;
+*  copy                    d   Y(t  +  1   )  into  state  variables  *
+                           dt          30
+Array_to_Bodiesyfinal;
+DisplayBodies;
+4 Quaternions vs. Rotation Matrices
+There is a better way to represent the orientation of a rigid body than using a 3 × 3 rotation matrix.
+For a number of reasons, unit quaternions, a type of four element vector normalized to unit length,
+are a better choice than rotation matrices[16].
+    For rigid body simulation, the most important reason to avoid using rotation matrices is because
+of numerical drift. Suppose that we keep track of the orientation of a rigid body according to the
+formula
+                                                R (t) = (t) R(t).
+As we update R(t) using this formula (that is, as we integrate this equation), we will inevitably
+encounter drift. Numerical error will build up in the coefficients of R(t) so that R(t) will no longer
+be precisely a rotation matrix. Graphically, the effect would be that applying R(t) to a body would
+cause a skewing effect.
+    This problem can be alleviated by representing rotations with unit quaternions. Since quater-
+nions have only four parameters, there is only one extra variable being used to describe the three
+freedoms of the rotation. In contrast, a rotation matrix uses nine parameters to describe three degrees
+of freedom; therefore, the degree of redundancy is noticeably lower for quaternions than rotation
+matrices. As a result, quaternions experience far less drift than rotation matrices. If it does become
+necessary to account for drift in a quaternion, it is because the quaternion has lost its unit magnitude3.
+This is easily correctable by renormalizing the quaternion to unit length. Because of these two
+properties, it is desirable to represent the orientation of a body directly as a unit quaternion q(t).
+We will still express angular velocity as a vector (t). The orientation matrix R(t), which is needed
+to compute I-1(t), will be computed as an auxiliary variable from q(t).
+    We will write a quaternion s + vxi + vyj + vzk as the pair
+                                                        [s, v].
+    3Any quaternion of unit length corresponds to a rotation, so quaternions deviate from representing rotations only if
+they lose their unit length. These notes will deal with that problem in a very simplistic way.
+SIGGRAPH '97 COURSE NOTES              D20                 PHYSICALLY BASED MODELING
+Using this notation, quaternion multiplication is                                        (4­1)
+                ·[s1, v1][s2, v2] = [s1s2 - v1 v2, s1v2 + s2v1 + v1 × v2].
+A rotation of  radians about a unit axis u is represented by the unit quaternion
+                            [cos(/2), sin(/2)u].
+In using quaternions to represent rotations, if q1 and q2 indicate rotations, then q2q1 represents the
+composite rotation of q1 followed by q2.4 In a moment, we'll show how to change the routines of
+section 3 to handle the quaternion representation for orientation. Before we can make these changes
+though, we'll need a formula for q(t). Appendix B derives the formula
+                            q (t )  =  1  (t)q(t).                                       (4­2)
+                                       2
+where the multiplication (t)q(t) is a shorthand for multiplication between the quaternions [0, (t)]
+and q(t). Note the similarity between equation (4­2) and
+                            R (t) = (t) R(t).
+To actually use a quaternion representation, we'll need to redefine the type RigidBody:
+struct RigidBody
+   * Constant quantities *
+   double mass;                        * mass M *
+   matrix Ibody,                       * Ibody *
+                 Ibodyinv;             * Ib-o1dy inverse of Ibody *
+    * State variables *                * x(t) *
+   triple x;                           * q(t) *
+   quaternion q;                       * P(t) *
+   triple P,                           * L(t) *
+                 L;
+   * Derived quantities auxiliary variables *
+   matrix Iinv,                        * I-1(t) *
+   R; * R(t) *
+   triple v,                           * v(t) *
+   omega;                              * (t) *
+   * Computed quantities *
+   triple force,                       * F(t) *
+   torque;                             * (t) *
+;
+    4This is according to the convention that the rotation of a point p by a quaternion q is qpq-1. Be warned! This is
+opposite the convention for rotation in the original paper Shoemake[16], but it is in correspondence with some more recent
+versions of Shoemake's article. Writing a composite rotation as q2q1 parallels our matrix notation for composition of
+rotations.
+SIGGRAPH '97 COURSE NOTES           D21             PHYSICALLY BASED MODELING
+      Next, in the routine State_to_Array, we'll replace the double loop
+      forint i = 0; i 3; i++                       * copy rotation matrix *
+               forint j = 0; j 3; j++
+                           *y++ = rb- R i,j ;
+with
+       *
+                    Assume that a quaternion is represented in
+                    terms of elements `r' for the real part,
+                    and `i', `j', and `k' for the vector part.
+      *
+      *y++ = rb- q.r;
+      *y++ = rb- q.i;
+      *y++ = rb- q.j;
+      *y++ = rb- q.k;
+A similar change is made in Array_to_State. Also, since Array_to_State is responsible for
+computing the auxiliary variable I-1(t), which depends on R(t), Array_to_State must also com-
+pute R(t) as an auxiliary variable: in the section
+      * Compute auxiliary variables... *
+      *  v(t)  =  P(t)  *
+                   M
+      rb- v = rb- P mass;
+       * I-1(t) = R(t)Ib-o1dy R(t)T*
+      rb- Iinv = R * Ibodyinv * TransposeR;
+                   * (t) = I-1(t)L(t) *
+                    rb- omega = rb- Iinv * rb- L;
+we add the line
+      rb- R = quaternion_to_matrixnormalizerb- q;
+prior to computing rb- Iinv. The routine normalize returns q divided by its length; this unit
+length quaternion returned by normalize is then passed to quaternion_to_matrix which returns
+a 3 × 3 rotation matrix. Given a quaternion q = [s, v], quaternion_to_matrix returns the ma-
+trix      1 - 2v2y - 2v2z                                           
+                                                   2vxvz + 2svy
+                           2vxvy - 2svz
+          2vxvy + 2svz 1 - 2v2x - 2v2z 2vyvz - 2svx  .
+                  2vxvz - 2svy 2vyvz + 2svx 1 - 2v2x - 2v2y
+In case you need to convert from a rotation matrix to a quaternion,
+SIGGRAPH '97 COURSE NOTES  D22                     PHYSICALLY BASED MODELING
+quaternion matrix_to_quaternionconst matrix &m
+quaternion                 q;
+double                     tr, s;
+tr = m 0,0 + m 1,1 + m 2,2 ;
+iftr = 0
+      s = sqrttr + 1;
+      q.r = 0.5 * s;
+      s = 0.5 s;
+      q.i = m 2,1 - m 1,2  * s;
+      q.j = m 0,2 - m 2,0  * s;
+      q.k = m 1,0 - m 0,1  * s;
+else
+      int i = 0;
+      ifm 1,1 m 0,0 
+                    i = 1;
+      ifm 2,2 m i,i
+                    i = 2;
+      switch i
+      case 0:
+                    s = sqrtm 0,0 - m 1,1 + m 2,2  + 1;
+                    q.i = 0.5 * s;
+                    s = 0.5 s;
+                    q.j = m 0,1 + m 1,0  * s;
+                    q.k = m 2,0 + m 0,2  * s;
+                    q.r = m 2,1 - m 1,2  * s;
+                    break;
+      case 1:
+                    s = sqrtm 1,1 - m 2,2 + m 0,0  + 1;
+                    q.j = 0.5 * s;
+                    s = 0.5 s;
+                    q.k = m 1,2 + m 2,1  * s;
+                    q.i = m 0,1 + m 1,0  * s;
+                    q.r = m 0,2 - m 2,0  * s;
+                    break;
+      case 2:
+                    s = sqrtm 2,2 - m 0,0 + m 1,1  + 1;
+SIGGRAPH '97 COURSE NOTES          D23  PHYSICALLY BASED MODELING
+                                               q.k = 0.5 * s;
+                                               s = 0.5 s;
+                                               q.i = m 2,0 + m 0,2  * s;
+                                               q.j = m 1,2 + m 2,1  * s;
+                                               q.r = m 1,0 - m 0,1  * s;
+                 return q;
+The matrix m is structured so that m 0,0 , m 0,1 and m 0,2 form the first row (not column) of m.
+     The routines Array_to_Bodies and Bodies_to_Array don't need any changes at all, but note
+that the constant STATE_SIZE changes from 18 to 13, since a quaternion requires five less elements
+than a rotation matrix. The only other change we need is in ddt_State_to_Array. Instead of
+                 matrix Rdot = Starrb- omega * rb- R;
+                  * copy R (t) into array *
+                 forint i = 0; i 3; i++
+                               forint j = 0; j 3; j++
+                                              *ydot++ = Rdot i,j ;
+we'll use
+                 quaternion                    qdot = .5 * rb- omega * rb- q;
+                 *ydot++ = qdot.r;
+                 *ydot++ = qdot.i;
+                 *ydot++ = qdot.j;
+                 *ydot++ = qdot.k;
+ We.'re assuming here that the multiplication between the triple rb- omega and the quaternion
+rb- q is defined to return the quaternion product
+                                                [0, rb- omega]q.
+5 Examples
+5.1 Inertia Tensor of a Block
+Let us calculate the inertia tensor Ibody of the rectangular block in figure 7. The block has dimensions
+x0 × y0 × z0. As required, the center of mass of the block is at the origin. Thus, the extent of the
+                    x0      x0
+block  is  from  -  2   to  2   along  the  x  axis,  and  similarly  for  the  y  and  z  axes.  To  calculate  the  inertia
+tensor, we must treat the sums in equation (2­32) as integrals over the volume of the block. Let us
+assume that the block has constant unit density. This means that the density function (x, y, z) is
+always one. Since the block has volume x0 y0z0, the mass M of the block is M = x0 y0z0. Then, in
+SIGGRAPH '97 COURSE NOTES                                  D24                  PHYSICALLY BASED MODELING
+                                                                                                                               x0   ,   y0  ,  z0  
+                                                                                                                               2        2      2   
+  - x0  ,  - y0  ,  - z0  
+   2        2        2    
+        Figure 7: A rectangular block of constant unit density, with center of mass at (0,0,0).
+body space,
+                    x0 y0 z0                                                               x0 y0 z0
+                       2          2        2 (x, y, z)(y2 + z2) dx dy dz = 2                         2        2 y2 + z2 dx dy dz
+     Ixx =          -x0        -y0                                                                -y0
+                                          -z0 -x0                                                            -z0
+                    222                                                                    222
+                    x0         y0    y2z + z3       z=  z0
+                    2          2                        2
+           =        -x0 -y0                    3 z=     -z0  dx dy
+                      22                                 2
+           =          x0         y0  y2z0 +    z03  dx dy
+                       2          2            12
+                    -x0        -y0
+                    22
+                                                                                                                                                     (5­1)
+                      x0  y30             z30       y=  y0
+                       2  3               12            2
+                    -x0
+           =          2        z0    +         y0       -y0  dx
+                                                          2
+                                                    y=
+           =        x0    y03z0 + z30 y0 dx
+                    2
+                    -x0 12                12
+                    2
+                 y30 z0   + z03 y0        x=   x0   y30 z0 x0      z03 y0x0       x0 y0z0                       M
+                 12           12               2      12             12             12                          12
+                                                                                           ( y20     z02               y20     z20
+           =                                   -x0             +               =                  +       )  =      (       +       ).
+                                                 2
+                                          x=
+Similarly,    Iyy =         M   (x02      +  z02 )  and     Izz =  M   (  x02  +  y02 ).  Now, the off-diagonal terms, such as Ixy,
+                            12                                     12
+are
+                          x0 y0 z0                                                        x0 y0 z0
+                          222                                                             222
+           Ixy =                             (x, y, z)(xy) dx dy dz =                                       xy dx dy dz = 0
+                          -x0        -y0                                                   -y0                                                       (5­2)
+                                          -z0 -x0                                                       -z0
+                          222                                                             222
+SIGGRAPH '97 COURSE NOTES                                                 D25                     PHYSICALLY BASED MODELING
+                                                     y
+                                                                     z
+                                               x(t)
+                                                                                                    x
+                                 (-3,0,-2)                (3,0,-2)
+                   FF
+               Figure 8: A block acted on by two equal forces F at two different points.
+(and similarly for the others) because the integrals are all symmetric. Thus, the inertia tensor of the
+block is
+                   Ibody =                     y20 + z02     0                                           (5­3)
+                                     M            0       x02 + z20        0
+                                     12                                    0 .
+                                                  0          0
+                                                                        x20 + y02
+5.2 A Uniform Force Field
+Suppose a uniform force acts on each particle of a body. For example, we typically describe a
+gravitational field as exerting a force mig on each particle of a rigid body, where g is a vector pointing
+downwards. The net force Fg acting due to gravity on the body then is
+                                            Fg = mig = Mg                                                (5­4)
+which  yields  an  acceleration  of  Mg  =  g  of  the  center  of  mass,  as  expected.  What  is  the  torque  due
+                                      g
+to the gravitational field? The net torque is the sum
+                   (ri(t) - x(t)) × mig = mi(ri(t) - x(t)) × g = 0                                       (5­5)
+by equation (2­20). We see from this that a uniform gravitational field can have no effect on the
+angular momentum of a body. Furthermore, the gravitational field can be treated as a single force
+Mg acting on the body at its center of mass.
+5.3 Rotation Free Movement of a Body
+Now, let us consider some forces acting on the block of figure 8. Suppose that an external force
+F = (0, 0, f ) acts on the body at points x(t) + (-3, 0, -2) and x(t) + (3, 0, -2). We would expect
+SIGGRAPH '97 COURSE NOTES                               D26                PHYSICALLY BASED MODELING
+that this would cause the body to accelerate linearly, without accelerating angularly. The net force
+acting on the body is (0, 0, 2 f ), so the acceleration of the center of mass is
+                                        2f
+                                        M
+along the z axis. The torque due to the force acting at x(t) + (-3, 0, -2) is
+                                    -3           -3
+                ((x(t) +  0 ) - x(t)) × F =  0  × F
+                                -2 -2
+while the torque due to the force acting at x(t) + (3, 0, -2) is
+                                33
+                ((x(t) +  0 ) - x(t)) × F =  0  × F.
+                                -2 -2
+The total torque  is therefore
+    -3                3                     -3 3                        0
+ =  0  × F +  0  × F = ( 0  +  0 ) × F =  0  × F.
+-2 -2                                   -2 -2                                  -2
+But this gives
+                                           00
+                                 =  0  ×  0  = 0.
+                                         -2 f
+As expected then, the forces acting on the block impart no angular acceleration to the block.
+5.4 Translation Free Movement of a Body
+Suppose now that an external force F1 = (0, 0, f ) acts on the body at point x(t) + (-3, 0, -2) and an
+external force F2 = (0, 0, - f ) acts on the body at point x(t) + (3, 0, 2) (figure 9). Since F1 = -F2,
+the net force acting on the block is F1 + F2 = 0, so there is no acceleration of the center of mass. On
+the other hand, the net torque is
+SIGGRAPH '97 COURSE NOTES               D27                       PHYSICALLY BASED MODELING
+                                    y
+                                                    z
+                              x(t)
+                                                       x
+        (-3,0,-2)                   (3,0,-2)
+FF
+Figure 9: A block acted on by two opposite forces F1 and F2 = -F1, at two different points.
+    -3
+((x(t) +  0 ) - x(t)) × F1 +
+-2                                
+                                  -3 0 3 0
+     3
+((x(t) +  0 ) - x(t)) × F2 =  0  ×  0  +  0  ×  0         (5­6)
+2 -2 f -2 - f
+                                00 0
+                              = 3f + 3f = 6f .
+                                    00 0
+Thus, the net torque is (0, 6 f, 0), which is parallel to the y axis. The final result is that the forces
+acting on the block cause it to angularly accelerate about the y axis.
+5.5 Force vs. Torque Puzzle
+In considering the effect of a force acting at a point on a body, it sometimes seems that the force is
+being considered twice. That is, if a force F acts on a body at a point r + x(t) in space, then we first
+consider F as accelerating the center of mass, and then consider F as imparting a spin to the body.
+    This gives rise to what at first seems a paradox: Consider the long horizontal block of figure 10
+which is initially at rest. Suppose that a force F acts on the block at the center of mass for some
+period of time, say, ten seconds. Since the force acts at the center of mass, no torque is exerted on
+the body. After ten seconds, the body will have acquired some linear velocity v. The body will not
+have acquired any angular velocity; thus the kinetic energy of the block will be12 M|v|2.
+    Now suppose that the same force F is applied off-center to the body as shown in figure 11. Since
+the force acting on the body is the same, the acceleration of the center of mass is the same. Thus,
+SIGGRAPH '97 COURSE NOTES           D28                PHYSICALLY BASED MODELING
+FF
+                                (ten seconds later)
+                                                     v
+Energy:                                              Energy:
+           0                                                     1 MvT v
+                                                                 2
+Figure 10: A rectangular block acted on by a force through its center of mass.
+                               (ten seconds later)                
+                                                                            v
+F
+             Energy:                                 F
+                        0
+                                                     Energy:
+                                                              1 MvT v + 1 T I
+                                                               22
+Figure 11: A block acted on by a force, off-center of the center of mass.
+SIGGRAPH '97 COURSE NOTES  D29                       PHYSICALLY BASED MODELING
+after ten seconds, the body will again have linear velocity v. However, after ten seconds, the body
+will have picked up some angular velocity , since the force F, acting off center, now exerts a torque
+on the body. Since the kinetic energy is (see appendix C)
+                           1  M|v|2  +  1  T  I
+                           2            2
+the kinetic energy of the block is higher than when the force acted through the center of mass. But
+if identical forces pushed the block in both cases, how can the energy of the block be different?
+Hint: Energy, or work, is the integral of force over distance.
+SIGGRAPH '97 COURSE NOTES     D30                PHYSICALLY BASED MODELING
+                               (ten seconds later)               
+                                                                           v
+F
+             Energy:                                F
+                        0
+                                                    Energy:
+                                                               1 MvT v + 1 T I
+                                                                22
+Figure 12: The path the force acts over is longer than in figure 10. As a result, the force does more
+work, imparting a larger kinetic energy to the block.
+    Figure 12 shows why the force acting off center results in a higher kinetic energy. The kinetic
+energy of the block is equivalent to the work done by the force. The work done by the force is the
+integral of the force over the path traveled in applying that force. In figure 11, where the force acts off
+the center of mass, consider the path traced out by the point where the force is applied. This path is
+clearly longer than the path taken by the center of mass in figure 10. Thus, when the force is applied
+off center, more work is done because the point p at which the force is applied traces out a longer
+path then when the force is applied at the center of mass.
+SIGGRAPH '97 COURSE NOTES  D31                      PHYSICALLY BASED MODELING

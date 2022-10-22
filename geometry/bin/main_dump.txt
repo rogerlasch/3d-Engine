@@ -1,0 +1,2 @@
+Tempo total de execução: 2344 ms.
+Total de funções monitoradas: 0

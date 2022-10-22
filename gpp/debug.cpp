@@ -13,18 +13,42 @@ using namespace std;
 namespace gpp
 {
 
+static ofstream log_file;
+static mutex mtx_log;
+
+void log_open_file(const string& filename)
+{
+try {
+lock_guard<mutex> lck(mtx_log);
+if((!log_file.is_open())&&(filename.size()>0))
+{
+log_file.open(filename);
+}
+} catch(const exception& e) {
+cout<<"Exception: "<<e.what()<<endl;
+}
+}
+
+bool log_is_open()
+{
+lock_guard<mutex> lck(mtx_log);
+return log_file.is_open();
+}
+
 void log_write(uint32 type, const string& msg)
 {
-static ofstream ofn("gpp_log.txt");
-static mutex mtx;
-unique_lock<mutex> lck(mtx);
+if(!log_is_open())
+{
+log_open_file("gpp_default_file.txt");
+}
+lock_guard<mutex> lck(mtx_log);
 switch(type)
 {
 case LOG_MSG:
 case LOG_FAILURE:
 {
-ofn<<msg<<endl;
-cout<<msg<<endl;
+log_file<<msg<<endl;
+//cout<<msg<<endl;
 }
 }
 }
