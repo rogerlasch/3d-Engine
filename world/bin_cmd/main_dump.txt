@@ -1,0 +1,5 @@
+Tempo total de execução: 60664 ms.
+Total de funções monitoradas: 3
+fillBodies: Tempo total: 641.00 ms, Total de execuções: 1
+SortAndSweepAABBArray: Tempo total: 59976.71 ms, Total de execuções: 10383, Duração média: 5.78 ms
+sortBodies: Tempo total: 24976.63 ms, Total de execuções: 10383, Duração média: 2.41 ms

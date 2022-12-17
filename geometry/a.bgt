@@ -1,9 +1,0 @@
-
-
-void main()
-{
-float x=0;
-float y=1;
-float z=x/y;
-alert("info", z);
-}

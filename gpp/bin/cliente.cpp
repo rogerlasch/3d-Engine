@@ -7,7 +7,8 @@
 using namespace std;
 using namespace gpp;
 
-basic_client client;
+gpp_steamsockets hnet;
+gpp_client* client=NULL;
 atomic<uint32> hstate;
 void sig_callback(int x);
 void client_loop();
@@ -30,12 +31,12 @@ if(line.size()>0)
 {
 if(line=="ping")
 {
-client.makePing();
+client->makePing();
 }
 else
 {
 packet sf;
-if(!client.sendAndWait(4, "Estou testando o envio...", &sf))
+if(!client->sendAndWait(4, "Estou testando o envio...", &sf))
 {
 cout<<"Mensagem de falha: "<<sf.errormsg<<endl;
 }
@@ -54,7 +55,7 @@ return 0;
 
 void sig_callback(int x)
 {
-client.disconnect();
+client->shutdown();
 wait_ms(100);
 hstate.store(0);
 }
@@ -63,7 +64,8 @@ void client_loop()
 {
 profiler_snap();
 _FLOG("Iniciando cliente...");
-if(client.connect("127.0.0.1", 4000))
+client=new gpp_client(PEER_REGULAR_CLIENT|PEER_CLIENT, &hnet);
+if(client->connect("127.0.0.1", 4000))
 {
 _FLOG("Cliente iniciado.");
 }
@@ -71,12 +73,14 @@ else
 {
 hstate.store(0);
 _FLOG("Erro ao iniciar o cliente...");
+delete client;
 return;
 }
-while(client.isConnected())
+while(client->isConnected())
 {
-this_thread::sleep_for(chrono::milliseconds(5));
-client.update();
+wait_ms(2);
+client->update();
 }
 hstate.store(0);
+delete client;
 }

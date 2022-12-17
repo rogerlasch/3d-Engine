@@ -160,7 +160,7 @@ memset(&storage, 0, sizeof(storage));
 type=gpp_type_void;
 }
 
-string gpp_value::to_string()const
+string gpp_value::toString()const
 {
 switch(type)
 {
@@ -320,7 +320,7 @@ return true;
 
 ostream& operator<<(ostream& os, gpp_value& val)
 {
-os<<val.to_string();
+os<<val.toString();
 return os;
 }
 }

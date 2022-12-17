@@ -9,8 +9,8 @@ namespace gpp
 
 enum RIGIDBODYFLAGS
 {
-RB_STATIC=0,
-RB_TRANSPARENT
+RB_STATIC=(1<<0),
+RB_TRANSPARENT=(1<<1)
 };
 
 enum RIGIDBODY_TYPES
@@ -18,54 +18,53 @@ enum RIGIDBODY_TYPES
 RB_DEFAULT=0,
 RB_ZONE,
 RB_OBJECT,
+RB_PC,
 RB_NPC
 };
 
-class RigidBody
+class RigidBody : public AABB
 {
-protected:
-float mass;
 public:
 gpp_index index;
 protected:
-vector3d position;
+uint32 btype;
+uint32 userdata;
+float mass;
 vector3d velocity;
 vector3d forse;
 std::string name;
-std::bitset<16> bflags;
-shape2d* body;
+SafeFlags<uint16> bflags;
 public:
-RigidBody();
+RigidBody(uint32 btype=0);
 RigidBody(const RigidBody& rb)=delete;
 RigidBody& operator=(const RigidBody& rb)=delete;
 virtual ~RigidBody();
-void setName(const std::string& name);
-std::string getName()const;
-void setPosition(const vector3d& position);
-vector3d getPosition()const;
-void setBody(shape2d* body);
-shape2d* getBody()const;
-void setVelocity(const vector3d& velocity);
-vector3d getVelocity()const;
-void setForse(const vector3d& forse);
-vector3d getForse()const;
-void setMass(float mass);
-float getMass()const;
+uint32 getBType()const;
 void setVnum(uint32 vnum);
 uint32 getVnum()const;
 void setSubVnum(uint32 vnum);
 uint32 getSubVnum()const;
 void setIndex(const gpp_index& id);
 gpp_index getIndex()const;
-virtual void onStep(float dt, vector3d* onchanged=NULL);
+void setName(const std::string& name);
+std::string getName()const;
+void setUserData(uint32 udata);
+uint32 getUserData()const;
+void setVelocity(const vector3d& velocity);
+vector3d getVelocity()const;
+void setForse(const vector3d& forse);
+vector3d getForse()const;
+void setMass(float mass);
+float getMass()const;
+virtual vector3d nextStep(float dt);
 std::string toString();
-virtual void translate(const vector3d& v);
-virtual void rotate(float angle, const vector3d& origin);
-void setBodyFlag(const std::initializer_list<uint32>& bflags);
-void removeBodyFlag(const std::initializer_list<uint32>& bflags);
-bool containsBodyFlag(const std::initializer_list<uint32>& bflags)const;
+void setBodyFlag(uint16 bflags);
+void removeBodyFlag(uint16 bflags);
+bool containsBodyFlag(uint16 bflags);
 bool isStatic()const;
 bool isTransparent()const;
+friend class BroadPhase;
 };
+typedef std::vector<RigidBody*> RigidBodyList;
 }
 #endif

@@ -3,8 +3,6 @@
 #ifndef GPP_H
 #define GPP_H
 
-#include <GameNetworkingSockets/steam/steamnetworkingsockets.h>
-#include <GameNetworkingSockets/steam/isteamnetworkingutils.h>
 #include<atomic>
 #include<functional>
 #include<iostream>
@@ -25,10 +23,9 @@
 #include"PacketWaitable.h"
 #include"event.h"
 #include"EventQueue.h"
-#include"basic_peer.h"
-#include"GppSteamBase.h"
-#include"GppClientServerBase.h"
-#include"basic_client.h"
-#include"basic_server.h"
-//world and map
+#include"gpp_networkinterface.h"
+#include"gpp_steamsockets.h"
+#include"gpp_peer.h"
+#include"gpp_client.h"
+#include"gpp_server.h"
 #endif

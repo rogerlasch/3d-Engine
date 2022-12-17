@@ -1,14 +1,16 @@
 
 
 
+#include<sstream>
 #include<stdexcept>
 #include<unordered_map>
 #include<string>
 #include<bass.h>
+#include<Tolk.h>
 #include<sdl2/sdl.h>
 #include<fmt/core.h>
 #include"../types.h"
-#include"../vector3d.h"
+#include"../geometry/vector3d.h"
 #include"../../gpp/gpp.h"
 #include"r_window.h"
 
@@ -17,6 +19,28 @@ using namespace std;
 
 static r_window* mainwindow=NULL;
 static unordered_map<int32, uint32> keyboard;
+
+wstring dlb_string_to_wstring(const string& str)
+{
+locale loc;
+const auto& _Facet=use_facet<codecvt<wchar_t, char, mbstate_t>>(loc);
+wstring final=L"";
+final.resize(str.size());
+mbstate_t _State{};
+const char* istart=str.c_str();
+const char* iend=(str.c_str()+str.size());
+const char* inext=NULL;
+wchar_t* ostart=(wchar_t*)final.c_str();
+wchar_t* oend=(wchar_t*)(final.c_str()+final.size());
+wchar_t* onext=NULL;
+const auto Result=_Facet.in(_State, istart, iend, inext, ostart, oend, onext);
+if(Result==codecvt_base::ok)
+{
+final.resize(static_cast<size_t>(onext-ostart));
+return final;
+}
+return L"";
+}
 
 r_window::r_window(const string& title, uint32 x, uint32 y, uint32 width, uint32 height)
 {
@@ -45,6 +69,7 @@ BASS_Free();
 SDL_Quit();
 throw runtime_error("Falha ao criar o renderizador da janela.");
 }
+Tolk_Load();
 SDL_SetRenderDrawColor(this->renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 keyboard.clear();
 devices.insert(BASS_GetDevice());
@@ -79,6 +104,7 @@ this->device=-1;
 this->devices.clear();
 mainwindow=NULL;
 SDL_Quit();
+Tolk_Unload();
 }
 
 void r_window::setTitle(const string& title)
@@ -185,6 +211,7 @@ break;
 case sk_pressed:
 case sk_down:
 {
+it->second=sk_down;
 break;
 }
 }
@@ -288,7 +315,7 @@ return ((it==keyboard.end()) ? false : it->second==sk_down);
 bool key_up(int32 key_code)
 {
 auto it=keyboard.find(key_code);
-return ((it==keyboard.end()) ? false : it->second==sk_up);
+return ((it==keyboard.end()) ? true : it->second==sk_up);
 }
 
 uint32 rsound_play(const std::string& filename, uint32 flags)
@@ -340,8 +367,8 @@ bool rsound_set_listener_position(const vector3d& vect)
 {
 BASS_3DVECTOR v;
 v.x=vect.x;
-v.y=vect.y;
-v.z=vect.z;
+v.y=vect.z;
+v.z=vect.y;
 bool success=BASS_Set3DPosition(&v, NULL, NULL, NULL);
 if(success)
 {
@@ -388,4 +415,9 @@ vect.x=v.x;
 vect.y=v.y;
 vect.z=v.z;
 return true;
+}
+
+void r_speak(const std::string& s, bool interrupt)
+{
+Tolk_Speak(dlb_string_to_wstring(s).c_str(), interrupt);
 }

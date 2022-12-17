@@ -80,7 +80,7 @@ break;
 }
 default:
 {
-return type>PACKET_DEFAULT&&type<PACKET_LAST;
+return type>=PACKET_DEFAULT&&type<PACKET_LAST;
 }
 }
 }

@@ -1,88 +1,34 @@
 
 #include<sstream>
+#include<bitset>
+#include"../gpp/gpp.h"
 #include"types.h"
-#include"gpp_index.h"
-#include"vector3d.h"
-#include"functions.h"
-#include"geometry.h"
+#include"geometry/geometry.h"
 #include"RigidBody.h"
 
 using namespace std;
 
 namespace gpp
 {
-RigidBody::RigidBody()
+RigidBody::RigidBody(uint32 btype):
+AABB()
 {
+this->btype=btype;
 this->setIndex({0, 0});
-this->setPosition({0.0f, 0.0f, 0.0f});
 this->setVelocity({0.0f, 0.0f, 0.0f});
 this->setForse({0.0f, 0.0f, 0.0f});
 this->setMass(0.0f);
-bflags.reset();
+this->setUserData(0);
+bflags.replace_flags(0);
 }
 
 RigidBody::~RigidBody()
 {
 }
 
-void RigidBody::setName(const string& name)
+uint32 RigidBody::getBType()const
 {
-this->name=name;
-}
-
-string RigidBody::getName()const
-{
-return this->name;
-}
-
-void RigidBody::setPosition(const vector3d& position)
-{
-this->position=position;
-}
-
-vector3d RigidBody::getPosition()const
-{
-return this->position;
-}
-
-void RigidBody::setBody(shape2d* body)
-{
-this->body=body;
-}
-
-shape2d* RigidBody::getBody()const
-{
-return this->body;
-}
-
-void RigidBody::setVelocity(const vector3d& velocity)
-{
-this->velocity=velocity;
-}
-
-vector3d RigidBody::getVelocity()const
-{
-return this->velocity;
-}
-
-void RigidBody::setForse(const vector3d& forse)
-{
-this->forse=forse;
-}
-
-vector3d RigidBody::getForse()const
-{
-return this->forse;
-}
-
-void RigidBody::setMass(float mass)
-{
-this->mass=mass;
-}
-
-float RigidBody::getMass()const
-{
-return this->mass;
+return btype;
 }
 
 void RigidBody::setVnum(uint32 vnum)
@@ -115,18 +61,69 @@ gpp_index RigidBody::getIndex()const
 return index;
 }
 
-void RigidBody::onStep(float dt, vector3d* onchanged)
+void RigidBody::setName(const string& name)
+{
+this->name=name;
+}
+
+string RigidBody::getName()const
+{
+return this->name;
+}
+
+void RigidBody::setUserData(uint32 udata)
+{
+this->userdata=udata;
+}
+
+uint32 RigidBody::getUserData()const
+{
+return this->userdata;
+}
+
+void RigidBody::setVelocity(const vector3d& velocity)
+{
+this->velocity=velocity;
+}
+
+vector3d RigidBody::getVelocity()const
+{
+return this->velocity;
+}
+
+void RigidBody::setForse(const vector3d& forse)
+{
+this->forse=forse;
+}
+
+vector3d RigidBody::getForse()const
+{
+return this->forse;
+}
+
+void RigidBody::setMass(float mass)
+{
+this->mass=mass;
+}
+
+float RigidBody::getMass()const
+{
+return this->mass;
+}
+
+vector3d RigidBody::nextStep(float dt)
 {
 if((dt<0.000001)||(mass<=0))
 {
-return;
+return vector3d();
 }
 vector3d v;
 vector3d acceleration((forse/mass));
 velocity+=(acceleration*dt);
 v=velocity*dt;
-position+=v;
+return v;
 }
+
 
 string RigidBody::toString()
 {
@@ -135,62 +132,35 @@ ss<<fixed;
 ss.precision(2);
 ss<<"Index: "<<index.toString()<<endl;
 ss<<"Nome: "<<this->getName()<<endl;
-ss<<"Position: "<<position.x<<" "<<position.y<<" "<<position.z<<endl;
 ss<<"Velocity: "<<velocity.x<<" "<<velocity.y<<" "<<velocity.z<<endl;
 ss<<"Forse: "<<forse.x<<" "<<forse.y<<" "<<forse.z<<endl;
 ss<<"Mass: "<<mass<<endl;
+ss<<AABB::toString();
 return ss.str();
 }
 
-void RigidBody::translate(const vector3d& v)
+void RigidBody::setBodyFlag(uint16 bflags)
 {
-position+=v;
-if(body!=NULL)
-{
-body->translate(position);
-}
+this->bflags.setflag(bflags);
 }
 
-void RigidBody::rotate(float angle, const vector3d& origin)
+void RigidBody::removeBodyFlag(uint16 bflags)
 {
-gpp_rotate_single_point(position, angle, origin);
+this->bflags.removeflag(bflags);
 }
 
-void RigidBody::setBodyFlag(const initializer_list<uint32>& bflags)
+bool RigidBody::containsBodyFlag(uint16 bflags)
 {
-for(auto& it : bflags)
-{
-this->bflags.set(it, true);
-}
-}
-
-void RigidBody::removeBodyFlag(const initializer_list<uint32>& bflags)
-{
-for(auto& it : bflags)
-{
-this->bflags.set(it, false);
-}
-}
-
-bool RigidBody::containsBodyFlag(const initializer_list<uint32>& bflags)const
-{
-for(auto& it : bflags)
-{
-if(this->bflags[it]==0)
-{
-return false;
-}
-}
-return true;
+return this->bflags.flag_contains(bflags);
 }
 
 bool RigidBody::isStatic()const
 {
-return bflags[RB_STATIC];
+return bflags.flag_contains(RB_STATIC);
 }
 
 bool RigidBody::isTransparent()const
 {
-return bflags[RB_TRANSPARENT];
+return bflags.flag_contains(RB_TRANSPARENT);
 }
 }

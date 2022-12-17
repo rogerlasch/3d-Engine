@@ -50,7 +50,7 @@ return;
 }
 while(m_first!=NULL)
 {
-event* ev=m_first->next;
+Event* ev=m_first->next;
 m_first=m_first->next;
 delete ev;
 }
@@ -58,7 +58,7 @@ m_last=NULL;
 m_size.store(0);
 }
 
-bool EventQueue::eventGet(event** ev)
+bool EventQueue::eventGet(Event** ev)
 {
 if((ev==NULL)||(m_size.load()==0))
 {
@@ -78,7 +78,7 @@ return true;
 
 void EventQueue::eventPost(uint32 peer_id, uint32 type, int64 timeout, packet* pack)
 {
-event* ev=new event();
+Event* ev=new Event();
 ev->peer_id=peer_id;
 ev->type=type;
 ev->timeout=timeout;
@@ -86,7 +86,7 @@ ev->pack=pack;
 eventPost(ev);
 }
 
-void EventQueue::eventPost(event* ev)
+void EventQueue::eventPost(Event* ev)
 {
 if(ev==NULL)
 {

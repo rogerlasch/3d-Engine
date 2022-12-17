@@ -9,11 +9,13 @@ namespace gpp
 enum GPP_EVENT_TYPES
 {
 GEVENT_DEFAULT=0,
+GEVENT_CONNECTED,
+GEVENT_DISCONNECTED,
 GEVENT_RECEIVE,
 GEVENT_PING
 };
 
-class event
+class Event
 {
 public:
 uint32 peer_id;
@@ -22,11 +24,11 @@ int64 timestamp;
 int64 timeout;
 std::string data;
 packet* pack;
-event* next;
-event();
-event(const event& ev)=delete;
-event& operator=(const event& ev)=delete;
-virtual ~event();
+Event* next;
+Event();
+Event(const Event& ev)=delete;
+Event& operator=(const Event& ev)=delete;
+virtual ~Event();
 void reset();
 };
 }

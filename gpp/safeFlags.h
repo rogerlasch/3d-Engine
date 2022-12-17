@@ -10,8 +10,7 @@ template<class T>
 class SafeFlags
 {
 private:
-T flags;
-mutable std::shared_mutex mtx_flags;
+std::atomic<T> flags;
 public:
 inline SafeFlags();
 inline SafeFlags(T f);
@@ -19,6 +18,7 @@ SafeFlags(const SafeFlags& sf)=delete;
 SafeFlags& operator=(const SafeFlags& sf)=delete;
 inline virtual ~SafeFlags();
 inline void replace_flags(T f);
+inline T get_flags()const;
 inline bool flag_contains(T f)const;
 inline bool setflag(T f);
 inline bool removeflag(T f);
@@ -35,7 +35,7 @@ namespace gpp
 template<class T>
 SafeFlags<T>::SafeFlags()
 {
-std::memset(&flags, 0, sizeof(flags));
+flags.store(0);
 }
 
 template<class T>
@@ -52,14 +52,18 @@ SafeFlags<T>::~SafeFlags()
 template<class T>
 void SafeFlags<T>::replace_flags(T f)
 {
-std::unique_lock<std::shared_mutex> lck(this->mtx_flags);
-this->flags=f;
+this->flags.store(f);
+}
+
+template<class T>
+T SafeFlags<T>::get_flags()const
+{
+return flags.load();
 }
 
 template<class T>
 bool SafeFlags<T>::flag_contains(T f)const
 {
-std::shared_lock<std::shared_mutex> lck(this->mtx_flags);
 return ((this->flags&f)==f);
 }
 
@@ -70,7 +74,6 @@ if(this->flag_contains(f))
 {
 return false;
 }
-std::unique_lock<std::shared_mutex> lck(this->mtx_flags);
 flags|=f;
 return true;
 }
@@ -82,7 +85,6 @@ if(!this->flag_contains(f))
 {
 return false;
 }
-std::unique_lock<std::shared_mutex> lck(this->mtx_flags);
 flags^=f;
 return true;
 }

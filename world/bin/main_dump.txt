@@ -1,5 +1,0 @@
-Tempo total de execução: 1798 ms.
-Total de funções monitoradas: 3
-gpp::gpp_zone::addChild: Tempo total: 0, Total de invocações: 2
-gpp::InserterSorted<class gpp::gpp_zone>::operator (): Tempo total: 0, Total de invocações: 2
-gpp::BinarySearcher<class gpp::gpp_zone>::findUnique: Tempo total: 0, Total de invocações: 2

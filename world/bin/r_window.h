@@ -58,4 +58,7 @@ bool rsound_set_listener_position(const gpp::vector3d& vect);
 bool rsound_get_listener_position(gpp::vector3d& vect);
 bool rsound_set_sound_position(gpp::uint32 handle, const gpp::vector3d& vect);
 bool rsound_get_sound_position(gpp::uint32 handle, gpp::vector3d& vect);
+void r_speak(const std::string& s, bool interrupt);
+#define _speak(str, ...) r_speak(fmt::format(str, __VA_ARGS__), false)
+#define _speak_interrupt(str, ...) r_speak(fmt::format(str, __VA_ARGS__), true)
 #endif

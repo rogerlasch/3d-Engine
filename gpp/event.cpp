@@ -12,7 +12,7 @@ using namespace std;
 
 namespace gpp
 {
-event::event()
+Event::Event()
 {
 profiler_snap();
 pack=NULL;
@@ -20,13 +20,13 @@ next=NULL;
 this->reset();
 }
 
-event::~event()
+Event::~Event()
 {
 profiler_snap();
 this->reset();
 }
 
-void event::reset()
+void Event::reset()
 {
 type=GEVENT_DEFAULT;
 peer_id=0;

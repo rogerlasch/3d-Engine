@@ -57,7 +57,7 @@ gpp_value& operator=(const gpp_value& val);
 uint32 gettype()const;
 void cleanup();
 ~gpp_value();
-std::string to_string()const;
+std::string toString()const;
 bool get(int8& val)const;
 bool get(uint8& val)const;
 bool get(int16& val)const;

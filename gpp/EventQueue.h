@@ -9,8 +9,8 @@ namespace gpp
 class EventQueue
 {
 private:
-event* m_first;
-event* m_last;
+Event* m_first;
+Event* m_last;
 std::atomic<uint32> m_size;
 mutable std::mutex mtx_queue;
 public:
@@ -21,9 +21,9 @@ virtual ~EventQueue();
 uint32 size()const;
 bool empty()const;
 void eventDestroyAll();
-bool eventGet(event** ev);
+bool eventGet(Event** ev);
 void eventPost(uint32 peer_id, uint32 type, int64 timeout=0, packet* pack=NULL);
-void eventPost(event* ev);
+void eventPost(Event* ev);
 };
 }
 #endif

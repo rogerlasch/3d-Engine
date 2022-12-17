@@ -1,4 +1,0 @@
-Iniciando servidor...
-Servidor iniciado.
-Alguém se conectou!
-Conexão fechada.

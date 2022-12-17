@@ -13,8 +13,14 @@ using namespace std;
 namespace gpp
 {
 
+static bool mstdout=true;
 static ofstream log_file;
 static mutex mtx_log;
+
+void log_set_stdout(bool toggle_stdout)
+{
+mstdout=toggle_stdout;
+}
 
 void log_open_file(const string& filename)
 {
@@ -48,7 +54,11 @@ case LOG_MSG:
 case LOG_FAILURE:
 {
 log_file<<msg<<endl;
-//cout<<msg<<endl;
+if(mstdout)
+{
+cout<<msg<<endl;
+}
+break;
 }
 }
 }
@@ -60,11 +70,20 @@ string str=safe_format(except_format, filename, func_name, edesc);
 log_write(LOG_FAILURE, str);
 }
 
-void log_write_assert(const string& filename, const string& func_name, uint32 line, const string expression)
+void log_write_assert(const string& filename, const string& func_name, uint32 line, const string expression, const string& msg)
 {
-static string assert_format="Erro de assertion no arquivo {}\nFunção: {} Linha: {}.\nExpressão avaliada: {}.\n";
-string str=safe_format(assert_format, func_name, filename, line, expression);
-log_write(LOG_FAILURE, str);
+string final="";
+if(msg.size()==0)
+{
+string assert_format="Erro de assertion no arquivo {}\nFunção: {} Linha: {}.\nExpressão avaliada: {}\n";
+final=safe_format(assert_format, filename, func_name, line, expression);
+}
+else
+{
+string assert_format="Erro de assertion no arquivo {}\nFunção: {} Linha: {}.\nExpressão avaliada: {}\nMensagem de erro: \"{}\"";
+final=safe_format(assert_format, filename, func_name, line, expression, msg);
+}
+log_write(LOG_FAILURE, final);
 std::terminate();
 }
 }
