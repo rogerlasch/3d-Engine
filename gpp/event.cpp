@@ -3,7 +3,6 @@
 #include<string>
 #include"types.h"
 #include"debug.h"
-#include"profiler.h"
 #include"time.h"
 #include"packet.h"
 #include"event.h"
@@ -14,7 +13,6 @@ namespace gpp
 {
 Event::Event()
 {
-profiler_snap();
 pack=NULL;
 next=NULL;
 this->reset();
@@ -22,7 +20,6 @@ this->reset();
 
 Event::~Event()
 {
-profiler_snap();
 this->reset();
 }
 

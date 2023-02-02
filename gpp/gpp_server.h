@@ -17,7 +17,7 @@ SERVER_FINISHED
 };
 
 #define GPP_SERVER_DEFAULT_PORT 4000
-#define GPP_SERVER_DEFAULT_MAX_PLAYERS 100
+#define GPP_SERVER_DEFAULT_MAX_PLAYERS 10000
 
 
 class gpp_server : public EventQueue
@@ -52,6 +52,7 @@ virtual void processNetMessage(gpp_peer* peer, const std::string& msg);
 virtual void dispatchEvent(Event* ev);
 private:
 virtual void netCallBack(uint32 event, uint32 peer_id);
+virtual gpp_peer* createNewPeer();
 };
 }
 #endif

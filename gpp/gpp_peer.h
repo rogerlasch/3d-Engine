@@ -38,11 +38,11 @@ std::atomic<uint32> hstate;//estado da conexão...
 std::atomic<int64> onping;//Usado em solicitações ping...
 SafeFlags<uint32> pflags;
 int64 connection_time;//Timestamp da hora da conexão...
+std::string peer_name;
 gpp_networkinterface* hcon;//Objeto gerenciador de rede...
 mutable std::shared_mutex mtx_con;
-std::shared_ptr<PacketWaitable> hpack;//Usado para gerenciar os pacotes do tipo PACK_WAITABLE...
 public:
-gpp_peer(uint32 pflags, gpp_networkinterface* hcon);
+gpp_peer(gpp_networkinterface* hcon);
 gpp_peer(const gpp_peer& pr)=delete;
 gpp_peer& operator=(const gpp_peer& pr)=delete;
 virtual ~gpp_peer();
@@ -55,6 +55,8 @@ bool isDisconnected()const;
 bool isAlt()const;
 uint32 getPFlags()const;
 void setPFlags(uint32 pflags);
+std::string getPeerName()const;
+void setPeerName(const std::string& peer_name);
 uint32 getPeerId()const;
 void setPeerId(uint32 peer_id);
 uint32 getHState()const;
@@ -67,13 +69,9 @@ bool sendUnreliable(const std::string& data);
 bool sendReliable(const std::string& data);
 bool sendPacketUnreliable(uint32 type, uint32 flags, int64 timeout, const std::string& data);
 bool sendPacketReliable(uint32 type, uint32 flags, int64 timeout, const std::string& data);
-bool sendAndWait(uint32 type, const std::string& data, packet* result);
-bool sendAnswerSuccess(const std::string& data);
-bool sendAnswerError(const std::string& errormsg);
 bool disconnect();
 bool disconnectNow();
 void makePing();
-friend class gpp_server;
 };
 }
 #endif

@@ -12,13 +12,14 @@ private:
 uint16 port;
 std::string ipaddress;
 public:
-gpp_client(uint32 pflags, gpp_networkinterface* hcon);
+gpp_client(gpp_networkinterface* hcon);
 gpp_client(const gpp_client& hc)=delete;
 gpp_client& operator=(const gpp_client& hc)=delete;
 virtual ~gpp_client();
 uint16 getPort()const;
 std::string getIpAddress()const;
 virtual bool connect(const std::string& ipaddress, uint16 port);
+virtual bool altConnection();
 virtual void shutdown();
 virtual void run();
 virtual void update();

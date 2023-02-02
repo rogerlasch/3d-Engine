@@ -13,18 +13,15 @@
 #include<unordered_map>
 #include"types.h"
 #include"debug.h"
-#include"profiler.h"
 #include"time.h"
 #include"SafeFlags.h"
 #include"packet.h"
-#include"PacketWaitable.h"
 #include"event.h"
 #include"event.h"
 #include"EventQueue.h"
 #include"gpp_networkinterface.h"
 #include"gpp_peer.h"
 #include"gpp_server.h"
-#include"ScopedFunction.h"
 
 using namespace std;
 
@@ -99,6 +96,7 @@ this->max_players=max_players;
 this->hstate.store(SERVER_RUNNING);
 return true;
 }
+this->hstate.store(SERVER_DEFAULT);
 break;
 }
 }
@@ -176,6 +174,12 @@ _GASSERT_MSG(hcon!=NULL, "Nenhuma interface de rede definida!");
 hcon->onLoop();
 for(auto it=peers.begin(); it!=peers.end(); ++it)
 {
+int64 end_time=get_timestamp_ms();
+if((it->second->isAlt())||((end_time-it->second->getConnectionTime())>10000))
+{
+it->second->disconnectNow();
+continue;
+}
 vector<string> msgs;
 if(hcon->receiveMessages(it->first, msgs, 10)==0)
 {
@@ -217,17 +221,6 @@ peer->sendPacketReliable(PACKET_PONG, 0, 0, "");
 delete pack;
 break;
 }
-//O servidor recebeu um pacote waitable...
-case PACKET_WAITABLE:
-{
-peer->hpack->psend=pack;
-Event* ev=new Event();
-ev->type=GEVENT_RECEIVE;
-ev->peer_id=peer->getPeerId();
-ev->pack=pack;
-eventPost(ev);
-break;
-}
 //Caso seja um outro tipo de pacote, gere o evento e despache ele para a fila de eventos.
 default:
 {
@@ -255,7 +248,6 @@ break;
 case GEVENT_RECEIVE:
 {
 gpp_peer* ch=peers.at(ev->peer_id);
-ch->sendAnswerSuccess("Sua mensagem foi recebida com sucesso.");
 break;
 }
 }
@@ -267,7 +259,8 @@ switch(event)
 {
 case GEVENT_CONNECTED:
 {
-gpp_peer* p=new gpp_peer(PEER_CLIENT|PEER_SERVER, hcon);
+gpp_peer* p=createNewPeer();
+p->setPFlags(PEER_CLIENT|PEER_SERVER);
 p->setPeerId(peer_id);
 p->setHState(PEER_ALT);
 p->setConnectionTime(get_timestamp_ms());
@@ -288,5 +281,10 @@ eventPost(peer_id, GEVENT_DISCONNECTED);
 break;
 }
 }
+}
+
+gpp_peer* gpp_server::createNewPeer()
+{
+return new gpp_peer(hcon);
 }
 }

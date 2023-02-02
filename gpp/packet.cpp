@@ -14,6 +14,7 @@
 using namespace std;
 namespace gpp
 {
+atomic<uint32> packet::IdGenerator=0;
 packet::packet()
 {
 this->reset();
@@ -26,8 +27,8 @@ packet::packet(const packet& p)
 
 packet& packet::operator=(const packet& p)
 {
+this->id=p.id;
 this->type=p.type;
-this->subtype=p.subtype;
 this->errorcode=p.errorcode;
 this->flags=p.flags;
 this->timestamp=p.timestamp;
@@ -44,10 +45,10 @@ packet::~packet()
 
 void packet::reset()
 {
+id=0;
 type=PACKET_DEFAULT;
-subtype=PACKET_DEFAULT;
 flags=0;
-errorcode=PWAITABLE_DEFAULT;
+errorcode=0;
 timestamp=0;
 timeout=0;
 command="";
@@ -57,42 +58,12 @@ errormsg="";
 
 bool packet::isValid()const
 {
-switch(type)
-{
-case PACKET_WAITABLE:
-case PACKET_ANSWER_WAITABLE:
-{
-switch(subtype)
-{
-case PACKET_ALT:
-case PACKET_TYPED_COMMAND:
-case PACKET_GAME_COMMAND:
-case PACKET_SOUND:
-{
-return true;
-}
-default:
-{
-return false;
-}
-}
-break;
-}
-default:
-{
 return type>=PACKET_DEFAULT&&type<PACKET_LAST;
-}
-}
 }
 
 bool packet::hasTimeout()const
 {
 return timeout>0;
-}
-
-bool packet::isWaitable()const
-{
-return type==PACKET_WAITABLE;
 }
 
 string packet::serialize()
@@ -105,10 +76,6 @@ picojson::object obj;
 timestamp=get_timestamp_ms();
 obj["type"]=picojson::value(static_cast<int64>(type));
 obj["timestamp"]=picojson::value(timestamp);
-if((type==PACKET_WAITABLE)||(type==PACKET_ANSWER_WAITABLE))
-{
-obj["subtype"]=picojson::value(static_cast<int64>(subtype));
-}
 if(timeout>0)
 {
 obj["timeout"]=picojson::value(timeout);
@@ -117,7 +84,7 @@ if(flags>0)
 {
 obj["flags"]=picojson::value(static_cast<int64>(flags));
 }
-if(errorcode!=PWAITABLE_DEFAULT)
+if(errorcode!=0)
 {
 obj["errorcode"]=picojson::value(static_cast<int64>(errorcode));
 }
@@ -146,9 +113,9 @@ return false;
 }
 picojson::object obj=val.get<picojson::object>();
 this->type=((obj.count("type")>0) ? static_cast<uint32>(obj.at("type").get<int64>()) : PACKET_DEFAULT);
-this->subtype=((obj.count("subtype")>0) ? static_cast<uint32>(obj.at("subtype").get<int64>()) : PACKET_DEFAULT);
+this->id=((obj.count("id")>0) ? static_cast<uint32>(obj.at("id").get<int64>()) : 0);
 this->flags=((obj.count("flags")>0) ? static_cast<uint32>(obj.at("flags").get<int64>()) : 0);
-this->errorcode=((obj.count("errorcode")>0) ? static_cast<uint32>(obj.at("errorcode").get<int64>()) : PWAITABLE_DEFAULT);
+this->errorcode=((obj.count("errorcode")>0) ? static_cast<uint32>(obj.at("errorcode").get<int64>()) : 0);
 this->timestamp=((obj.count("timestamp")>0) ? obj.at("timestamp").get<int64>() : 0);
 this->timeout=((obj.count("timeout")>0) ? obj.at("timeout").get<int64>() : 0);
 this->command=((obj.count("command")>0) ? obj.at("command").get<string>() : "");
@@ -200,6 +167,7 @@ obj["altpassword"]=picojson::value(altpassword);
 obj["name"]=picojson::value(name);
 data=picojson::value(obj).serialize();
 }
+
 void packet::setCommand(const string& cmd, uint32 type)
 {
 switch(type)

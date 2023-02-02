@@ -3,6 +3,8 @@
 #define GPP_VALUE
 
 
+#include<string>
+#include<vector>
 namespace gpp
 {
 
@@ -51,7 +53,6 @@ gpp_value(uint64 val);
 gpp_value(float val);
 gpp_value(double val);
 gpp_value(bool val);
-gpp_value(const char* s);
 gpp_value(const std::string& s);
 gpp_value& operator=(const gpp_value& val);
 uint32 gettype()const;

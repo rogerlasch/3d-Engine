@@ -14,11 +14,9 @@
 #include<unordered_map>
 #include"types.h"
 #include"debug.h"
-#include"profiler.h"
 #include"time.h"
 #include"SafeFlags.h"
 #include"packet.h"
-#include"PacketWaitable.h"
 #include"event.h"
 #include"EventQueue.h"
 #include"gpp_networkinterface.h"
@@ -30,8 +28,8 @@ using namespace std;
 namespace gpp
 {
 
-gpp_client::gpp_client(uint32 pflags, gpp_networkinterface* hcon):
-gpp_peer(pflags, hcon), EventQueue()
+gpp_client::gpp_client(gpp_networkinterface* hcon):
+gpp_peer(hcon), EventQueue()
 {
 port=0;
 ipaddress="";
@@ -59,7 +57,6 @@ return this->ipaddress;
 bool gpp_client::connect(const string& address, uint16 port)
 {
 _GASSERT_MSG(hcon!=NULL, "A steamnetworkingsockets não foi iniciada!");
-profiler_snap();
 if((address.size()==0)||(port==0)||(this->getHState()!=PEER_DEFAULT))
 {
 return false;
@@ -71,10 +68,34 @@ if(sock>0)
 this->port=port;
 this->ipaddress=address;
 this->setPeerId(sock);
-hstate.store(PEER_CONNECTED);
+hstate.store(PEER_ALT);
+if(!altConnection())
+{
+this->shutdown();
+return false;
+}
 return true;
 }
 return false;
+}
+
+bool gpp_client::altConnection()
+{
+if(!this->isAlt())
+{
+return false;
+}
+if((!this->isBot())&&(!this->isRegularClient()))
+{
+return false;
+}
+uint32 ptype=((isBot()) ? PEER_BOT : PEER_REGULAR_CLIENT);
+string n=this->getPeerName();
+string key="default password";
+packet pack, result;
+pack.createAlt(ptype, n, key);
+setHState(PEER_CONNECTED);
+return true;
 }
 
 void gpp_client::shutdown()
@@ -110,7 +131,6 @@ this->setHState(PEER_DISCONNECTED);
 **/
 void gpp_client::run()
 {
-profiler_snap();
 while(hstate.load()==PEER_CONNECTED)
 {
 wait_ms(5);
@@ -130,7 +150,6 @@ pollEvents();
 void gpp_client::pollNet()
 {
 _GASSERT_MSG(hcon!=NULL, "A steamnetworkingsockets não foi iniciada!");
-profiler_snap();
 switch(getHState())
 {
 case PEER_ALT:
@@ -196,20 +215,6 @@ onping.store(0);
 delete pack;
 break;
 }
-//O cliente recebeu uma resposta!
-case PACKET_ANSWER_WAITABLE:
-{
-if((hpack->isWaiting())&&(hpack->isAnswer(pack)))
-{
-break;
-}
-else
-{
-_FLOG("O pacote de resposta chegou tarde de mais.");
-delete pack;
-}
-break;
-}
 //Caso seja um outro tipo de pacote, gere o evento e despache ele para a fila de eventos.
 default:
 {
@@ -229,7 +234,6 @@ break;
 **/
 void gpp_client::dispatchEvent(Event* ev)
 {
-profiler_snap();
 if(ev==NULL)
 {
 return;

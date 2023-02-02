@@ -88,12 +88,6 @@ type=gpp_type_bool;
 storage.bool_=val;
 }
 
-gpp_value::gpp_value(const char* s)
-{
-type=gpp_type_string;
-storage.string_=new string(((s==NULL) ? "" : s));
-}
-
 gpp_value::gpp_value(const string& s)
 {
 type=gpp_type_string;

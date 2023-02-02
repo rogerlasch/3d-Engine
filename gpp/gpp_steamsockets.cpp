@@ -39,7 +39,6 @@ hsteam=NULL;
 
  uint32 gpp_steamsockets::connectToServer(const string& address, uint16 port, GPPCONNECTIONCALLBACK hcall)
 {
-profiler_snap();
 if((address.size()==0)||(port==0))
 {
 return 0;
@@ -65,7 +64,6 @@ return sock;
 uint32 gpp_steamsockets::createListenSocket(uint16 port, GPPCONNECTIONCALLBACK hcall)
 {
 _GASSERT_MSG(hsteam!=NULL, "A isteamnetworkingsockets não foi inicializada!");
-profiler_snap();
 _GASSERT(hsteam!=NULL);
 SteamNetworkingIPAddr localAddress;
 localAddress.Clear();
@@ -84,14 +82,14 @@ return listensock;
 uint32 gpp_steamsockets::closeListenSocket(uint32 sock)
 {
 _GASSERT_MSG(hsteam!=NULL, "A isteamnetworkingsockets não foi inicializada!");
-profiler_snap();
+//profiler_snap();
 return ((hsteam->CloseListenSocket(sock)) ? 1 : 0);
 }
 
  uint32 gpp_steamsockets::sendReliable(uint32 peer_id, const GMESSAGE& msg)
 {
 _GASSERT_MSG(hsteam!=NULL, "A isteamnetworkingsockets não foi inicializada!");
-profiler_snap();
+//profiler_snap();
 _GASSERT(hsteam!=NULL);
 int32 res=hsteam->SendMessageToConnection(peer_id, msg.c_str(), msg.size(), k_nSteamNetworkingSend_Reliable, NULL);
 return res==k_EResultOK;
@@ -100,7 +98,7 @@ return res==k_EResultOK;
  uint32 gpp_steamsockets::sendUnreliable(uint32 peer_id, const GMESSAGE& msg)
 {
 _GASSERT_MSG(hsteam!=NULL, "A isteamnetworkingsockets não foi inicializada!");
-profiler_snap();
+//profiler_snap();
 _GASSERT(hsteam!=NULL);
 int32 res=hsteam->SendMessageToConnection(peer_id, msg.c_str(), msg.size(), k_nSteamNetworkingSend_Unreliable, NULL);
 return res==k_EResultOK;
@@ -109,7 +107,7 @@ return res==k_EResultOK;
  uint32 gpp_steamsockets::receiveMessage(uint32 peer_id, GMESSAGE& msg)
 {
 _GASSERT_MSG(hsteam!=NULL, "A isteamnetworkingsockets não foi inicializada!");
-profiler_snap();
+//profiler_snap();
 _GASSERT(hsteam!=NULL);
 SteamNetworkingMessage_t * msgs=NULL;
 int32 size=0;
@@ -125,7 +123,7 @@ return msg.size();
  uint32 gpp_steamsockets::receiveMessages(uint32 peer_id, GMESSAGELIST& msgs, uint32 n)
 {
 _GASSERT_MSG(hsteam!=NULL, "A isteamnetworkingsockets não foi inicializada!");
-profiler_snap();
+//profiler_snap();
 msgs.clear();
 msgs.reserve(n+1);
 int32 size=0;
@@ -145,7 +143,7 @@ return size;
  bool gpp_steamsockets::disconnectPeer(uint32 peer_id, uint32 gmode)
 {
 _GASSERT_MSG(hsteam!=NULL, "A isteamnetworkingsockets não foi inicializada!");
-profiler_snap();
+//profiler_snap();
 switch(gmode)
 {
 case GMODE_NOW:

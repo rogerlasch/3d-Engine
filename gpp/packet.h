@@ -16,26 +16,14 @@ PACKET_ALT,
 PACKET_TYPED_COMMAND,
 PACKET_GAME_COMMAND,
 PACKET_SOUND,
-PACKET_WAITABLE,
-PACKET_ANSWER_WAITABLE,
 PACKET_LAST
-};
-
-//Usado com pacotes waitable...
-enum PACKET_WAITABLE_STATUS
-{
-PWAITABLE_DEFAULT=0,//Não serializar isto...
-PWAITABLE_OK,//sucesso
-PWAITABLE_ERROR,//A resposta foi negativa. Verifique a mensagem de erro.
-PWAITABLE_TIMEOUT,//O Tempo de espera foi esgotado.
-PWAITABLE_UNKNOWN //Erro desconhecido!
 };
 
 class packet
 {
 public:
+uint32 id;
 uint32 type;
-uint32 subtype;
 uint32 errorcode;
 uint32 flags;
 int64 timestamp;
@@ -43,14 +31,17 @@ int64 timeout;
 std::string command;
 std::string data;
 std::string errormsg;
+private:
+static std::atomic<uint32> IdGenerator;
+public:
 packet();
 packet(const packet& p);
 packet& operator=(const packet& p);
 virtual ~packet();
 void reset();
+static uint32 generateId();
 bool isValid()const;
 bool hasTimeout()const;
-bool isWaitable()const;
 std::string serialize();
 bool deserialize(const std::string& str);
 void create(uint32 type, int64 timeout=0, uint32 flags=0);

@@ -24,6 +24,10 @@ chrono::system_clock::duration dtn=tp.time_since_epoch();
 return chrono::duration_cast<chrono::milliseconds>(dtn).count();
 }
 
+float gpp_nanoseconds_to_milliseconds(int64 ns)
+{
+return 0;
+}
 int64 get_timestamp_mcs()
 {
 chrono::system_clock::time_point tp=chrono::system_clock::now();
@@ -55,14 +59,14 @@ this_thread::sleep_for(chrono::nanoseconds(ns));
 
 uint32 random_uint32(uint32 rMin, uint32 rMax)
 {
-static mt19937 rd(get_timestamp_ms());
+static mt19937 rd(static_cast<uint32>(get_timestamp_ms()));
 static uniform_int_distribution<> distribution(rMin, rMax);
 return distribution(rd);
 }
 
 uint64 random_uint64(uint64 rMin, uint64 rMax)
 {
-static mt19937_64 rd(get_timestamp_ms());
+static mt19937_64 rd(static_cast<uint32>(get_timestamp_ms()));
 static uniform_int_distribution<> distribution(rMin, rMax);
 return distribution(rd);
 }
@@ -72,6 +76,6 @@ float random_float(float rmin, float rmax)
 random_device randdev;
 mt19937 generator(randdev());
 uniform_real_distribution<> distrib(rmin, rmax);
-return distrib(generator);
+return static_cast<float>(distrib(generator));
 }
 }
