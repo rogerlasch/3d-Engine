@@ -162,12 +162,14 @@ bool vector3d::isNull()const
 return x==0.0f&&y==0.0f&&z==0.0f;
 }
 
+//Calcula a magnitude do vetor, ou comprimento.
 float vector3d::length()const
 {
 //is the same formula as the distance
 return sqrt((this->x*this->x)+(this->y*this->y)+(this->z*this->z));
 }
 
+//Normaliza o vetor...
 void vector3d::normalize()
 {
 float len=this->length();
@@ -180,6 +182,7 @@ if(fabs(this->y)<GPP_VECTOR_TOLERANCE) this->y=0.0f;
 if(fabs(this->z)<GPP_VECTOR_TOLERANCE) this->z=0.0f;
 }
 
+//Inverte o vetor...
 void vector3d::reverse()
 {
 this->x=-this->x;
@@ -187,11 +190,13 @@ this->y=-this->y;
 this->z=-this->z;
 }
 
+//Inverte o vetor retornando um novo vetor.
 vector3d vector3d::reverse(const vector3d& v)
 {
 return vector3d(-v.x, -v.y, -v.z);
 }
 
+//recupera uma das 3 coordenadas possíveis...
 float vector3d::get(int axis)const
 {
 switch(axis)
@@ -259,6 +264,8 @@ this->y=y;
 this->z=z;
 }
 
+//Normaliza o vetor, versão estática.
+//Útil quando precisamos manter o original intácto.
 vector3d vector3d::normalize(const vector3d& v)
 {
 float len=v.length();
@@ -270,12 +277,14 @@ if(fabs(v2.z)<GPP_VECTOR_TOLERANCE) v2.z=0.0f;
 return v2;
 }
 
+//Calcula o produto entre 2 vetores...
 float vector3d::dotProduct(const vector3d& v1, const vector3d&  v2)
 {
 //just multiply everything and add.
 return ((v1.x*v2.x)+(v1.y*v2.y)+(v1.z*v2.z));
 }
 
+//Calcula o produto cruzado entre 2 vetores...
 vector3d vector3d::crozProduct(const vector3d& v1, const vector3d& v2)
 {
 vector3d v;
@@ -285,11 +294,13 @@ v.z= v1.x*v2.y - v1.y*v2.x;
 return v;
 }
 
+//Calcula o produto triplo entre 3 vetores...
 float vector3d::tripleProduct(const vector3d& v1, const vector3d& v2, const vector3d& v3)
 {
              return float( (v1.x * (v2.y*v3.z - v2.z*v3.y)) + (v1.y * (-v2.x*v3.z + v2.z*v3.x)) + (v1.z * (v2.x*v3.y - v2.y*v3.x)));
 }
 
+//Calcula o ângulo entre 2 vetores...
 float vector3d::angle_from(const vector3d&  v1, const vector3d&  v2)
 {
 float escalar=dotProduct(v1, v2);
@@ -299,6 +310,7 @@ angle=(angle*180)/GPP_PI;
 return angle;
 }
 
+//Calcula a distância entre 2 vetores...
 float vector3d::get_distance(const vector3d&  v1, const vector3d&  v2)
 {
 vector3d v(v1-v2);
@@ -309,6 +321,7 @@ float df=(v.x+v.y+v.z);
 return sqrt(df);
 }
 
+//Calcula a distância ao quadrado entre 2 vetores...
 float vector3d::get_squared_distance(const vector3d&  v1, const vector3d&  v2)
 {
 vector3d v(v1-v2);
@@ -335,6 +348,7 @@ return 0.0f;
 }
 return v;
 }
+
 //Functions
 
 ostream& operator<<(ostream& os, const vector3d& dv)
@@ -346,6 +360,7 @@ return os;
 }
 
 //overloads
+//Aqui existem outras sobrecargas para operações entre vetores, bem como operadores de subtração adição, e etc...
 
 vector3d operator+(const vector3d& v, float s)
 {
