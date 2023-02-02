@@ -295,9 +295,10 @@ return v;
 }
 
 //Calcula o produto triplo entre 3 vetores...
-float vector3d::tripleProduct(const vector3d& v1, const vector3d& v2, const vector3d& v3)
+float vector3d::tripleProduct(const vector3d& a, const vector3d& b, const vector3d& c)
 {
-             return float( (v1.x * (v2.y*v3.z - v2.z*v3.y)) + (v1.y * (-v2.x*v3.z + v2.z*v3.x)) + (v1.z * (v2.x*v3.y - v2.y*v3.x)));
+return a.x * (b.y * c.z - c.y * b.z) - a.y * (b.x * c.z - c.x * b.z) + a.z * (b.x * c.y - c.x * b.y);
+
 }
 
 //Calcula o ângulo entre 2 vetores...
