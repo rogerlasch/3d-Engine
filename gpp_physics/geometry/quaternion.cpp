@@ -1,5 +1,6 @@
 
 
+#include<sstream>
 #include"vector3d.h"
 #include"functions.h"
 #include"quaternion.h"
@@ -107,6 +108,18 @@ quaternion quaternion::conjugate()const
 return quaternion(n, -v.x, -v.y, -v.z);
 }
 
+quaternion& quaternion::normalize()
+{
+    float length = sqrt(n * n + v.x * v.x + v.y * v.y + v.z * v.z);
+    if (length > 0) {
+        n /= length;
+        v.x /= length;
+        v.y /= length;
+        v.z /= length;
+    }
+return *this;
+}
+
 float quaternion::getAngle()const
 {
 return (float)2*acos(n);
@@ -119,6 +132,12 @@ if(m<=GPP_VECTOR_TOLERANCE) return vector3d(0,0,0);
 return v/m;
 }
 
+string quaternion::toString() const 
+{
+    stringstream result;
+    result << n << " + " << v.x << "i + " << v.y << "j + " << v.z << "k";
+    return result.str();
+}
 
 
 //Overloads

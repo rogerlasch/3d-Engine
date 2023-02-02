@@ -36,10 +36,12 @@ vector3d getVector()const;
 float length();
 //Método de conjugar o quatérnion...
 quaternion conjugate()const;
+//Normaliza o quaternion...
+quaternion& normalize();
 //Retorna o ângulo que o quatérnion está representando...
 float getAngle()const;
 vector3d getAxis()const;
-
+std::string toString()const;
 };
 
 //Sobrecarga dos operadores do quatérnion...
