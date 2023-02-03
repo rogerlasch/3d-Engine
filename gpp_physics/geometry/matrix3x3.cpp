@@ -152,7 +152,7 @@ mt[i][i1]=n;
 }
 }
 
-void matrix3x3::identity()
+void matrix3x3::setIdentity()
 {
 fill(0.0f);
 mt[0][0]=1.0f;

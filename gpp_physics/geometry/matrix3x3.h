@@ -26,7 +26,7 @@ float determinant();
 matrix3x3 transpose();
 matrix3x3 inverse();
 void fill(float n);
-void identity();
+void setIdentity();
 friend inline void checkMatrix(matrix3x3* m);
 };
 

@@ -152,4 +152,32 @@ void RigidBody::setInverseInertiaTensor(const matrix3x3& mt) {inverseInertiaTens
 quaternion RigidBody::getOrientation()const { return orientation;}
 void RigidBody::setOrientation(const quaternion& q) { orientation=q;}
 
+
+//Funções extras...
+
+void initRigidBody(RigidBody* rb)
+{
+    rb->setMass(1.0f);
+    rb->setLinearDamping(0.0f);
+    rb->setAngularDamping(0.0f);
+
+    rb->setPosition(vector3d(0.0f, 0.0f, 0.0f));
+    rb->setLinearMomentum(vector3d(0.0f, 0.0f, 0.0f));
+    rb->setAngularMomentum(vector3d(0.0f, 0.0f, 0.0f));
+
+    rb->setLinearVelocity(vector3d(0.0f, 0.0f, 0.0f));
+    rb->setAngularVelocity(vector3d(0.0f, 0.0f, 0.0f));
+    rb->setLinearAcceleration(vector3d(0.0f, 0.0f, 0.0f));
+    rb->setAngularAcceleration(vector3d(0.0f, 0.0f, 0.0f));
+
+    rb->setForce(vector3d(0.0f, 0.0f, 0.0f));
+    rb->setTorque(vector3d(0.0f, 0.0f, 0.0f));
+
+    matrix3x3 identityMatrix;
+    identityMatrix.setIdentity();
+    rb->setInertiaTensor(identityMatrix);
+    rb->setInverseInertiaTensor(identityMatrix);
+
+    rb->setOrientation(quaternion(0.0f, 0.0f, 0.0f, 1.0f));
+}
 }

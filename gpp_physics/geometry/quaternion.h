@@ -14,12 +14,11 @@ namespace gpp
 class quaternion
 {
 public:
-//Escalar do quatérnion...
-float n;
-//Parte vetorial do quatérnion...
-vector3d v;
-quaternion(float n=0.0f, float x=0.0f, float y=0.0f, float z=0.0f);
-quaternion(float n, const vector3d& v);
+float x;
+float y;
+float z;
+float w;
+quaternion(float x=0.0f, float y=0.0f, float z=0.0f, float w=0.0f);
 quaternion(const quaternion& q);
 quaternion& operator=(const quaternion& q);
 quaternion& operator+=(float s);
@@ -29,16 +28,21 @@ quaternion& operator/=(float s);
 quaternion& operator+=(const quaternion& q);
 quaternion& operator-=(const quaternion& q);
 quaternion operator~()const;
-void setScalar(float n);
-float getScalar()const;
-void setVector(const vector3d& v);
-vector3d getVector()const;
+void setX(float x);
+float getX()const;
+void setY(float y);
+float getY()const;
+void setZ(float z);
+float getZ()const;
+void setW(float w);
+float getW()const;
 //Calcula o comprimento do quatérnion...
-float length();
+float length()const;
 //Método de conjugar o quatérnion...
 quaternion conjugate()const;
 //Normaliza o quaternion...
 quaternion& normalize();
+quaternion& setIdentity();
 //Retorna o ângulo que o quatérnion está representando...
 float getAngle()const;
 vector3d getAxis()const;

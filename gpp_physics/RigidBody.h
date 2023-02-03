@@ -103,5 +103,7 @@ void setOrientation(const quaternion& q);
 friend class BroadPhase;
 };
 typedef std::vector<RigidBody*> RigidBodyList;
+
+void initRigidBody(RigidBody* rb);
 }
 #endif
