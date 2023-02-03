@@ -62,26 +62,6 @@ return NULL;
 void gpp_world::update(float dt)
 {
 profiler_snap();
-for(auto& it : bodies)
-{
-if((it->containsBodyFlag(RB_STATIC))||(it->getMass()==0))
-{
-continue;
-}
-vector3d v;
-v=it->nextStep(dt);
-if(!v.isNull())
-{
-it->translate(v);
-}
-}
-BroadPhase bs;
-NarrowPhase ns;
-CollisionSolver cv;
-CollisionPairList BroadCollisions, NarrowCollisions;
-bs.scan(bodies, BroadCollisions);
-ns.scan(BroadCollisions, NarrowCollisions);
-cv.solve(NarrowCollisions);
 }
 
 string gpp_world::toString()const

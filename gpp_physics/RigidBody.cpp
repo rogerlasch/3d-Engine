@@ -13,9 +13,6 @@ AABB()
 {
 this->btype=btype;
 this->setIndex({0, 0});
-this->setVelocity({0.0f, 0.0f, 0.0f});
-this->setForse({0.0f, 0.0f, 0.0f});
-this->setMass(0.0f);
 this->setUserData(0);
 bflags.store(0);
 }
@@ -79,50 +76,6 @@ uint32 RigidBody::getUserData()const
 return this->userdata;
 }
 
-void RigidBody::setVelocity(const vector3d& velocity)
-{
-this->velocity=velocity;
-}
-
-vector3d RigidBody::getVelocity()const
-{
-return this->velocity;
-}
-
-void RigidBody::setForse(const vector3d& forse)
-{
-this->forse=forse;
-}
-
-vector3d RigidBody::getForse()const
-{
-return this->forse;
-}
-
-void RigidBody::setMass(float mass)
-{
-this->mass=mass;
-}
-
-float RigidBody::getMass()const
-{
-return this->mass;
-}
-
-vector3d RigidBody::nextStep(float dt)
-{
-if((dt<0.000001)||(mass<=0))
-{
-return vector3d();
-}
-vector3d v;
-vector3d acceleration((forse/mass));
-velocity+=(acceleration*dt);
-v=velocity*dt;
-return v;
-}
-
-
 string RigidBody::toString()
 {
 stringstream ss;
@@ -130,9 +83,6 @@ ss<<fixed;
 ss.precision(2);
 ss<<"Index: "<<index.toString()<<endl;
 ss<<"Nome: "<<this->getName()<<endl;
-ss<<"Velocity: "<<velocity.x<<" "<<velocity.y<<" "<<velocity.z<<endl;
-ss<<"Forse: "<<forse.x<<" "<<forse.y<<" "<<forse.z<<endl;
-ss<<"Mass: "<<mass<<endl;
 ss<<AABB::toString();
 return ss.str();
 }
@@ -167,4 +117,39 @@ bool RigidBody::isTransparent()const
 {
 return containsBodyFlag(RB_TRANSPARENT);
 }
+
+//geters e seters
+
+    // Getters e setters
+    float RigidBody::getMass() const { return mass; }
+    void RigidBody::setMass(float m) { mass = m; }
+    float RigidBody::getLinearDamping() const { return linearDamping; }
+    void RigidBody::setLinearDamping(float ld) { linearDamping = ld; }
+    float RigidBody::getAngularDamping() const { return angularDamping; }
+    void RigidBody::setAngularDamping(float ad) { angularDamping = ad; }
+    vector3d RigidBody::getPosition() const { return position; }
+    void RigidBody::setPosition(const vector3d &p) { position = p; }
+    vector3d RigidBody::getLinearMomentum() const { return linearMomentum; }
+    void RigidBody::setLinearMomentum(const vector3d &lm) { linearMomentum = lm; }
+    vector3d RigidBody::getAngularMomentum() const { return angularMomentum; }
+    void RigidBody::setAngularMomentum(const vector3d &am) { angularMomentum = am; }
+    vector3d RigidBody::getLinearVelocity() const { return linearVelocity; }
+    void RigidBody::setLinearVelocity(const vector3d &lv) { linearVelocity = lv; }
+    vector3d RigidBody::getAngularVelocity() const { return angularVelocity; }
+    void RigidBody::setAngularVelocity(const vector3d &av) { angularVelocity = av; }
+    vector3d RigidBody::getLinearAcceleration() const { return linearAcceleration; }
+    void RigidBody::setLinearAcceleration(const vector3d &la) { linearAcceleration = la; }
+    vector3d RigidBody::getAngularAcceleration() const { return angularAcceleration; }
+    void RigidBody::setAngularAcceleration(const vector3d &aa) { angularAcceleration = aa; }
+    vector3d RigidBody::getForce() const { return force; }
+    void RigidBody::setForce(const vector3d &f) { force = f; }
+    vector3d RigidBody::getTorque() const { return torque; }
+    void RigidBody::setTorque(const vector3d &t) { torque = t; }
+    matrix3x3 RigidBody::getInertiaTensor() const { return inertiaTensor; }
+    void RigidBody::setInertiaTensor(const matrix3x3 &it) { inertiaTensor = it; }
+    matrix3x3 RigidBody::getInverseInertiaTensor() const { return inverseInertiaTensor; }
+void RigidBody::setInverseInertiaTensor(const matrix3x3& mt) {inverseInertiaTensor=mt;}
+quaternion RigidBody::getOrientation()const { return orientation;}
+void RigidBody::setOrientation(const quaternion& q) { orientation=q;}
+
 }

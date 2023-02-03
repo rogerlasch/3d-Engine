@@ -25,3 +25,4 @@ release/
 debug/
 Release/
 debug/
+gpp_physics/*.txt

@@ -19,6 +19,7 @@ float n;
 //Parte vetorial do quatérnion...
 vector3d v;
 quaternion(float n=0.0f, float x=0.0f, float y=0.0f, float z=0.0f);
+quaternion(float n, const vector3d& v);
 quaternion(const quaternion& q);
 quaternion& operator=(const quaternion& q);
 quaternion& operator+=(float s);

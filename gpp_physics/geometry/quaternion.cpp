@@ -18,6 +18,12 @@ v.y=y;
 v.z=z;
 }
 
+quaternion::quaternion(float n, const vector3d& v)
+{
+this->n=n;
+this->v=v;
+}
+
 quaternion::quaternion(const quaternion& q)
 {
 *this=q;

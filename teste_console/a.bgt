@@ -1,7 +1,0 @@
-
-
-void main()
-{
-vector v(5, 7, 9);
-alert("info", v.length());
-}
