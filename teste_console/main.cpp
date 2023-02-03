@@ -6,40 +6,59 @@
 using namespace gpp;
 using namespace std;
 
-void printMT(int mt[3][3]);
-
+typedef vector<vector<int>> matrix;
+ostream& operator<<(ostream& os, const matrix& mt);
+void rotateMatrix(const quaternion& q, const matrix& mt, matrix& mt2);
 int main()
 {
     setlocale(LC_ALL, "Portuguese");
-cout<<fixed;
-    const float angle = -90.0f * (GPP_PI / 180.0f);
-    quaternion rotation = quaternion(1.0f, 0.0f, sin(angle / 2), cos(angle / 2));
-    int mt1[3][3] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
-    int mt2[3][3]={{0,0,0},{0,0,0},{0,0,0}};
-    printMT(mt1);
-    for (int i = 0; i < 3; i++)
-    {
-        for (int i1 = 0; i1 < 3; i1++)
-        {
-            vector3d v((float)i - 1, (float)i1 - 1, 0);
-            vector3d rf = quaternion_vector_rotate(rotation, v);
-            int x = floor(rf.x + 1.5f);
-            int y = floor(rf.y + 1.5f);
-                mt2[x][y] = mt1[i][i1];
-        }
-    }
-    printMT(mt2);
-    return 0;
+quaternion original=quaternion_from_euler_angles(0,0,90);
+quaternion q;
+q.setIdentity();
+matrix mt={{1,2,3}, {4,5,6}, {7,8,9}};
+matrix mt2;
+cout<<"Esta é a matriz original..."<<endl<<mt<<endl<<endl;
+cout<<"Mostrando a matriz girada por 90 graus para a esquerda..."<<endl;
+for(int i=0; i<4; i++)
+{
+cout<<"Mostrando a matriz girada por +90 graus a esquerda..."<<endl;
+q=q*original;
+rotateMatrix(q, mt, mt2);
+cout<<mt2<<endl;
+}
+cout<<"Teste finalizado!"<<endl;
+return 0;
 }
 
-void printMT(int mt[3][3])
+void rotateMatrix(const quaternion& q, const matrix& mt, matrix& mt2)
 {
-    for (int i = 0; i < 3; i++)
-    {
-        for (int i1 = 0; i1 < 3; i1++)
-        {
-            cout << mt[i][i1] << " ";
-        }
-        cout << endl;
-    }
+mt2.resize(mt.size());
+for(int i=0; i<mt.size(); i++)
+{
+mt2[i].resize(mt[i].size(), 0);
+}
+for(int i=0; i<mt.size(); i++)
+{
+for(int i1=0; i1<mt[i].size(); i1++)
+{
+vector3d v(i-1, i1-1);
+vector3d rf=quaternion_vector_rotate(q, v);
+int x=floor(rf.x+1.5);
+int y=floor(rf.y+1.5);
+mt2[x][y]=mt[i][i1];
+}
+}
+}
+
+ostream& operator<<(ostream& os, const matrix& mt)
+{
+for(auto& it : mt )
+{
+for(auto& it2 : it)
+{
+os<<it2<<" ";
+}
+os<<endl;
+}
+return os;
 }

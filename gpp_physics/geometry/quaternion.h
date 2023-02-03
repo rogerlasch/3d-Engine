@@ -21,6 +21,7 @@ float w;
 quaternion(float x=0.0f, float y=0.0f, float z=0.0f, float w=0.0f);
 quaternion(const quaternion& q);
 quaternion& operator=(const quaternion& q);
+bool operator==(const quaternion& q);
 quaternion& operator+=(float s);
 quaternion& operator-=(float s);
 quaternion& operator*=(float s);
@@ -50,6 +51,8 @@ std::string toString()const;
 };
 
 //Sobrecarga dos operadores do quatérnion...
+
+std::ostream& operator<<(std::ostream& os, const quaternion& q);
 quaternion operator+(const quaternion& q, float s);
 quaternion operator+(float s, const quaternion& q);
 quaternion operator-(const quaternion& q, float s);

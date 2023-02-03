@@ -32,6 +32,11 @@ this->w=q.w;
 return *this;
 }
 
+bool quaternion::operator==(const quaternion& q)
+{
+return this->w==q.w&&this->x==q.x&&this->y==q.y&&this->z==q.z;
+}
+
 quaternion& quaternion::operator+=(float s)
 {
 this->x+=s;
@@ -178,13 +183,18 @@ return vector3d(x/m, y/m, z/m);
 string quaternion::toString() const
 {
     stringstream result;
-    result << w << " + " << x << "i + " << y << "j + " << z << "k";
+result<<x<<":"<<y<<":"<<z<<":"<<w;
     return result.str();
 }
 
 
 //Overloads
 
+ostream& operator<<(ostream& os, const quaternion& q)
+{
+return os<<q.toString();
+return os;
+}
 quaternion operator+(const quaternion& q, float s)
 {
 return quaternion(q.x+s, q.y+s, q.z+s, q.w+s);
@@ -229,7 +239,7 @@ return quaternion(q.x/s, q.y/s, q.z/s, q.w/s);
 
 quaternion operator+(const quaternion& q1, const quaternion& q2)
 {
-return quaternion(q1.x+q2.y, q1.y+q2.y, q1.z+q2.z, q1.w+q2.w);
+return quaternion(q1.x+q2.x, q1.y+q2.y, q1.z+q2.z, q1.w+q2.w);
 }
 
 quaternion operator-(const quaternion& q1, const quaternion& q2)
@@ -297,9 +307,8 @@ quaternion quaternion_from_euler_angles(float x, float y, float z)
              double roll = degrees_to_radians(x);
              double pitch = degrees_to_radians(y);
              double yaw = degrees_to_radians(z);
-
-double  cyaw, cpitch, croll, syaw, spitch, sroll;
-double  cyawcpitch, syawspitch, cyawspitch, syawcpitch;
+double            cyaw, cpitch, croll, syaw, spitch, sroll;
+double            cyawcpitch, syawspitch, cyawspitch, syawcpitch;
 
 cyaw = cos(0.5f * yaw);
 cpitch = cos(0.5f * pitch);
@@ -322,32 +331,41 @@ q.w = (float) (cyawcpitch * croll + syawspitch * sroll);
 
 vector3d quaternion_extract_euler_angles(const quaternion& q)
 {
-             double r11, r21, r31, r32, r33, r12, r13;
-             double q00, q11, q22, q33;
-             double tmp;
-             vector3d u;
-             q00 = q.w * q.w;
-             q11 = q.x * q.x;
-             q22 = q.y * q.y;
-             q33 = q.z * q.z;
-             r11 = q00 + q11 - q22 - q33;
-             r21 = 2 * (q.x*q.y + q.w*q.z);
-             r31 = 2 * (q.x*q.z - q.w*q.y);
+             double r11, r21, r31, r32, r33, r12, r13=0.00;
+             double q00, q11, q22, q33=0.0;
+             double tmp=0.00;
+vector3d u;
+
+q00 = q.w * q.w;
+q11 = q.x * q.x;
+q22 = q.y * q.y;
+q33 = q.z * q.z;
+
+r11 = q00 + q11 - q22 - q33;
+r21 = 2 * (q.x*q.y + q.w*q.z);
+r31 = 2 * (q.x*q.z - q.w*q.y);
 r32 = 2 * (q.y*q.z + q.w*q.x);
 r33 = q00 - q11 - q22 + q33;
+
 tmp = fabs(r31);
 if(tmp > 0.999999)
 {
+
        r12 = 2 * (q.x*q.y - q.w*q.z);
        r13 = 2 * (q.x*q.z + q.w*q.y);
+
        u.x = radians_to_degrees(0.0f); //roll
        u.y = radians_to_degrees((float) (-(GPP_PI/2) * r31/tmp)); // pitch
        u.z = radians_to_degrees((float) atan2(-r12, -r31*r13)); // yaw
        return u;
 }
+
 u.x = radians_to_degrees((float) atan2(r32, r33)); // roll
+
 u.y = radians_to_degrees((float) asin(-r31));  // pitch
+
 u.z = radians_to_degrees((float) atan2(r21, r11)); // yaw
+
 return u;
 }
 }
