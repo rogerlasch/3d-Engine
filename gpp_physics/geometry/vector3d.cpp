@@ -22,11 +22,41 @@ vector3d::vector3d(const vector3d& dv)
 *this=dv;
 }
 
+float& vector3d::operator[](unsigned int axis)
+{
+switch(axis)
+{
+case 0:
+return this->x;
+case 1:
+return this->y;
+case 2:
+return this-> z;
+default:
+throw runtime_error("Invalid axis on vector3d");
+}
+}
+
+float vector3d::operator[](unsigned int axis)const
+{
+switch(axis)
+{
+case 0:
+return this->x;
+case 1:
+return this->y;
+case 2:
+return this-> z;
+default:
+throw runtime_error("Invalid axis on vector3d");
+}
+}
+
 vector3d& vector3d::operator=(const vector3d& dv)
 {
-this->x=dv.x;
-this->y=dv.y;
-this->z=dv.z;
+this->x=floatClean(dv.x);
+this->y=floatClean(dv.y);
+this->z=floatClean(dv.z);
 return *this;
 }
 
@@ -197,19 +227,6 @@ return vector3d(-v.x, -v.y, -v.z);
 }
 
 //recupera uma das 3 coordenadas possíveis...
-float vector3d::get(int axis)const
-{
-switch(axis)
-{
-case 0:
-return this->x;
-case 1:
-return this->y;
-case 2:
-return this-> z;
-}
-return -1;
-}
 
 float vector3d::get_x()const
 {

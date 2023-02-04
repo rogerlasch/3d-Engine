@@ -12,10 +12,10 @@ namespace gpp
 
 quaternion::quaternion(float x, float y, float z, float w)
 {
-this->x=x;
-this->y=y;
-this->z=z;
-this->w=w;
+this->x=vector3d::floatClean(x);
+this->y=vector3d::floatClean(y);
+this->z=vector3d::floatClean(z);
+this->w=vector3d::floatClean(w);
 }
 
 quaternion::quaternion(const quaternion& q)
@@ -25,10 +25,10 @@ quaternion::quaternion(const quaternion& q)
 
 quaternion& quaternion::operator=(const quaternion& q)
 {
-this->x=q.x;
-this->y=q.y;
-this->z=q.z;
-this->w=q.w;
+this->x=vector3d::floatClean(q.x);
+this->y=vector3d::floatClean(q.y);
+this->z=vector3d::floatClean(q.z);
+this->w=vector3d::floatClean(q.w);
 return *this;
 }
 
@@ -195,6 +195,7 @@ ostream& operator<<(ostream& os, const quaternion& q)
 return os<<q.toString();
 return os;
 }
+
 quaternion operator+(const quaternion& q, float s)
 {
 return quaternion(q.x+s, q.y+s, q.z+s, q.w+s);
@@ -303,7 +304,6 @@ return vector3d(t.x, t.y, t.z);
 
 quaternion quaternion_from_euler_angles(float x, float y, float z)
 {
-             quaternion q;
              double roll = degrees_to_radians(x);
              double pitch = degrees_to_radians(y);
              double yaw = degrees_to_radians(z);
@@ -322,11 +322,11 @@ syawspitch = syaw*spitch;
 cyawspitch = cyaw*spitch;
 syawcpitch = syaw*cpitch;
 
-q.x = (float) (cyawcpitch * sroll - syawspitch * croll);
-q.y = (float) (cyawspitch * croll + syawcpitch * sroll);
-q.z = (float) (syawcpitch * croll - cyawspitch * sroll);
-q.w = (float) (cyawcpitch * croll + syawspitch * sroll);
-             return q;
+float qx = (float) (cyawcpitch * sroll - syawspitch * croll);
+float qy = (float) (cyawspitch * croll + syawcpitch * sroll);
+float qz = (float) (syawcpitch * croll - cyawspitch * sroll);
+float qw = (float) (cyawcpitch * croll + syawspitch * sroll);
+             return quaternion(qx, qy, qz, qw);
 }
 
 vector3d quaternion_extract_euler_angles(const quaternion& q)

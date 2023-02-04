@@ -48,9 +48,6 @@
     <ClCompile Include="geometry\functions.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
-    <ClCompile Include="geometry\gpp_shape.cpp">
-      <Filter>Arquivos de Origem</Filter>
-    </ClCompile>
     <ClCompile Include="geometry\line3d.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
@@ -113,9 +110,6 @@
     <ClInclude Include="geometry\geometry.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
-    <ClInclude Include="geometry\gpp_shape.h">
-      <Filter>Arquivos de Cabeçalho</Filter>
-    </ClInclude>
     <ClInclude Include="geometry\line3d.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
@@ -138,6 +132,9 @@
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
     <ClInclude Include="gpp_physics.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="geometry\GeometricShape.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
   </ItemGroup>

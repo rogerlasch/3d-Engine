@@ -27,9 +27,13 @@ matrix3x3 transpose();
 matrix3x3 inverse();
 void fill(float n);
 void setIdentity();
+void setDiagonal(const vector3d& v);
+vector3d getDiagonal()const;
+std::string toString()const;
 friend inline void checkMatrix(matrix3x3* m);
 };
 
+std::ostream& operator<<(std::ostream& os, const matrix3x3& mt);
 matrix3x3 operator+(const matrix3x3& m, float s);
 matrix3x3 operator+(float s, const matrix3x3& m);
 matrix3x3 operator-(const matrix3x3& m, float s);

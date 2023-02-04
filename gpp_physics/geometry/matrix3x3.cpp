@@ -1,5 +1,6 @@
 
 
+#include<sstream>
 #include"vector3d.h"
 #include"matrix3x3.h"
 
@@ -14,7 +15,7 @@ if(m!=NULL)
 if(m->mt.size()!=3) m->mt.resize(3);
 for(int i=0; i<3; i++)
 {
-if(m->mt[i].size()!=3) m->mt[i].resize(3);
+if(m->mt[i].size()!=3) m->mt[i].resize(3, 0);
 }
 }
 }
@@ -160,7 +161,40 @@ mt[1][1]=1.0f;
 mt[2][2]=1.0f;
 }
 
+void matrix3x3::setDiagonal(const vector3d& v)
+{
+mt[0][0]=v.x;
+mt[1][1]=v.y;
+mt[2][2]=v.z;
+}
+
+vector3d matrix3x3::getDiagonal()const
+{
+return vector3d(mt[0][0], mt[1][1], mt[2][2]);
+}
+
+string matrix3x3::toString()const
+{
+stringstream ss;
+ss<<fixed;
+ss.precision(2);
+for(auto& it : mt)
+{
+for(auto& it2 : it)
+{
+ss<<it2<<" ";
+}
+ss<<endl;
+}
+return ss.str();
+}
+
 //Overloads...
+
+ostream& operator<<(ostream& os, const matrix3x3& mt)
+{
+return os<<mt.toString();
+}
 
 matrix3x3 operator+(const matrix3x3& m, float s)
 {

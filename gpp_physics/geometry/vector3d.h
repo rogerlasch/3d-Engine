@@ -35,6 +35,8 @@ vector3d(float x=0.0f, float y=0.0f, float z=0.0f);
 vector3d(const vector3d& dv);
 vector3d& operator=(const vector3d& dv);
 vector3d& operator=(const std::initializer_list<float>& points);
+float& operator[](unsigned int index);
+float operator[](unsigned int index)const;
 bool operator==(const vector3d& dv)const;
 bool operator==(const std::initializer_list<float>& dv)const;
 vector3d& operator+=(float escalar);
@@ -52,7 +54,6 @@ float length()const;
 void normalize();
 //Inverte as propriedades do vetor...
 void reverse();
-float get(int axis)const;
 float get_x()const;
 float get_y()const;
 float get_z()const;

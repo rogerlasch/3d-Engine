@@ -12,7 +12,7 @@
 #include"vector3d.h"
 #include"quaternion.h"
 #include"matrix3x3.h"
-#include"gpp_shape.h"
+#include"GeometricShape.h"
 #include"box3d.h"
 #include"line3d.h"
 #include"sphere3d.h"

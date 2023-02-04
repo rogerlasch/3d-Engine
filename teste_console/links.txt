@@ -1,0 +1,18 @@
+O que acha de todas essas classes. Que sugestões tem, e o que fazer a partir
+daqui com tudo isso?
+vector3d.h
+https://github.com/rogerlasch/3d_hobby/blob/main/gpp_physics/geometry/vector3d.h
+vector3d.cpp
+https://github.com/rogerlasch/3d_hobby/blob/main/gpp_physics/geometry/vector3d.cpp
+quaternion.h
+https://github.com/rogerlasch/3d_hobby/commit/2c11ed91db6a51a447e89b49f2f6b4e32b1c1296
+quaternion.cpp
+https://github.com/rogerlasch/3d_hobby/blob/main/gpp_physics/geometry/quaternion.cpp
+matrix3x3.h
+https://github.com/rogerlasch/3d_hobby/blob/main/gpp_physics/geometry/matrix3x3.h
+matrix3x3.cpp
+https://github.com/rogerlasch/3d_hobby/blob/main/gpp_physics/geometry/matrix3x3.cpp
+RigidBody.h
+https://github.com/rogerlasch/3d_hobby/blob/main/gpp_physics/RigidBody.h
+RigidBody.cpp
+https://github.com/rogerlasch/3d_hobby/blob/main/gpp_physics/RigidBody.cpp

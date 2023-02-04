@@ -11,8 +11,8 @@ void NarrowPhase::scan(const CollisionPairList& pairs, CollisionPairList& collis
 collisions.reserve(pairs.size());
 for(auto& it : pairs)
 {
-gpp_shape* s1=it.first->getShape();
-gpp_shape* s2=it.second->getShape();
+GeometricShape* s1=it.first->getShape();
+GeometricShape* s2=it.second->getShape();
 if(collision3d::isColliding(s1, s2))
 {
 collisions.push_back(it);

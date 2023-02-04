@@ -1,0 +1,49 @@
+Para um objeto esférico uniforme, o tensor de inércia é dado por: I = (2/5) * m * r^2 * I, onde m é a massa do objeto, r é o raio e I é a matriz identidade.
+•
+Para um objeto cilíndrico uniforme, o tensor de inércia é dado por: I = (1/2) * m * r^2 * I, onde m é a massa do objeto, r é o raio e I é a matriz identidade.
+•
+Para um objeto cubo uniforme, o tensor de inércia é dado por: I = (1/6) * m * s^2 * I, onde m é a massa do objeto, s é o lado do cubo e I é a matriz identidade.
+Estas são apenas algumas das formas mais comuns, e existem fórmulas mais complexas para formas mais específicas. É importante ter em mente que o cálculo do tensor de inércia é uma área avançada da física e pode ser complexo para algumas formas geométricas.
+
+void RigidBody::integrate(float deltaTime) {
+    position += velocity * deltaTime;
+    Quaternion qdot = 0.5f * Quaternion(0.0f, angularVelocity) * orientation;
+    orientation += qdot * deltaTime;
+    orientation.normalize();
+    Matrix3x3 skew = Matrix3x3::skewSymmetric(angularVelocity);
+    Matrix3x3 deltaRotation = Matrix3x3::identity() + skew * deltaTime;
+    inertiaTensor = deltaRotation * inertiaTensor * deltaRotation.transpose();
+    inverseInertiaTensor = deltaRotation * inverseInertiaTensor * deltaRotation.transpose();
+    velocity += force * (1.0f / mass) * deltaTime;
+    angularVelocity += inverseInertiaTensor * torque * deltaTime;
+    force = Vector3D();
+    torque = Vector3D();
+}
+void RigidBody::integrate(float deltaTime)
+{
+    // Atualiza a posição usando o linearMomentum
+    position += linearMomentum * (deltaTime / mass);
+
+    // Atualiza o linearMomentum com a força aplicada
+    linearMomentum += force * deltaTime;
+
+    // Aplica o amortecimento linear
+    linearMomentum *= pow(linearDamping, deltaTime);
+
+    // Atualiza a orientação usando o angularMomentum
+    orientation = orientation + 0.5f * deltaTime * (inverseInertiaTensor * angularMomentum);
+    orientation.normalize();
+
+    // Atualiza o angularMomentum com o torque aplicado
+    angularMomentum += torque * deltaTime;
+
+    // Aplica o amortecimento angular
+    angularMomentum *= pow(angularDamping, deltaTime);
+
+    // Atualiza a matriz de rotação
+    rotationMatrix = orientation.getRotationMatrix();
+
+    // Limpa as forças e torques
+    force = Vector3d();
+    torque = Vector3d();
+}

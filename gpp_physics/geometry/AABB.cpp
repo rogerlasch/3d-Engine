@@ -8,7 +8,7 @@ using namespace std;
 
 namespace gpp
 {
-AABB::AABB(const vector3d& min, const vector3d& max, gpp_shape* sh)
+AABB::AABB(const vector3d& min, const vector3d& max, GeometricShape* sh)
 {
 this->shape=NULL;
 this->min=min;
@@ -25,22 +25,7 @@ delete shape;
 shape=NULL;
 }
 
-float AABB::getVolume()const
-{
-vector3d v=(max-min);
-return ((v.x*v.y)*v.z);
-}
-
-void AABB::setShape(uint32 gtype)
-{
-gpp_shape* sh=shape_create_from_type(gtype);
-if(sh!=NULL)
-{
-this->setShape(sh);
-}
-}
-
-void AABB::setShape(gpp_shape* sh)
+void AABB::setShape(GeometricShape* sh)
 {
 if(this->shape!=NULL)
 {
@@ -50,7 +35,7 @@ this->shape=sh;
 this->recalculateBoundingBox();
 }
 
-gpp_shape* AABB::getShape()const
+GeometricShape* AABB::getShape()const
 {
 return this->shape;
 }
@@ -81,7 +66,7 @@ min+=v;
 max+=v;
 if(shape!=NULL)
 {
-shape->translate(v);
+shape->Translate(v);
 }
 }
 
@@ -90,18 +75,18 @@ void AABB::scale(float sk)
 max*=sk;
 if(shape!=NULL)
 {
-shape->scale(sk);
+shape->Scale(sk);
 }
 }
 
 void AABB::recalculateBoundingBox()
 {
-gpp_shape* sh=this->getShape();
+GeometricShape* sh=this->getShape();
 if(sh==NULL)
 {
 return;
 }
-switch(sh->getGType())
+switch(sh->GetGeometricType())
 {
 case GTYPE_SPHERE:
 {
@@ -117,12 +102,14 @@ min=b->min;
 max=(b->min+b->measures);
 break;
 }
+/*
 case GTYPE_CAPSULE:
 case GTYPE_CONE:
 case GTYPE_POLYHEDRON:
 {
 break;
 }
+*/
 case GTYPE_LINE:
 {
 line3d* l=(line3d*)sh;

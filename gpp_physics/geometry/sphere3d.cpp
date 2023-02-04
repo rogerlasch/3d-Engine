@@ -7,13 +7,14 @@ using namespace std;
 namespace gpp
 {
 sphere3d::sphere3d(const vector3d& center, float radius):
-gpp_shape(GTYPE_SPHERE)
+GeometricShape(GTYPE_SPHERE)
 {
 this->center=center;
 this->radius=radius;
 }
 
-sphere3d::sphere3d(const sphere3d& b)
+sphere3d::sphere3d(const sphere3d& b):
+GeometricShape(GTYPE_SPHERE)
 {
 *this=b;
 }
@@ -29,27 +30,56 @@ sphere3d:: ~sphere3d()
 {
 }
 
- float sphere3d::getVolume()
+ vector3d sphere3d::GetCenter()const
 {
-return (float(4)/float(3))*GPP_PI*radius*radius*radius;
+return center;
 }
 
- vector3d sphere3d::getCenter()
+   bool sphere3d::Contains(const vector3d& point) const
 {
-return this->center;
+float sqdist=vector3d::get_squared_distance(center, point);
+return sqdist<=(radius*radius);
 }
 
- void sphere3d::scale(float sk)
+   void sphere3d::Translate(const vector3d& translation)
 {
-this->radius*=sk;
+center+=translation;
 }
 
- void sphere3d::translate(const vector3d& v)
+   void sphere3d::Scale(float scale)
 {
-center+=v;
+radius/=scale;
 }
 
- void sphere3d::rotate(float angle, const vector3d& origin)
+ void sphere3d::Scale(const vector3d& scale)
 {
+}
+
+void sphere3d::Rotate(const quaternion& orientation)
+{
+vector3d origem=this->GetCenter();
+Translate(vector3d::reverse(origem));
+center=quaternion_vector_rotate(orientation, center);
+Translate(origem);
+}
+
+   vector3d sphere3d::ClosestPointOnSurface(const vector3d& point) const
+{
+vector3d direction=center-point;
+direction.normalize();
+return center+direction*radius;
+}
+
+   float sphere3d::Volume() const
+{
+return (4.0f / 3.0f) * GPP_PI * radius * radius * radius;
+}
+
+ matrix3x3 sphere3d::GetInertiaTensor(float mass)const
+{
+  float i = (2.0f/5.0f) * mass * radius * radius;
+  matrix3x3 inertiaTensor;
+  inertiaTensor.setDiagonal(vector3d(i,i,i));
+  return inertiaTensor;
 }
 }

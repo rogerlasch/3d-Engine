@@ -1,0 +1,20 @@
+class RigidBodyIntegratorVerlet
+{
+public:
+  RigidBodyIntegratorVerlet(float timeStep) : timeStep(timeStep) {}
+
+  void Integrate(RigidBody& body, float timeStep)
+  {
+    // Integrate linear velocity
+    body.position += body.linearVelocity * timeStep + 0.5f * body.linearAcceleration * timeStep * timeStep;
+    body.linearVelocity += body.linearAcceleration * timeStep;
+
+    // Integrate angular velocity
+    body.orientation = body.orientation + 0.5f * Quaternion(0, body.angularVelocity) * body.orientation * timeStep * timeStep;
+    body.orientation = body.orientation.Normalized();
+    body.angularVelocity += body.angularAcceleration * timeStep;
+  }
+
+private:
+  float timeStep;
+};
