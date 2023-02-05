@@ -11,7 +11,7 @@ class CollisionSolver
 {
 public:
 void solve(CollisionPairList& pairs);
-void solve(CollisionPairList& pairs, std::shared_mutex& m);
+void solve(RigidBody* r1, RigidBody* r2, CollisionData* data);
 };
 }
 #endif

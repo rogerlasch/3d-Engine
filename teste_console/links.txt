@@ -1,18 +1,39 @@
-O que acha de todas essas classes. Que sugestões tem, e o que fazer a partir
-daqui com tudo isso?
+
+Verifique estes códigos. O que você acha? Alguma sugestão de adição ou
+melhoria? tudo isto já foi testado e está funcionando bem.
 vector3d.h
 https://github.com/rogerlasch/3d_hobby/blob/main/gpp_physics/geometry/vector3d.h
 vector3d.cpp
 https://github.com/rogerlasch/3d_hobby/blob/main/gpp_physics/geometry/vector3d.cpp
 quaternion.h
-https://github.com/rogerlasch/3d_hobby/commit/2c11ed91db6a51a447e89b49f2f6b4e32b1c1296
+https://github.com/rogerlasch/3d_hobby/blob/main/gpp_physics/geometry/quaternion.h
 quaternion.cpp
 https://github.com/rogerlasch/3d_hobby/blob/main/gpp_physics/geometry/quaternion.cpp
 matrix3x3.h
 https://github.com/rogerlasch/3d_hobby/blob/main/gpp_physics/geometry/matrix3x3.h
 matrix3x3.cpp
 https://github.com/rogerlasch/3d_hobby/blob/main/gpp_physics/geometry/matrix3x3.cpp
+GeometricShape.h
+https://github.com/rogerlasch/3d_hobby/blob/main/gpp_physics/geometry/GeometricShape.h
+GeometricShape.cpp
+https://github.com/rogerlasch/3d_hobby/blob/main/gpp_physics/geometry/GeometricShape.cpp
+AABB.h
+https://github.com/rogerlasch/3d_hobby/blob/main/gpp_physics/geometry/AABB.h
+AABB.cpp
+https://github.com/rogerlasch/3d_hobby/blob/main/gpp_physics/geometry/AABB.cpp
 RigidBody.h
 https://github.com/rogerlasch/3d_hobby/blob/main/gpp_physics/RigidBody.h
 RigidBody.cpp
 https://github.com/rogerlasch/3d_hobby/blob/main/gpp_physics/RigidBody.cpp
+sphere3d.h
+https://github.com/rogerlasch/3d_hobby/blob/main/gpp_physics/geometry/sphere3d.h
+sphere3d.cpp
+https://github.com/rogerlasch/3d_hobby/blob/main/gpp_physics/geometry/sphere3d.cpp
+box3d.h
+https://github.com/rogerlasch/3d_hobby/blob/main/gpp_physics/geometry/box3d.h
+box3d.cpp
+https://github.com/rogerlasch/3d_hobby/blob/main/gpp_physics/geometry/box3d.cpp
+collision3d.h
+https://github.com/rogerlasch/3d_hobby/blob/main/gpp_physics/geometry/collision3d.h
+collision3d.cpp
+https://github.com/rogerlasch/3d_hobby/blob/main/gpp_physics/geometry/collision3d.cpp

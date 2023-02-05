@@ -1,6 +1,7 @@
 
 
 
+#include<sstream>
 #include<vector>
 #include<initializer_list>
 #include"vector3d.h"
@@ -113,6 +114,14 @@ return this->x==df[0]&&this->y==df[1]&&this->z==df[2];
 return false;
 }
 
+vector3d& vector3d::operator-()
+{
+this->x=floatClean(-x);
+this->y=floatClean(-y);
+this->z=floatClean(-z);
+return *this;
+}
+
 vector3d& vector3d::operator+=(float escalar)
 {
 this->x+=escalar;
@@ -195,29 +204,28 @@ return x==0.0f&&y==0.0f&&z==0.0f;
 //Calcula a magnitude do vetor, ou comprimento.
 float vector3d::length()const
 {
-//is the same formula as the distance
-return sqrt((this->x*this->x)+(this->y*this->y)+(this->z*this->z));
+return sqrt(x*x+y*y+z*z);
 }
 
 //Normaliza o vetor...
 void vector3d::normalize()
 {
 float len=this->length();
-if(len<=GPP_VECTOR_TOLERANCE) len=1.0f;
+if(len<=numeric_limits<float>::epsilon()) len=1.0f;
 this->x/=len;
 this->y/=len;
 this->z/=len;
-if(fabs(this->x)<GPP_VECTOR_TOLERANCE) this->x=0.0f;
-if(fabs(this->y)<GPP_VECTOR_TOLERANCE) this->y=0.0f;
-if(fabs(this->z)<GPP_VECTOR_TOLERANCE) this->z=0.0f;
+if(fabs(this->x)<numeric_limits<float>::epsilon()) this->x=0.0f;
+if(fabs(this->y)<numeric_limits<float>::epsilon()) this->y=0.0f;
+if(fabs(this->z)<numeric_limits<float>::epsilon()) this->z=0.0f;
 }
 
 //Inverte o vetor...
 void vector3d::reverse()
 {
-this->x=-this->x;
-this->y=-this->y;
-this->z=-this->z;
+this->x=floatClean(-this->x);
+this->y=floatClean(-this->y);
+this->z=floatClean(-this->z);
 }
 
 //Inverte o vetor retornando um novo vetor.
@@ -286,11 +294,11 @@ this->z=z;
 vector3d vector3d::normalize(const vector3d& v)
 {
 float len=v.length();
-if(len<=GPP_VECTOR_TOLERANCE) len=1.0f;
+if(len<=numeric_limits<float>::epsilon()) len=1.0f;
 vector3d v2(v.x/len, v.y/len, v.z/len);
-if(fabs(v2.x)<GPP_VECTOR_TOLERANCE) v2.x=0.0f;
-if(fabs(v2.y)<GPP_VECTOR_TOLERANCE) v2.y=0.0f;
-if(fabs(v2.z)<GPP_VECTOR_TOLERANCE) v2.z=0.0f;
+if(fabs(v2.x)<numeric_limits<float>::epsilon()) v2.x=0.0f;
+if(fabs(v2.y)<numeric_limits<float>::epsilon()) v2.y=0.0f;
+if(fabs(v2.z)<numeric_limits<float>::epsilon()) v2.z=0.0f;
 return v2;
 }
 
@@ -360,20 +368,26 @@ if(isinf(v))
 {
 return 0.0f;
 }
-if(v==-0)
+if(fabs(v)<numeric_limits<float>::epsilon())
 {
 return 0.0f;
 }
 return v;
 }
 
+string vector3d::toString()const
+{
+stringstream ss;
+ss<<fixed;
+ss<<x<<":"<<y<<":"<<z;
+return ss.str();
+}
+
 //Functions
 
 ostream& operator<<(ostream& os, const vector3d& dv)
 {
-os.precision(2);
-os<<fixed;
-os<<dv.x<<":"<<dv.y<<":"<<dv.z<<endl;
+os<<dv.toString();
 return os;
 }
 

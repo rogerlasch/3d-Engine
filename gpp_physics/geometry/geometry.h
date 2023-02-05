@@ -16,6 +16,7 @@
 #include"box3d.h"
 #include"line3d.h"
 #include"sphere3d.h"
+#include"CollisionData.h"
 #include"collision3d.h"
 #include"AABB.h"
 #include"aabbutil.h"

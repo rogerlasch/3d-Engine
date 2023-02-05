@@ -21,6 +21,7 @@
 #include"gpp_index.h"
 #include"IndexTable.h"
 #include"RigidBody.h"
+#include"IntegratorVerlet.h"
 #include"BinaryUtils.h"
 #include"octree.h"
 #include"BroadPhase.h"

@@ -8,16 +8,6 @@ namespace gpp
 {
 void NarrowPhase::scan(const CollisionPairList& pairs, CollisionPairList& collisions)
 {
-collisions.reserve(pairs.size());
-for(auto& it : pairs)
-{
-GeometricShape* s1=it.first->getShape();
-GeometricShape* s2=it.second->getShape();
-if(collision3d::isColliding(s1, s2))
-{
-collisions.push_back(it);
-}
-}
 }
 
 void NarrowPhase::scan(const CollisionPairList& pairs, CollisionPairList& collisions, shared_mutex& m)

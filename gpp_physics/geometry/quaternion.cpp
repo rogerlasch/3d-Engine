@@ -18,6 +18,15 @@ this->z=vector3d::floatClean(z);
 this->w=vector3d::floatClean(w);
 }
 
+
+quaternion::quaternion(float w, const vector3d& v)
+{
+this->x=vector3d::floatClean(v.x);
+this->y=vector3d::floatClean(v.y);
+this->z=vector3d::floatClean(v.z);
+this->w=vector3d::floatClean(w);
+}
+
 quaternion::quaternion(const quaternion& q)
 {
 *this=q;

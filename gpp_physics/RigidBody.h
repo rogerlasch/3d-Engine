@@ -32,6 +32,7 @@ uint32 userdata;
 float mass;//Maça do corpo
     float linearDamping;
     float angularDamping;
+float restitution;
 vector3d position;//Posição do corpo...
 vector3d linearMomentum;
 vector3d angularMomentum;
@@ -76,6 +77,8 @@ bool isTransparent()const;
     void setLinearDamping(float ld);
     float getAngularDamping()const;
     void setAngularDamping(float ad);
+float getRestitution()const;
+void setRestitution(float restitution);
     vector3d getPosition()const;
     void setPosition(const vector3d &p);
     vector3d getLinearMomentum()const;
@@ -101,9 +104,11 @@ void setInverseInertiaTensor(const matrix3x3& mt);
 quaternion getOrientation()const;
 void setOrientation(const quaternion& q);
 friend class BroadPhase;
+friend class IntegratorVerlet;
+friend class CollisionSolver;
 };
 typedef std::vector<RigidBody*> RigidBodyList;
 
-void initRigidBody(RigidBody* rb);
+void initRigidBody(RigidBody* rb, GeometricShape* sh, float mass=1.0f);
 }
 #endif

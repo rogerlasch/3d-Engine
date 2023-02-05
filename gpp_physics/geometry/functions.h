@@ -8,6 +8,7 @@ namespace gpp
 {
 
 class AABB;
+std::string floatToString(float n);
 float degrees_to_radians(float f);
 float radians_to_degrees(float r);
 float ClosestPtSegmentSegment(const vector3d& p1, const vector3d& q1, const vector3d& p2, const vector3d& q2,  float& s, float& t, vector3d& c1, vector3d& c2);

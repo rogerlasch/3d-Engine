@@ -35,7 +35,7 @@ this->shape=sh;
 this->recalculateBoundingBox();
 }
 
-GeometricShape* AABB::getShape()const
+GeometricShape* AABB::getGeometricShape()const
 {
 return this->shape;
 }
@@ -62,8 +62,8 @@ return this->max;
 
 void AABB::translate(const vector3d& v)
 {
-min+=v;
-max+=v;
+this->min+=v;
+this->max+=v;
 if(shape!=NULL)
 {
 shape->Translate(v);
@@ -81,7 +81,7 @@ shape->Scale(sk);
 
 void AABB::recalculateBoundingBox()
 {
-GeometricShape* sh=this->getShape();
+GeometricShape* sh=this->getGeometricShape();
 if(sh==NULL)
 {
 return;

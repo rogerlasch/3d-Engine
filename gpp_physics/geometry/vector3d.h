@@ -39,6 +39,7 @@ float& operator[](unsigned int index);
 float operator[](unsigned int index)const;
 bool operator==(const vector3d& dv)const;
 bool operator==(const std::initializer_list<float>& dv)const;
+vector3d& operator-();
 vector3d& operator+=(float escalar);
 vector3d& operator-=(float escalar);
 vector3d& operator*=(float escalar);
@@ -83,6 +84,7 @@ static float get_distance(const vector3d& v1, const vector3d& v2);
 static float get_squared_distance(const vector3d& v1, const vector3d& v2);
 //Limpa um float convertendo nan e inf em 0.
 static float floatClean(float v);
+std::string toString()const;
 };
 
 //Sobrecarga de operadores

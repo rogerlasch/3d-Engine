@@ -18,7 +18,7 @@ AABB(const AABB& ab)=delete;
 AABB& operator=(const AABB& ab)=delete;
 virtual ~AABB();
 void setShape(GeometricShape* sh);
-GeometricShape* getShape()const;
+GeometricShape* getGeometricShape()const;
 void setMin(const vector3d& m);
 vector3d getMin()const;
 void setMax(const vector3d& m);

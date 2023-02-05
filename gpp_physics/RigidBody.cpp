@@ -84,6 +84,21 @@ ss.precision(2);
 ss<<"Index: "<<index.toString()<<endl;
 ss<<"Nome: "<<this->getName()<<endl;
 ss<<AABB::toString();
+ss<< "Mass: "<<mass<<endl;//Maça do corpo
+    ss<< "linearDamping: "<<linearDamping<<endl;
+    ss<< "angularDamping: "<<angularDamping<<endl;
+ss<< "position: "<<position<<endl;//Posição do corpo...
+ss<< "linearMomentum: "<<linearMomentum<<endl;
+ss<< "angularMomentum: "<<angularMomentum<<endl;
+ss<< "linearVelocity: "<<linearVelocity<<endl;
+ss<< "angularVelocity: "<<angularVelocity<<endl;
+ss<< "linearAcceleration: "<<linearAcceleration<<endl;
+ss<< "angularAcceleration: "<<angularAcceleration<<endl;
+    ss<< "força: "<<force<<endl;
+    ss<< "torque: "<<torque<<endl;
+ss<< "inertiaTensor: "<<inertiaTensor<<endl;
+ss<< "inverseInertiaTensor: "<<inverseInertiaTensor<<endl;
+ss<< "orientation: "<<orientation<<endl;
 return ss.str();
 }
 
@@ -127,6 +142,8 @@ return containsBodyFlag(RB_TRANSPARENT);
     void RigidBody::setLinearDamping(float ld) { linearDamping = ld; }
     float RigidBody::getAngularDamping() const { return angularDamping; }
     void RigidBody::setAngularDamping(float ad) { angularDamping = ad; }
+float RigidBody::getRestitution()const{return restitution;}
+void RigidBody::setRestitution(float restitution){this->restitution=restitution;}
     vector3d RigidBody::getPosition() const { return position; }
     void RigidBody::setPosition(const vector3d &p) { position = p; }
     vector3d RigidBody::getLinearMomentum() const { return linearMomentum; }
@@ -155,11 +172,12 @@ void RigidBody::setOrientation(const quaternion& q) { orientation=q;}
 
 //Funções extras...
 
-void initRigidBody(RigidBody* rb)
+void initRigidBody(RigidBody* rb, GeometricShape* sh, float mass)
 {
-    rb->setMass(1.0f);
+    rb->setMass(mass);
     rb->setLinearDamping(0.0f);
     rb->setAngularDamping(0.0f);
+rb->setRestitution(0.25f);
 
     rb->setPosition(vector3d(0.0f, 0.0f, 0.0f));
     rb->setLinearMomentum(vector3d(0.0f, 0.0f, 0.0f));
@@ -173,11 +191,20 @@ void initRigidBody(RigidBody* rb)
     rb->setForce(vector3d(0.0f, 0.0f, 0.0f));
     rb->setTorque(vector3d(0.0f, 0.0f, 0.0f));
 
+rb->setShape(sh);
+if(sh==NULL)
+{
     matrix3x3 identityMatrix;
-    identityMatrix.setIdentity();
+    identityMatrix.Identity();
     rb->setInertiaTensor(identityMatrix);
     rb->setInverseInertiaTensor(identityMatrix);
-
+}
+else
+{
+matrix3x3 mt=sh->GetInertiaTensor(rb->getMass());
+rb->setInertiaTensor(mt);
+rb->setInverseInertiaTensor(mt.Inverse());
+}
     rb->setOrientation(quaternion(0.0f, 0.0f, 0.0f, 1.0f));
 }
 }

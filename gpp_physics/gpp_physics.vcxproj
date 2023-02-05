@@ -25,6 +25,7 @@
     <ClCompile Include="geometry\aabbutil.cpp" />
     <ClCompile Include="geometry\box3d.cpp" />
     <ClCompile Include="geometry\collision3d.cpp" />
+    <ClCompile Include="geometry\CollisionData.cpp" />
     <ClCompile Include="geometry\functions.cpp" />
     <ClCompile Include="geometry\line3d.cpp" />
     <ClCompile Include="geometry\matrix3x3.cpp" />
@@ -33,6 +34,7 @@
     <ClCompile Include="geometry\vector3d.cpp" />
     <ClCompile Include="gpp_index.cpp" />
     <ClCompile Include="gpp_world.cpp" />
+    <ClCompile Include="IntegratorVerlet.cpp" />
     <ClCompile Include="NarrowPhase.cpp" />
     <ClCompile Include="octree.cpp" />
     <ClCompile Include="RigidBody.cpp" />
@@ -45,6 +47,7 @@
     <ClInclude Include="geometry\aabbutil.h" />
     <ClInclude Include="geometry\box3d.h" />
     <ClInclude Include="geometry\collision3d.h" />
+    <ClInclude Include="geometry\CollisionData.h" />
     <ClInclude Include="geometry\functions.h" />
     <ClInclude Include="geometry\GeometricShape.h" />
     <ClInclude Include="geometry\geometry.h" />
@@ -57,6 +60,7 @@
     <ClInclude Include="gpp_physics.h" />
     <ClInclude Include="gpp_world.h" />
     <ClInclude Include="IndexTable.h" />
+    <ClInclude Include="IntegratorVerlet.h" />
     <ClInclude Include="NarrowPhase.h" />
     <ClInclude Include="octree.h" />
     <ClInclude Include="RigidBody.h" />
