@@ -1,0 +1,3 @@
+Esta pasta cerve apenas para exemplos gráficos de testes. Existe uma classe de
+janela que será usada em todos os exemplos para simplificar a criação e o
+gerenciamento da mesma.

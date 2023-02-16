@@ -2,7 +2,7 @@
 
 void main()
 {
-string [] folders={"gpp", "world"};
+string [] folders={"gpp", "gpp_physics", "gpp_physics\\geometry"};
 uint final=0;
 uint arquivos=0;
 for(uint i=0; i<folders.length; i++)
