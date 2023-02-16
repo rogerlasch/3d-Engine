@@ -1,5 +1,8 @@
 
-
+/**
+*Classe que representa uma linha.
+*Uma linha é formada pelo ponto inicial, e o ponto final.
+**/
 #ifndef LINE3D_H
 #define LINE3D_H
 

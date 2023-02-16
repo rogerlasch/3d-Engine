@@ -1,6 +1,10 @@
 
 
-
+/**
+*Esta classe representa um corpo em nossa simulação.
+*Um corpo tem forma, velocidades, forças e maça.
+*Caso o corpo não tenha maça, ele será considerado um corpo estático, que não se move. Ele será necessário para modelar o chão, terrenos, e paredes.
+**/
 #ifndef RIGIDBODY_H
 #define RIGIDBODY_H
 
@@ -30,6 +34,7 @@ protected:
 uint32 btype;
 uint32 userdata;
 float mass;//Maça do corpo
+float inverseMass;
     float linearDamping;
     float angularDamping;
 float restitution;
@@ -73,6 +78,8 @@ bool isTransparent()const;
     // Getters e setters
     float getMass()const;
     void setMass(float m);
+float getInverseMass()const;
+void setInverseMass(float inv);
     float getLinearDamping()const;
     void setLinearDamping(float ld);
     float getAngularDamping()const;

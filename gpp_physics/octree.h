@@ -1,6 +1,9 @@
 
 
-
+/**
+*Uma implementação básica de uma octhree.
+*No momento ela não está sendo utilizada, mas talvez seja futuramente.
+**/
 #ifndef OCTREE_H
 #define OCTREE_H
 

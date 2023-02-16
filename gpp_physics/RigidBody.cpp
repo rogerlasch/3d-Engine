@@ -85,8 +85,10 @@ ss<<"Index: "<<index.toString()<<endl;
 ss<<"Nome: "<<this->getName()<<endl;
 ss<<AABB::toString();
 ss<< "Mass: "<<mass<<endl;//Maça do corpo
+ss<< "inverseMass: "<<inverseMass<<endl;//Maça do corpo
     ss<< "linearDamping: "<<linearDamping<<endl;
     ss<< "angularDamping: "<<angularDamping<<endl;
+ss<<"Restitution: "<<restitution<<endl;
 ss<< "position: "<<position<<endl;//Posição do corpo...
 ss<< "linearMomentum: "<<linearMomentum<<endl;
 ss<< "angularMomentum: "<<angularMomentum<<endl;
@@ -138,6 +140,8 @@ return containsBodyFlag(RB_TRANSPARENT);
     // Getters e setters
     float RigidBody::getMass() const { return mass; }
     void RigidBody::setMass(float m) { mass = m; }
+    float RigidBody::getInverseMass() const { return inverseMass; }
+    void RigidBody::setInverseMass(float inv) { inverseMass = inv; }
     float RigidBody::getLinearDamping() const { return linearDamping; }
     void RigidBody::setLinearDamping(float ld) { linearDamping = ld; }
     float RigidBody::getAngularDamping() const { return angularDamping; }
@@ -175,6 +179,7 @@ void RigidBody::setOrientation(const quaternion& q) { orientation=q;}
 void initRigidBody(RigidBody* rb, GeometricShape* sh, float mass)
 {
     rb->setMass(mass);
+rb->setInverseMass(((mass>0) ? 1/mass : 0.0f));
     rb->setLinearDamping(0.0f);
     rb->setAngularDamping(0.0f);
 rb->setRestitution(0.25f);

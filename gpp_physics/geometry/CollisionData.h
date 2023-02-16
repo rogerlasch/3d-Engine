@@ -1,5 +1,7 @@
 
-
+/**
+*Classe para armazenar informações sobre uma colisão...
+**/
 #ifndef COLLISIONDATA_H
 #define COLLISIONDATA_H
 
@@ -17,6 +19,7 @@ CollisionData(const CollisionData& c);
 CollisionData& operator=(const CollisionData& c);
 virtual ~CollisionData()=default;
 void reset();
+std::string toString()const;
 };
 }
 #endif

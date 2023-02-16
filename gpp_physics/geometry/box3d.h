@@ -1,5 +1,8 @@
 
-
+/**
+*Classe que representa uma caixa, ou cubo...
+*Muito semelhante ao AABB.
+**/
 #ifndef BOX3D_H
 #define BOX3D_H
 

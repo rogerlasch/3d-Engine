@@ -1,5 +1,7 @@
 
-
+/**
+*Interface que define nossa geometria básica.
+**/
 
 #ifndef GEOMETRICSHAPE_H
 #define GEOMETRICSHAPE_H

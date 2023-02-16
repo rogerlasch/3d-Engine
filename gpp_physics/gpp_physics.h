@@ -1,6 +1,8 @@
 
 
-
+/**
+*Header principal que inclui todos os arquivos da biblioteca.
+**/
 #ifndef GPP_PHYSICS_H
 #define GPP_PHYSICS_H
 

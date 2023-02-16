@@ -13,42 +13,53 @@ void CollisionSolver::solve(RigidBody* r1, RigidBody* r2, CollisionData* data)
         return; // ambos são estáticos, não há nada a fazer
 
     vector3d normal = data->normal;
-    float depth = ((data->depth==0) ? 1 : data->depth);;
-    vector3d contact_point = data->point;
+    float depth = ((data->depth<=0.1f) ? 0.0f : data->depth);
+    vector3d contactPoint = data->point;
 
+    // Calcular a velocidade relativa entre os corpos rígidos
+    vector3d relativeVelocity = r2->linearVelocity + vector3d::crozProduct(r2->angularVelocity, contactPoint - r2->position) -
+                                r1->linearVelocity - vector3d::crozProduct(r1->angularVelocity, contactPoint - r1->position);
+
+    // Calcular a direção e magnitude do impulso
+    float impulseMagnitude = (-(1 + r1->restitution) * vector3d::dotProduct(relativeVelocity, normal)) /
+                            (r1->inverseMass + r2->inverseMass +
+                             vector3d::dotProduct(normal, vector3d::crozProduct(r1->inverseInertiaTensor *
+                                                 vector3d::crozProduct(contactPoint - r1->position, normal),
+                                                 contactPoint - r1->position) +
+                                                 vector3d::crozProduct(r2->inverseInertiaTensor *
+                                                 vector3d::crozProduct(contactPoint - r2->position, normal),
+                                                 contactPoint - r2->position)));
+    vector3d impulse = impulseMagnitude * normal;
+    // Calcular o momento linear
+    vector3d momentum = vector3d::crozProduct(contactPoint - r1->position, impulse);
+
+// Calcular o torque
+vector3d torque1 = vector3d::crozProduct(contactPoint - r1->position, normal * impulseMagnitude);
+vector3d torque2 = vector3d::crozProduct(contactPoint - r2->position, normal * impulseMagnitude);
+
+    // Atualizar o momento linear dos corpos rígidos
+    r1->linearMomentum -= impulse;
+    r1->angularMomentum -= momentum;
+r1->angularMomentum -= torque1;
+    r2->linearMomentum += impulse;
+    r2->angularMomentum += momentum;
+r2->angularMomentum += torque2;
     // correção de penetração
-    vector3d correction = normal * depth / (r1->mass + r2->mass);
+if(depth>0)
+{
+_FLOG("Depth: {}", depth);
+    vector3d correction = normal * depth / (r1->inverseMass + r2->inverseMass);
     if (r1->mass > 0)
     {
-        r1->position -= correction * r1->mass;
-        r1->translate(-correction * r1->mass);
+_FLOG("Correction: {}", correction.toString());
+        r1->position -= correction * r1->inverseMass;
+        r1->translate(-(correction * r1->inverseMass));
     }
     if (r2->mass > 0)
     {
-        r2->position += correction * r2->mass;
-        r2->translate(correction * r2->mass);
-    }
-
-    // cálculo da velocidade relativa
-    vector3d relative_velocity = r2->linearVelocity - r1->linearVelocity;
-    float velocity_along_normal = vector3d::dotProduct(relative_velocity, normal);
-
-    // se a velocidade relativa já é menor que zero, então eles já estão se afastando
-    if (velocity_along_normal < 0)
-        return;
-
-    // cálculo do coeficiente de restituição
-    float restitution = std::min(r1->restitution, r2->restitution);
-
-    // cálculo da força de impacto
-    float impulse_scalar = (1 + restitution) * velocity_along_normal;
-    impulse_scalar /= r1->mass + r2->mass;
-
-    // aplicação da força de impacto
-    vector3d impulse = normal * impulse_scalar;
-    if (r1->mass > 0)
-        r1->linearVelocity -= impulse * r1->mass;
-    if (r2->mass > 0)
-        r2->linearVelocity += impulse * r2->mass;
+        r2->position += correction * r2->inverseMass;
+        r2->translate(correction * r2->inverseMass);
+}
+}
 }
 }

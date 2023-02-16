@@ -1,5 +1,8 @@
 
-
+/**
+*Classe que implementa diversos métodos de colisão entre geometrias.
+*No momento, apenas colisão entre esferas, caixas e linhas.
+**/
 #ifndef COLLISION3D_H
 #define COLLISION3D_H
 

@@ -58,7 +58,7 @@ radius/=scale;
 void sphere3d::Rotate(const quaternion& orientation)
 {
 vector3d origem=this->GetCenter();
-Translate(vector3d::reverse(origem));
+Translate(vector3d::inverse(origem));
 center=quaternion_vector_rotate(orientation, center);
 Translate(origem);
 }

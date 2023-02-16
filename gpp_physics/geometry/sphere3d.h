@@ -1,5 +1,8 @@
 
-
+/**
+*Classe que representa uma esfera.
+*Uma esfera é formada  por um ponto central, e um raio.
+**/
 #ifndef SPHERE3D_H
 #define SPHERE3D_H
 

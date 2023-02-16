@@ -1,5 +1,9 @@
 
 
+/**
+*Classe que representa um vetor 3d com os componentes x, y e z.
+*Também tem sobrecargas para muitas operações.
+**/
 #ifndef VECTOR3D_H
 #define VECTOR3D_H
 
@@ -52,9 +56,9 @@ bool isNull()const;
 //Calcula o comprimento, ou maguinitude do vetor...
 float length()const;
 //Normaliza o vetor...
-void normalize();
+vector3d& normalize();
 //Inverte as propriedades do vetor...
-void reverse();
+vector3d& inverse();
 float get_x()const;
 float get_y()const;
 float get_z()const;
@@ -69,7 +73,7 @@ void set_xyz(float x, float y, float z);
 //Retorna um novo vetor normalizado, mantendo as propriedades originais intactas.
 static vector3d normalize(const vector3d& v);
 //Retorna o vetor inverso mantendo as propriedades originais.
-static vector3d reverse(const vector3d& v);
+static vector3d inverse(const vector3d& v);
 //Calcula o produto escalar de 2 vetores...
 static float dotProduct(const vector3d& v1, const vector3d& v2);
 //Calcula o produto vetorial, ou o produto cruzado de 2 vetores...

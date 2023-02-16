@@ -1,5 +1,9 @@
 
-
+/**
+*Classe para lidar com corpos rígidos.
+*Principalmente busca, e inserção de elementos em arrays usando o algoritmo de busca binária.
+*Os métodos que levam um parãmetro do tipo shared_mutex, são para uso em multithreading.
+**/
 #ifndef BINARYUTILS_H
 #define BINARYUTILS_H
 

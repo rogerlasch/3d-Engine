@@ -208,7 +208,7 @@ return sqrt(x*x+y*y+z*z);
 }
 
 //Normaliza o vetor...
-void vector3d::normalize()
+vector3d& vector3d::normalize()
 {
 float len=this->length();
 if(len<=numeric_limits<float>::epsilon()) len=1.0f;
@@ -218,18 +218,20 @@ this->z/=len;
 if(fabs(this->x)<numeric_limits<float>::epsilon()) this->x=0.0f;
 if(fabs(this->y)<numeric_limits<float>::epsilon()) this->y=0.0f;
 if(fabs(this->z)<numeric_limits<float>::epsilon()) this->z=0.0f;
+return *this;
 }
 
 //Inverte o vetor...
-void vector3d::reverse()
+vector3d& vector3d::inverse()
 {
 this->x=floatClean(-this->x);
 this->y=floatClean(-this->y);
 this->z=floatClean(-this->z);
+return *this;
 }
 
 //Inverte o vetor retornando um novo vetor.
-vector3d vector3d::reverse(const vector3d& v)
+vector3d vector3d::inverse(const vector3d& v)
 {
 return vector3d(-v.x, -v.y, -v.z);
 }
@@ -378,7 +380,6 @@ return v;
 string vector3d::toString()const
 {
 stringstream ss;
-ss<<fixed;
 ss<<x<<":"<<y<<":"<<z;
 return ss.str();
 }

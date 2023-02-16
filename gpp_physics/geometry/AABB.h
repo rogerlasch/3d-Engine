@@ -1,5 +1,14 @@
 
-
+/**
+*Classe que representa um AABB (Aligned AXIS Bounding Box)
+*Um AABB é uma caixa que envolve completamente uma forma geométrica mais complexa.
+*Por exemplo, imagine uma esfera dentro de uma caixa quadrada. Este tipo de estrutura é utilizado para fazer uma primeira varredura barata de colisão.
+*Um poliedro de N vértices é muito caro para ser testado toda vez contra uma esfera a cada quadro da simulação.
+*Então, para evitarmos isto, "encaixotamos" o poliedro dentro de uma caixa e a
+*esfera também, e caso as duas caixas estejam se sobrepondo, então o teste mais caro de detecção de colisão entre esfera e poliedro é executado.
+*Um teste caixa contra caixa é muito barato computacionalmente e também muito preciso.
+*Nós poderiamos encapsular nossas geometrias dentro de esferas também, mas, infelizmente, elas não são tão precisas como as caixas, o que pode acarretar em muitos falços positivos.
+**/
 #ifndef AABB_H
 #define AABB_H
 

@@ -1,5 +1,11 @@
 
 
+/**
+*Classe de quatérnion para a simulação.
+*Esta classe também foi retirada do livro Physics for game developers.
+*Vários métodos adicionais foram adicionados.
+*Esta classe serve para armazenar a orientação de um corpo no espaço.
+**/
 
 #ifndef QUATERNION_H
 #define QUATERNION_H
@@ -9,7 +15,6 @@ namespace gpp
 
 /*
 * Classe de quatérnions fortemente baseada na classe quaternion do livro Physics for Game Developers.
-*Ela usa um vector3d para a sua parte vetorial.
 **/
 class quaternion
 {

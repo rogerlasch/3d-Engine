@@ -48,7 +48,7 @@ bool collision3d::sphereSphere(sphere3d* s1, sphere3d* s2, CollisionData* data)
     float distance = sqrt(distanceSquared);
     vector3d collisionNormal = displacement / distance;
 if (vector3d::dotProduct(s1->center - s2->center, collisionNormal ) > 0) {
-collisionNormal.reverse();
+collisionNormal.inverse();
 }
     vector3d collisionPoint = s1->center + s1->radius * collisionNormal;
     data->normal = collisionNormal;
@@ -100,28 +100,20 @@ bool collision3d::sphereLine(sphere3d* s, line3d* l, CollisionData* data)
 
 bool collision3d::sphereBox(sphere3d* s, box3d* b, CollisionData* data)
 {
-  vector3d& min = b->min;
-  vector3d max = (b->min + b->measures);
-  vector3d closestPoint = s->center;
-
-  // Verifica se o centro da esfera está dentro da caixa
-  closestPoint.x = std::max(min.x, std::min(s->center.x, max.x));
-  closestPoint.y = std::max(min.y, std::min(s->center.y, max.y));
-  closestPoint.z = std::max(min.z, std::min(s->center.z, max.z));
-
-  // Cálculo da distância entre o ponto mais próximo na caixa e o centro da esfera
-  float distance = (closestPoint - s->center).length();
-_FLOG("final: {}", (closestPoint-s->center).toString());
-  // Verifica se houve colisão
-  if (distance <= s->radius) {
-    data->point = closestPoint;
-//    data->normal = vector3d::normalize(closestPoint - s->center);
-data->normal=vector3d::normalize(closestPoint-s->center);
-data->depth =  distance-s->radius;
-    return true;
-  }
-
-  return false;
+vector3d closestPoint;
+closestPoint.x = std::max(b->min.x, std::min(s->center.x, b->min.x + b->measures.x));
+closestPoint.y = std::max(b->min.y, std::min(s->center.y, b->min.y + b->measures.y));
+closestPoint.z = std::max(b->min.z, std::min(s->center.z, b->min.z + b->measures.z));
+float sqdist=vector3d::dotProduct(closestPoint-s->center, closestPoint-s->center);
+float sqradius=s->radius*s->radius;
+if(sqdist<=sqradius)
+{
+data->point=closestPoint;
+data->normal=(closestPoint-s->center).normalize();
+data->depth=sqrt(sqradius-sqdist);
+return true;
+}
+return false;
 }
 
 bool collision3d::boxBox(box3d* b1, box3d* b2, CollisionData* data)
