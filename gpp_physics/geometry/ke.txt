@@ -1,0 +1,18 @@
+
+
+class Simplex3d
+{
+public:
+std::vector<vector3d> points;
+Simplex3d();
+Simplex3d(const Simplex3d& sp);
+Simplex3d& operator=(const Simplex3d& sp);
+void reset();
+vector3d getVertex(uint32 index)const;
+void setVertex(uint32 index, const vector3d& vertex);
+void addVertex(const vector3d& v);
+bool isPointInSimplex(const vector3d& pt)const;
+vector3d getSupportPoint(const vector3d& dir)const;
+vector3d getDirectionToOrigi()const;
+void doSimplex();
+};

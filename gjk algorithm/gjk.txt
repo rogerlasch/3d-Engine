@@ -1,0 +1,18 @@
+Para implementar a função GJK (Gilbert-Johnson-Keerthi) com base neste código, você precisará seguir os seguintes passos:
+1.
+Crie uma função `support` que calcule o ponto mais afastado (de ambas as formas) ao longo de uma direção arbitrária passada como parâmetro. Essa função é fundamental para a implementação do algoritmo GJK.
+2.
+Crie uma função `getFirstSimplex` que utilize a função `support` para encontrar o primeiro simplex de dois pontos. Esses dois pontos são escolhidos aleatoriamente de um dos poliedros.
+3.
+Implemente um loop principal que execute o algoritmo GJK, utilizando o simplex encontrado na etapa anterior. Dentro desse loop, você deve fazer o seguinte:
+3.1. Calcular o ponto mais afastado dos dois poliedros na direção oposta ao vetor que conecta os pontos no simplex atual.
+3.2. Verificar se o ponto mais afastado está atrás do ponto mais próximo dos dois poliedros. Se sim, não há interseção entre os poliedros.
+3.3. Adicionar o novo ponto encontrado ao simplex atual.
+3.4. Se o novo ponto adicionado não trouxer o simplex para dentro dos dois poliedros, continue o loop.
+4. 
+Quando o loop terminar, verifique se o último simplex contém a origem. Se sim, os poliedros se interceptam.
+5. 
+Se a função encontrar uma colisão, ela deve preencher o parâmetro `simplex` com os pontos do último simplex encontrado.
+6. 
+Ao final, a função deve retornar `true` se houver interseção entre os poliedros ou `false` caso contrário.
+A função `gjk` no código fornecido atualmente retorna `false`. Você precisará substituir esse retorno pela implementação real do algoritmo GJK para que ele possa detectar colisões entre os poliedros.

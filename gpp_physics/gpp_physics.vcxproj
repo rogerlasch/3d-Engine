@@ -27,6 +27,7 @@
     <ClCompile Include="geometry\collision3d.cpp" />
     <ClCompile Include="geometry\CollisionData.cpp" />
     <ClCompile Include="geometry\functions.cpp" />
+    <ClCompile Include="geometry\gjk.cpp" />
     <ClCompile Include="geometry\line3d.cpp" />
     <ClCompile Include="geometry\matrix3x3.cpp" />
     <ClCompile Include="geometry\quaternion.cpp" />
@@ -51,6 +52,7 @@
     <ClInclude Include="geometry\functions.h" />
     <ClInclude Include="geometry\GeometricShape.h" />
     <ClInclude Include="geometry\geometry.h" />
+    <ClInclude Include="geometry\gjk.h" />
     <ClInclude Include="geometry\line3d.h" />
     <ClInclude Include="geometry\matrix3x3.h" />
     <ClInclude Include="geometry\quaternion.h" />

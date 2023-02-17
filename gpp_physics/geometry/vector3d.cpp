@@ -312,7 +312,7 @@ return ((v1.x*v2.x)+(v1.y*v2.y)+(v1.z*v2.z));
 }
 
 //Calcula o produto cruzado entre 2 vetores...
-vector3d vector3d::crozProduct(const vector3d& v1, const vector3d& v2)
+vector3d vector3d::crossProduct(const vector3d& v1, const vector3d& v2)
 {
 vector3d v;
 v.x=v1.y*v2.z - v1.z*v2.y;

@@ -1,0 +1,4 @@
+vector3d.cpp
+https://github.com/rogerlasch/3d-Engine/blob/main/gpp_physics/geometry/vector3d.cpp
+vector3d.h
+https://github.com/rogerlasch/3d-Engine/blob/main/gpp_physics/geometry/vector3d.h
