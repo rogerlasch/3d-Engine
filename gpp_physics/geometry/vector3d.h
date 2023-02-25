@@ -1,5 +1,9 @@
 
 
+/**
+*Classe que representa um vetor 3d com os componentes x, y e z.
+*Também tem sobrecargas para muitas operações.
+**/
 #ifndef VECTOR3D_H
 #define VECTOR3D_H
 
@@ -73,7 +77,7 @@ static vector3d inverse(const vector3d& v);
 //Calcula o produto escalar de 2 vetores...
 static float dotProduct(const vector3d& v1, const vector3d& v2);
 //Calcula o produto vetorial, ou o produto cruzado de 2 vetores...
-static vector3d crozProduct(const vector3d& v1, const vector3d& v2);
+static vector3d crossProduct(const vector3d& v1, const vector3d& v2);
 //Calcula o produto triplo escalar de 3 vetores...
 static float tripleProduct(const vector3d& v1, const vector3d& v2, const vector3d& v3);
 //Calcula o ângulo entre 2 vetores...

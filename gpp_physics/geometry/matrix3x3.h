@@ -1,5 +1,9 @@
 
-
+/**
+*Classe para uma matriz 3x3 útil em algumas situações.
+*Esta classe foi retirada do livro physics for game developers.
+*Alguns metodos foram adicionados a ela.
+**/
 #ifndef MATRIX3X3_H
 #define MATRIX3X3_H
 

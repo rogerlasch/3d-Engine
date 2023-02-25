@@ -1,5 +1,7 @@
 
-
+/**
+*Muitas funções úteis, algumas foram retiradas e adaptadas do livro detecção de colisão em tempo real.
+**/
 #ifndef GPP_FUNCTIONS_H
 #define GPP_FUNCTIONS_H
 

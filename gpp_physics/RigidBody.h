@@ -1,6 +1,10 @@
 
 
-
+/**
+*Esta classe representa um corpo em nossa simulação.
+*Um corpo tem forma, velocidades, forças e maça.
+*Caso o corpo não tenha maça, ele será considerado um corpo estático, que não se move. Ele será necessário para modelar o chão, terrenos, e paredes.
+**/
 #ifndef RIGIDBODY_H
 #define RIGIDBODY_H
 

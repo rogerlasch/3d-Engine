@@ -17,12 +17,18 @@ void CollisionSolver::solve(RigidBody* r1, RigidBody* r2, CollisionData* data)
     vector3d contactPoint = data->point;
 
     // Calcular a velocidade relativa entre os corpos rígidos
+<<<<<<< HEAD
     vector3d relativeVelocity = r2->linearVelocity + vector3d::crozProduct(r2->angularVelocity, contactPoint - r2->position) -
                                 r1->linearVelocity - vector3d::crozProduct(r1->angularVelocity, contactPoint - r1->position);
+=======
+    vector3d relativeVelocity = r2->linearVelocity + vector3d::crossProduct(r2->angularVelocity, contactPoint - r2->position) -
+                                r1->linearVelocity - vector3d::crossProduct(r1->angularVelocity, contactPoint - r1->position);
+>>>>>>> 17c95e9564162d02c1e90b7a4390dde0925763a3
 
     // Calcular a direção e magnitude do impulso
     float impulseMagnitude = (-(1 + r1->restitution) * vector3d::dotProduct(relativeVelocity, normal)) /
                             (r1->inverseMass + r2->inverseMass +
+<<<<<<< HEAD
                              vector3d::dotProduct(normal, vector3d::crozProduct(r1->inverseInertiaTensor *
                                                  vector3d::crozProduct(contactPoint - r1->position, normal),
                                                  contactPoint - r1->position) +
@@ -36,6 +42,21 @@ void CollisionSolver::solve(RigidBody* r1, RigidBody* r2, CollisionData* data)
 // Calcular o torque
 vector3d torque1 = vector3d::crozProduct(contactPoint - r1->position, normal * impulseMagnitude);
 vector3d torque2 = vector3d::crozProduct(contactPoint - r2->position, normal * impulseMagnitude);
+=======
+                             vector3d::dotProduct(normal, vector3d::crossProduct(r1->inverseInertiaTensor *
+                                                 vector3d::crossProduct(contactPoint - r1->position, normal),
+                                                 contactPoint - r1->position) +
+                                                 vector3d::crossProduct(r2->inverseInertiaTensor *
+                                                 vector3d::crossProduct(contactPoint - r2->position, normal),
+                                                 contactPoint - r2->position)));
+    vector3d impulse = impulseMagnitude * normal;
+    // Calcular o momento linear
+    vector3d momentum = vector3d::crossProduct(contactPoint - r1->position, impulse);
+
+// Calcular o torque
+vector3d torque1 = vector3d::crossProduct(contactPoint - r1->position, normal * impulseMagnitude);
+vector3d torque2 = vector3d::crossProduct(contactPoint - r2->position, normal * impulseMagnitude);
+>>>>>>> 17c95e9564162d02c1e90b7a4390dde0925763a3
 
     // Atualizar o momento linear dos corpos rígidos
     r1->linearMomentum -= impulse;

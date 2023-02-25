@@ -1,5 +1,7 @@
 
-
+/**
+*Classe para armazenar informações sobre uma colisão...
+**/
 #ifndef COLLISIONDATA_H
 #define COLLISIONDATA_H
 
