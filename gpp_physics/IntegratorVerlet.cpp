@@ -10,6 +10,7 @@ namespace gpp
 
 void IntegratorVerlet::integrate(RigidBody* rb, float delta_time)
 {
+if((rb==NULL)||(rb->getMass()<=0)) return;
     //Atualizar velocidade linear e posição
 vector3d displacement;
     rb->linearVelocity = rb->linearMomentum / rb->mass;

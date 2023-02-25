@@ -183,7 +183,6 @@ return vector3d(e11, e22, e33);
 string matrix3x3::toString()const
 {
 stringstream ss;
-ss<<fixed;
 ss<<e11<<","<<e12<<","<<e13<<endl;
 ss<<e21<<","<<e22<<","<<e23<<endl;
 ss<<e31<<","<<e32<<","<<e33<<endl;

@@ -17,6 +17,9 @@ CollisionData(const CollisionData& c);
 CollisionData& operator=(const CollisionData& c);
 virtual ~CollisionData()=default;
 void reset();
+std::string toString()const;
 };
+
+std::ostream& operator<<(std::ostream& os, const CollisionData& cd);
 }
 #endif

@@ -1,5 +1,6 @@
 
 
+#include<sstream>
 #include"vector3d.h"
 #include"CollisionData.h"
 
@@ -33,5 +34,20 @@ void CollisionData::reset()
 point={0,0,0};
 normal={0,0,0};
 depth=0.0f;
+}
+
+string CollisionData::toString()const
+{
+stringstream ss;
+ss<<"ponto: "<<point<<endl;
+ss<<"normal: "<<normal<<endl;
+ss<<"depth: "<<depth<<endl;
+return ss.str();
+}
+
+ostream& operator<<(ostream& os, const CollisionData& cd)
+{
+os<<cd.toString();
+return os;
 }
 }

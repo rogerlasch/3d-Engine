@@ -1,0 +1,7 @@
+Tempo de execução total: 35917 ms
+
+Imprimindo funções monitoradas:
+Total de funções monitoradas: 1
+
+r_window::drawCircle: Tempo total: 703.413 ms, Total de execuções: 39, Duração média: 18.036 ms
+
