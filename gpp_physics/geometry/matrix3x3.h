@@ -36,6 +36,7 @@ std::string toString()const;
 std::ostream& operator<<(std::ostream& os, const matrix3x3& mt);
        matrix3x3 operator+(const matrix3x3& m1, const matrix3x3& m2);
        matrix3x3 operator-(const matrix3x3& m1, const matrix3x3& m2);
+       matrix3x3 operator/(float s, const matrix3x3& m);
        matrix3x3 operator/(const matrix3x3& m, float s);
        matrix3x3 operator*(const matrix3x3& m1, const matrix3x3& m2);
        matrix3x3 operator*(const matrix3x3& m, float s);

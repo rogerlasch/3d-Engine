@@ -8,6 +8,14 @@ using namespace std;
 
 namespace gpp
 {
+
+gpp_index::gpp_index()
+{
+vnum=0;
+subvnum=0;
+type=0;
+}
+
 gpp_index::gpp_index(uint32 vnum, uint32 subvnum, uint32 type)
 {
 this->vnum=vnum;
@@ -54,6 +62,7 @@ return *this;
 
 bool gpp_index::operator<(const gpp_index& di)const
 {
+/*
 if((this->vnum==di.vnum)&&(this->subvnum==di.subvnum))
 {
 return this->type<di.type;
@@ -63,11 +72,17 @@ if(this->vnum==di.vnum)
 return this->subvnum<di.subvnum;
 }
 return this->vnum<di.vnum;
+*/
+if(this->vnum<di.vnum)
+{
+return true;
+}
+return this->subvnum<di.subvnum;
 }
 
 bool gpp_index::operator==(const gpp_index& di)const
 {
-return this->vnum==di.vnum&&this->subvnum==di.subvnum&&this->type==di.type;
+return this->vnum==di.vnum&&this->subvnum==di.subvnum;
 }
 
 void gpp_index::set(uint32 vnum, uint32 subvnum, uint32 type)

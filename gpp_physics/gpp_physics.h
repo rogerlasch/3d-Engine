@@ -29,6 +29,6 @@
 #include"BroadPhase.h"
 #include"NarrowPhase.h"
 #include"CollisionSolver.h"
-
+#include"gpp_world.h"
 
 #endif

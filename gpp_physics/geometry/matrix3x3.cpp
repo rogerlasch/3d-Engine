@@ -211,6 +211,19 @@ return os;
                                                    m1.e33+m2.e33);
       }
 
+       matrix3x3 operator/(float s, const matrix3x3& m)
+      {
+             return matrix3x3( m.e11/s,
+                                                   m.e12/s,
+                                                   m.e13/s,
+                                                   m.e21/s,
+                                                   m.e22/s,
+                                                   m.e23/s,
+                                                   m.e31/s,
+                                                   m.e32/s,
+                                                   m.e33/s);
+      }
+
        matrix3x3 operator-(const matrix3x3& m1, const matrix3x3& m2)
       {
              return matrix3x3( m1.e11-m2.e11,

@@ -25,7 +25,7 @@
     <ClCompile Include="geometry\aabbutil.cpp" />
     <ClCompile Include="geometry\box3d.cpp" />
     <ClCompile Include="geometry\collision3d.cpp" />
-    <ClCompile Include="geometry\CollisionData.cpp" />
+    <ClCompile Include="geometry\CollisionInfo.cpp" />
     <ClCompile Include="geometry\functions.cpp" />
     <ClCompile Include="geometry\gjk.cpp" />
     <ClCompile Include="geometry\line3d.cpp" />
@@ -48,7 +48,7 @@
     <ClInclude Include="geometry\aabbutil.h" />
     <ClInclude Include="geometry\box3d.h" />
     <ClInclude Include="geometry\collision3d.h" />
-    <ClInclude Include="geometry\CollisionData.h" />
+    <ClInclude Include="geometry\CollisionInfo.h" />
     <ClInclude Include="geometry\functions.h" />
     <ClInclude Include="geometry\GeometricShape.h" />
     <ClInclude Include="geometry\geometry.h" />

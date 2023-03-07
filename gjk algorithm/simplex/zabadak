@@ -1,0 +1,143 @@
+
+#include"Simplex3d.h"
+
+using namespace std;
+
+    Simplex3d::Simplex3d()
+{
+vertices.clear();
+}
+
+Simplex3d::Simplex3d(const vector<vector3d>& vertices)
+{
+*this=vertices;
+}
+
+Simplex3d& Simplex3d::operator=(const vector<vector3d>& vertices)
+{
+this->vertices=vertices;
+return *this;
+}
+Simplex3d::    Simplex3d(const Simplex3d& sp)
+{
+*this=sp;
+}
+
+    Simplex3d& Simplex3d::operator=(const Simplex3d& sp)
+{
+this->vertices=sp.vertices;
+return *this;
+}
+
+    void Simplex3d::reset()
+{
+vertices.clear();
+}
+
+    vector3d Simplex3d::getVertex(uint32 index) const
+{
+return vertices[index];
+}
+
+    void Simplex3d::setVertex(uint32 index, const vector3d& pt)
+{
+vertices[index]=pt;
+}
+
+    void Simplex3d::addVertex(const vector3d& pt)
+{
+}
+
+bool Simplex3d::containsPoint(const vector3d& pt) const {
+    // Verifica se o ponto está dentro do simplex usando o "Teste de Barycentro"
+    // Verifica se o ponto está dentro do triângulo formado pelos primeiros três vértices
+    vector3d a = vertices[0];
+    vector3d b = vertices[1];
+    vector3d c = vertices[2];
+    vector3d v0 = b - a;
+    vector3d v1 = c - a;
+    vector3d v2 = pt - a;
+vector3d::dotProduct(v0, v0);
+    float dot00 = vector3d::dotProduct(v0, v0);
+    float dot01 = vector3d::dotProduct(v0, v1);
+    float dot02 = vector3d::dotProduct(v0, v2);
+    float dot11 = vector3d::dotProduct(v1, v1);
+    float dot12 = vector3d::dotProduct(v1, v2);
+    float invDenom = 1.0f / (dot00 * dot11 - dot01 * dot01);
+    float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+    float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+    if (u >= 0 && v >= 0 && u + v <= 1) {
+        return true;
+    }
+    // Verifica se o ponto está dentro do triângulo formado pelos primeiros, segundo e quarto vértices
+    b = vertices[3];
+    v0 = b - a;
+    v2 = pt - a;
+    dot00 = vector3d::dotProduct(v0, v0);
+    dot01 = vector3d::dotProduct(v0, v1);
+    dot02 = vector3d::dotProduct(v0, v2);
+    invDenom = 1.0f / (dot00 * dot11 - dot01 * dot01);
+    u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+    v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+    if (u >= 0 && v >= 0 && u + v <= 1) {
+        return true;
+    }
+    // Verifica se o ponto está dentro do triângulo formado pelos primeiros, terceiro e quarto vértices
+    c = vertices[3];
+    v1 = c - a;
+    v2 = pt - a;
+    dot01 = vector3d::dotProduct(v0, v1);
+    dot11 = vector3d::dotProduct(v1, v1);
+    dot12 = vector3d::dotProduct(v1, v2);
+    invDenom = 1.0f / (dot00 * dot11 - dot01 * dot01);
+    u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+    v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+    if (u >= 0 && v >= 0 && u + v <= 1) {
+        return true;
+    }
+    // Verifica se o ponto está dentro
+// do tetraedro completo formado pelos quatro vértices
+v0 = vertices[1] - vertices[0];
+v1 = vertices[2] - vertices[0];
+v2 = vertices[3] - vertices[0];
+vector3d n = vector3d::crossProduct(v0, v1);
+float d = vector3d::dotProduct(n, vertices[0]);
+if (vector3d::dotProduct(n, pt) - d > 0) {
+    return false;
+}
+n = vector3d::crossProduct(v1, v2);
+d = vector3d::dotProduct(n, vertices[2]);
+if (vector3d::dotProduct(n, pt) - d > 0) {
+    return false;
+}
+n =vector3d::crossProduct(v2, v0);
+d = vector3d::dotProduct(n, vertices[0]);
+if (vector3d::dotProduct(n, pt) - d > 0) {
+    return false;
+}
+return true;
+}
+
+    vector3d Simplex3d::getSupportPoint(const vector3d& dir) const
+{
+return vector3d();
+}
+
+    vector3d Simplex3d::getDirectionToOrigi() const
+{
+return vector3d();
+}
+
+    // Métodos auxiliares para o algoritmo GJK
+    vector3d Simplex3d::computeClosestPointToOrigin() const
+{
+return vector3d();
+}
+
+    void Simplex3d::reduceToTriangle(vector3d& a, vector3d& b, vector3d& c) const
+{
+}
+
+    void Simplex3d::reduceToLine(vector3d& a, vector3d& b) const
+{
+}

@@ -69,7 +69,7 @@
     <ClCompile Include="IntegratorVerlet.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
-    <ClCompile Include="geometry\CollisionData.cpp">
+    <ClCompile Include="geometry\CollisionInfo.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
     <ClCompile Include="geometry\gjk.cpp">
@@ -149,7 +149,7 @@
     <ClInclude Include="IntegratorVerlet.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
-    <ClInclude Include="geometry\CollisionData.h">
+    <ClInclude Include="geometry\CollisionInfo.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
     <ClInclude Include="geometry\gjk.h">

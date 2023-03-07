@@ -69,6 +69,8 @@ bool sendUnreliable(const std::string& data);
 bool sendReliable(const std::string& data);
 bool sendPacketUnreliable(uint32 type, uint32 flags, int64 timeout, const std::string& data);
 bool sendPacketReliable(uint32 type, uint32 flags, int64 timeout, const std::string& data);
+void sendAnswerSuccess(const std::string& cmd, const std::string& data);
+void sendAnswerError(const std::string& cmd, uint32 errorcode, const std::string& msg);
 bool disconnect();
 bool disconnectNow();
 void makePing();

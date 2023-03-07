@@ -106,7 +106,8 @@ vector3d operator/(float s, const vector3d& v);
 
 vector3d operator+(const vector3d& v1, const vector3d& v2);
 vector3d operator-(const vector3d& v1, const vector3d& v2);
-vector3d operator*(const vector3d& v1, const vector3d& v2);
+float operator*(const vector3d& v1, const vector3d& v2);
 vector3d operator/(const vector3d& v1, const vector3d& v2);
+vector3d operator^(const vector3d& v1, const vector3d& v2);
 }
 #endif

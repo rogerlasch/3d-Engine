@@ -32,7 +32,7 @@ box3d:: ~box3d()
 
  vector3d box3d::GetCenter()const
 {
-return (min+measures)*0.5f;
+return min+(measures*0.5f);
 }
 
 void box3d::GetVertices(vector<vector3d>& vertices)
@@ -75,7 +75,7 @@ measures=measures*scale;
 
 void box3d::Rotate(const quaternion& orientation)
 {
-  // Rotate each vertex of the box
+  // rotate each vertex of the box
 vector<vector3d> vertices;
   GetVertices(vertices);
   for (int i = 0; i < 8; i++)

@@ -8,7 +8,7 @@ using namespace std;
 
 namespace gpp
 {
-bool collision3d::isColliding(GeometricShape* s1, GeometricShape* s2, CollisionData* data)
+bool collision3d::isColliding(GeometricShape* s1, GeometricShape* s2, CollisionInfo* data)
 {
 if((s1==NULL)||(s2==NULL))
 {
@@ -36,7 +36,7 @@ return lineLine((line3d*)s1, (line3d*)s2, data);
 return false;
 }
 
-bool collision3d::sphereSphere(sphere3d* s1, sphere3d* s2, CollisionData* data)
+bool collision3d::sphereSphere(sphere3d* s1, sphere3d* s2, CollisionInfo* data)
 {
     vector3d displacement = s1->center - s2->center;
     float distanceSquared = vector3d::dotProduct(displacement, displacement);
@@ -47,17 +47,14 @@ bool collision3d::sphereSphere(sphere3d* s1, sphere3d* s2, CollisionData* data)
 
     float distance = sqrt(distanceSquared);
     vector3d collisionNormal = displacement / distance;
-if (vector3d::dotProduct(s1->center - s2->center, collisionNormal ) > 0) {
-collisionNormal.inverse();
-}
-    vector3d collisionPoint = s1->center + s1->radius * collisionNormal;
+    vector3d collisionPoint = s2->center + s2->radius * collisionNormal;
     data->normal = collisionNormal;
     data->point = collisionPoint;
     data->depth= radiusSum - distance;
     return true;
 }
 
-bool collision3d::sphereLine(sphere3d* s, line3d* l, CollisionData* data)
+bool collision3d::sphereLine(sphere3d* s, line3d* l, CollisionInfo* data)
 {
   vector3d centerToStart = l->min - s->center;
   vector3d centerToEnd = l->max - s->center;
@@ -98,7 +95,7 @@ bool collision3d::sphereLine(sphere3d* s, line3d* l, CollisionData* data)
   }
 }
 
-bool collision3d::sphereBox(sphere3d* s, box3d* b, CollisionData* data)
+bool collision3d::sphereBox(sphere3d* s, box3d* b, CollisionInfo* data)
 {
 vector3d closestPoint;
 closestPoint.x = std::max(b->min.x, std::min(s->center.x, b->min.x + b->measures.x));
@@ -109,14 +106,14 @@ float sqradius=s->radius*s->radius;
 if(sqdist<=sqradius)
 {
 data->point=closestPoint;
-data->normal=(closestPoint-s->center).normalize();
+data->normal=(s->center-closestPoint).normalize();
 data->depth=sqrt(sqradius-sqdist);
 return true;
 }
 return false;
 }
 
-bool collision3d::boxBox(box3d* b1, box3d* b2, CollisionData* data)
+bool collision3d::boxBox(box3d* b1, box3d* b2, CollisionInfo* data)
 {
 vector3d min1 = b1->min, max1 = b1->min + b1->measures;
 vector3d min2 = b2->min, max2 = b2->min + b2->measures;
@@ -145,7 +142,7 @@ data->depth = data->normal.length();
 return true;
 }
 
-bool collision3d::boxLine(box3d* b, line3d* l, CollisionData* data)
+bool collision3d::boxLine(box3d* b, line3d* l, CollisionInfo* data)
 {
   // Cálculo da origem da linha e do vetor direção
   vector3d o = l->min;
@@ -202,7 +199,7 @@ bool collision3d::boxLine(box3d* b, line3d* l, CollisionData* data)
   return true;
 }
 
-bool collision3d::lineLine(line3d* l1, line3d* l2, CollisionData* data)
+bool collision3d::lineLine(line3d* l1, line3d* l2, CollisionInfo* data)
 {
 /*
 static float f1=0.0f, f2=0.0f;

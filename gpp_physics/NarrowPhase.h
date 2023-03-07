@@ -12,11 +12,12 @@
 namespace gpp
 {
 
+typedef std::vector<CollisionInfo> CollisionList;
 class NarrowPhase
 {
 public:
-void scan(const CollisionPairList& pairs, CollisionPairList& colisions);
-void scan(const CollisionPairList& pairs, CollisionPairList& colisions, std::shared_mutex& m);
+void scan(CollisionPairList& pairs, CollisionList& colisions);
+void scan(CollisionPairList& pairs, CollisionList& colisions, std::shared_mutex& m);
 };
 }
 #endif

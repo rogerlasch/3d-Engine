@@ -21,7 +21,7 @@ namespace gpp
 #define GPP_INVALID_VNUM 0//Se algum objeto tiver este vnum, ele será considerado como inválido.
 #define GPP_MAX_VNUM 4000000000// Se existir um objeto maior que este vnum, ele será conciderado inválido também.
 
-enum GPP_INDEX_TYPES
+enum GPP_INDEX_TYPES : uint32
 {
 GPP_DEFAULT_TYPE=0,
 GPP_ZONE,
@@ -36,7 +36,8 @@ public:
 uint32 vnum;//Vnum principal
 uint32 subvnum;//Vnum secundário caso o objeto precise.
 uint32 type;
-gpp_index(uint32 vnum=GPP_INVALID_VNUM, uint32 subvnum=GPP_INVALID_VNUM, uint32 type=GPP_DEFAULT_TYPE);
+gpp_index();
+gpp_index(uint32 vnum, uint32 subvnum, uint32 type);
 gpp_index(const std::initializer_list<uint32>& id);
 gpp_index(const gpp_index& di);
 gpp_index& operator=(const std::initializer_list<uint32>& id);

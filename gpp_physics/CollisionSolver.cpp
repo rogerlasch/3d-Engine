@@ -7,59 +7,49 @@ using namespace std;
 
 namespace gpp
 {
-void CollisionSolver::solve(RigidBody* r1, RigidBody* r2, CollisionData* data)
+
+void CollisionSolver::solve(CollisionList& collisions)
 {
-    if (r1->mass <= 0 && r2->mass <= 0)
-        return; // ambos são estáticos, não há nada a fazer
-
-    vector3d normal = data->normal;
-    float depth = ((data->depth<=0.1f) ? 0.0f : data->depth);
-    vector3d contactPoint = data->point;
-
-    // Calcular a velocidade relativa entre os corpos rígidos
-    vector3d relativeVelocity = r2->linearVelocity + vector3d::crossProduct(r2->angularVelocity, contactPoint - r2->position) -
-                                r1->linearVelocity - vector3d::crossProduct(r1->angularVelocity, contactPoint - r1->position);
-
-    // Calcular a direção e magnitude do impulso
-    float impulseMagnitude = (-(1 + r1->restitution) * vector3d::dotProduct(relativeVelocity, normal)) /
-                            (r1->inverseMass + r2->inverseMass +
-                             vector3d::dotProduct(normal, vector3d::crossProduct(r1->inverseInertiaTensor *
-                                                 vector3d::crossProduct(contactPoint - r1->position, normal),
-                                                 contactPoint - r1->position) +
-                                                 vector3d::crossProduct(r2->inverseInertiaTensor *
-                                                 vector3d::crossProduct(contactPoint - r2->position, normal),
-                                                 contactPoint - r2->position)));
-    vector3d impulse = impulseMagnitude * normal;
-    // Calcular o momento linear
-    vector3d momentum = vector3d::crossProduct(contactPoint - r1->position, impulse);
-
-// Calcular o torque
-vector3d torque1 = vector3d::crossProduct(contactPoint - r1->position, normal * impulseMagnitude);
-vector3d torque2 = vector3d::crossProduct(contactPoint - r2->position, normal * impulseMagnitude);
-
-    // Atualizar o momento linear dos corpos rígidos
-    r1->linearMomentum -= impulse;
-    r1->angularMomentum -= momentum;
-r1->angularMomentum -= torque1;
-    r2->linearMomentum += impulse;
-    r2->angularMomentum += momentum;
-r2->angularMomentum += torque2;
-    // correção de penetração
-if(depth>0)
+for(auto it=collisions.begin(); it!=collisions.end(); ++it)
 {
-_FLOG("Depth: {}", depth);
-    vector3d correction = normal * depth / (r1->inverseMass + r2->inverseMass);
-    if (r1->mass > 0)
-    {
-_FLOG("Correction: {}", correction.toString());
-        r1->position -= correction * r1->inverseMass;
-        r1->translate(-(correction * r1->inverseMass));
-    }
-    if (r2->mass > 0)
-    {
-        r2->position += correction * r2->inverseMass;
-        r2->translate(correction * r2->inverseMass);
+solvePair(it->b1, it->b2, &(*it));
 }
+}
+void CollisionSolver::solvePair(RigidBody* r1, RigidBody* r2, CollisionInfo*
+info)
+{
+    // Verifica se ambos corpos são estáticos
+    if (r1->mass <= 0 && r2->mass <= 0)
+        return;
+vector3d v1=r1->linearVelocity+r1->angularVelocity^info->point;
+vector3d v2=r2->linearVelocity+r2->angularVelocity^info->point;
+vector3d relativeVelocity=v1-v2;
+vector3d rvn=relativeVelocity*info->normal;
+vector3d pt1=info->point-r1->position;
+vector3d pt2=info->point-r2->position;
+float j = (-(1+r1->restitution) * (relativeVelocity *
+info->normal)) /
+((1/r1->mass + 1/r2->mass) +
+(info->normal * ( ( (pt1 ^
+ info->normal) *
+ r1->inverseInertiaTensor )^pt1) ) +
+(info->normal * ( ( (pt2 ^
+ info->normal) *
+r2->inverseInertiaTensor )^pt2) ) );
+
+vector3d backStep=((info->depth>0) ? (info->depth*info->normal) : vector3d());
+
+if(r1->mass>0)
+{
+   r1->linearVelocity+= (j * info->normal) / r1->mass;
+   r1->angularVelocity+= (info->point^    (j * info->normal)) /    r1->inertiaTensor;
+r1->Translate(backStep);
+}
+if(r2->mass>0)
+{
+   r2->linearVelocity-= (j * info->normal) / r2->mass;
+   r2->angularVelocity-= (info->point^(j * info->normal)) /    r2->inertiaTensor;
+r2->Translate(vector3d::inverse(backStep));
 }
 }
 }

@@ -1,0 +1,36 @@
+
+
+para resolver a colisão:
+
+//Calcular a velocidade relativa entre os corpos:
+ v1 = body1->vVelocityBody +
+ (body1->vAngularVelocity^body1->vCollisionPoint);
+ v2 = body2->vVelocityBody +
+ (body2->vAngularVelocity^body2->vCollisionPoint);
+ v1 = VRotate2D(body1->fOrientation, v1);
+ v2 = VRotate2D(body2->fOrientation, v2);
+ vRelativeVelocity = v1 - v2;
+ Vrn = vRelativeVelocity * vCollisionNormal;
+
+//Calcular e aplicar impulso...
+void  ApplyImpulse(pRigidBody2D body1, pRigidBody2D body2)
+{
+   float j;
+   j = (-(1+fCr) * (vRelativeVelocity*vCollisionNormal)) /
+( (1/body1->fMass + 1/body2->fMass) +
+(vCollisionNormal * (((body1->vCollisionPoint ^
+ vCollisionNormal)/body1->fInertia)^body1->vCollisionPoint)) +
+(vCollisionNormal * (((body2->vCollisionPoint ^
+ vCollisionNormal)/body2->fInertia)^body2->vCollisionPoint))
+);
+
+   body1->vVelocity += (j * vCollisionNormal) / body1->fMass;
+   body1->vAngularVelocity += (body1->vCollisionPoint ^
+   (j * vCollisionNormal)) /
+   body1->fInertia;
+
+   body2->vVelocity -= (j * vCollisionNormal) / body2->fMass;
+   body2->vAngularVelocity -= (body2->vCollisionPoint ^
+   (j * vCollisionNormal)) /
+   body2->fInertia;
+}

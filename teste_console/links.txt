@@ -1,0 +1,31 @@
+A resolução de colisão por impulso é um método comum para resolver colisões em física de jogos e simulação de física em geral. O objetivo é calcular as forças de reação necessárias para corrigir a sobreposição das colisões e manter as leis da física em equilíbrio.
+Em resumo, a resolução de colisão por impulso funciona assim:
+1. Detecte uma colisão entre dois objetos.
+2. Calcule a velocidade de separação relativa entre os dois objetos no ponto de colisão.
+3. Calcule o impulso necessário para inverter a velocidade de separação.
+4. Aplique o impulso aos objetos para corrigir a colisão.
+O impulso é uma quantidade de força aplicada durante um intervalo de tempo muito curto. A magnitude do impulso depende da rigidez dos objetos envolvidos na colisão e da magnitude da velocidade de separação relativa no ponto de colisão.
+Após a aplicação do impulso, os objetos geralmente precisam ser atualizados em termos de sua posição e velocidade para que a simulação continue de maneira adequada.
+A resolução de colisão por impulso é um método bastante simples e eficiente, mas pode ser complexo de implementar corretamente, especialmente em situações de colisões múltiplas ou em situações com objetos deformáveis.
+
+Depois de detectar a colisão e determinar quais são os corpos rígidos envolvidos na colisão, o próximo passo é calcular a velocidade relativa e a direção da normal da colisão. A partir disso, podemos calcular o impulso necessário para resolver a colisão.
+Para calcular o impulso, podemos usar a seguinte equação:
+J = -(1 + e) * Vr . N / (1 / m1 + 1 / m2 + (I1 . (r x N))^2 / L1 + (I2 . (r x N))^2 / L2)
+onde:
+•
+J é o impulso necessário para resolver a colisão
+•
+e é a restituição (coeficiente de restituição) do material. Um valor de 0 significa que a colisão é completamente inelástica, enquanto um valor de 1 significa que a colisão é completamente elástica.
+•
+Vr é a velocidade relativa dos corpos rígidos no ponto de contato da colisão
+•
+N é a normal da colisão
+•
+m1 e m2 são as massas dos corpos rígidos
+•
+I1 e I2 são os tensores de inércia dos corpos rígidos
+•
+r é o vetor de raio do centro de massa até o ponto de contato da colisão
+•
+L1 e L2 são as magnitudes do vetor r cruzado com a normal da colisão para cada corpo rígido.
+Depois de calcular o impulso, podemos aplicá-lo nos corpos rígidos envolvidos na colisão para resolver a colisão. Isso envolve a atualização da velocidade e da posição dos corpos rígidos com base no impulso calculado.

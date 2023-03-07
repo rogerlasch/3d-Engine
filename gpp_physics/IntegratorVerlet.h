@@ -13,6 +13,7 @@ namespace gpp
 class IntegratorVerlet
 {
 public:
+void integrate(RigidBodyList& bodies, float delta_time);
 void integrate(RigidBody* rb, float delta_time);
 };
 }

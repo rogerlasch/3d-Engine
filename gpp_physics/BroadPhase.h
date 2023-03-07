@@ -17,9 +17,13 @@ typedef std::pair<RigidBody*, RigidBody*> CollisionPair;
 typedef std::vector<CollisionPair> CollisionPairList;
 class BroadPhase
 {
+uint32 gsortaxis;
 public:
-void scan(const RigidBodyList& bodies, CollisionPairList& collisions);
-void scan(const RigidBodyList& bodies, CollisionPairList& collisions, std::shared_mutex& m);
+BroadPhase();
+void scan(RigidBodyList& bodies, CollisionPairList& collisions);
+void scan(RigidBodyList& bodies, CollisionPairList& collisions, std::shared_mutex& m);
+uint32 getgSortAxis()const;
+void setgSortAxis(uint32 gsortaxis);
 };
 }
 #endif

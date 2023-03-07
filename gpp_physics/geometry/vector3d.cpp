@@ -380,6 +380,7 @@ return v;
 string vector3d::toString()const
 {
 stringstream ss;
+ss<<fixed;
 ss<<x<<":"<<y<<":"<<z;
 return ss.str();
 }
@@ -388,7 +389,7 @@ return ss.str();
 
 ostream& operator<<(ostream& os, const vector3d& dv)
 {
-os<<dv.toString();
+os<<dv.x<<":"<<dv.y<<":"<<dv.z;
 return os;
 }
 
@@ -447,14 +448,29 @@ vector3d operator-(const vector3d& v1, const vector3d& v2)
 return vector3d(v1.x-v2.x, v1.y-v2.y, v1.z-v2.z);
 }
 
+/*
 vector3d operator*(const vector3d& v1, const vector3d& v2)
 {
 return vector3d(v1.x*v2.x, v1.y*v2.y, v1.z*v2.z);
 }
+*/
 
 vector3d operator/(const vector3d& v1, const vector3d& v2)
 {
 return vector3d(v1.x/((v2.x!=0) ? v2.x : 1.0f), v1.y/((v2.y!=0) ? v2.y : 1.0f), v1.z/((v2.z!=0) ? v2.z : 1.0f));
 }
 
+float operator*(const vector3d& v1, const vector3d& v2)
+{
+return((v1.x*v2.x)+(v1.y*v2.y)+(v1.z*v2.z));
+}
+
+vector3d operator^(const vector3d& v1, const vector3d& v2)
+{
+vector3d v;
+v.x=v1.y*v2.z - v1.z*v2.y;
+v.y=-v1.x*v2.z + v1.z*v2.x;
+v.z= v1.x*v2.y - v1.y*v2.x;
+return v;
+}
 }

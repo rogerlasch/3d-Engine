@@ -15,8 +15,8 @@ namespace gpp
 class CollisionSolver
 {
 public:
-void solve(CollisionPairList& pairs);
-void solve(RigidBody* r1, RigidBody* r2, CollisionData* data);
+void solve(CollisionList& collisions);
+void solvePair(RigidBody* r1, RigidBody* r2, CollisionInfo* data);
 };
 }
 #endif

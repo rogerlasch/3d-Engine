@@ -227,6 +227,34 @@ return false;
 return sendReliable(pack.serialize());
 }
 
+void gpp_peer::sendAnswerSuccess(const std::string& cmd, const std::string& data)
+{
+if(isOnServer())
+{
+packet pack;
+pack.type=PACKET_ANSWER;
+pack.command=cmd;
+pack.data=data;
+pack.errorcode=0;
+pack.errormsg="sucesso";
+sendReliable(pack.serialize());
+}
+}
+
+void gpp_peer::sendAnswerError(const std::string& cmd, uint32 errorcode, const std::string& msg)
+{
+if(isOnServer())
+{
+packet pack;
+pack.type=PACKET_ANSWER;
+pack.command=cmd;
+pack.data="";
+pack.errorcode=errorcode;
+pack.errormsg=msg;
+sendReliable(pack.serialize());
+}
+}
+
 /**
 *Fecha a conexão enviando os pacotes restantes...
 *Neste estado, qualquer chamada para os métodos sendReliable e sendUnreliable devem falhar.
