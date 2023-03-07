@@ -1,0 +1,27 @@
+Mostrando a matriz original:
+1 2 3
+4 5 6
+7 8 9
+
+Mostrando a matriz girada em 90 graus no sentido horário...
+7 4 1
+8 5 2
+9 6 3
+
+
+Mostrando a matriz girada em 90 graus no sentido horário...
+9 8 7
+6 5 4
+3 2 1
+
+
+Mostrando a matriz girada em 90 graus no sentido horário...
+3 6 9
+2 5 8
+1 4 7
+
+
+Mostrando a matriz girada em 90 graus no sentido horário...
+1 2 3
+4 5 6
+7 8 9

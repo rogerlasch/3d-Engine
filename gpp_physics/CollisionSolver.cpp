@@ -20,6 +20,7 @@ info)
 {
     // Verifica se ambos corpos são estáticos
     if (r1->mass <= 0 && r2->mass <= 0)
+<<<<<<< HEAD
         return;
 vector3d v1=r1->linearVelocity+r1->angularVelocity^info->point;
 vector3d v2=r2->linearVelocity+r2->angularVelocity^info->point;
@@ -41,15 +42,9 @@ vector3d backStep=((info->depth>0) ? (info->depth*info->normal) : vector3d());
 
 if(r1->mass>0)
 {
-   r1->linearVelocity+= (j * info->normal) / r1->mass;
-   r1->angularVelocity+= (info->point^    (j * info->normal)) /    r1->inertiaTensor;
-r1->Translate(backStep);
 }
 if(r2->mass>0)
 {
-   r2->linearVelocity-= (j * info->normal) / r2->mass;
-   r2->angularVelocity-= (info->point^(j * info->normal)) /    r2->inertiaTensor;
-r2->Translate(vector3d::inverse(backStep));
 }
 }
 }
