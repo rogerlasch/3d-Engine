@@ -1,9 +1,7 @@
 
 
 #include<string>
-#include"types.h"
-#include"debug.h"
-#include"time.h"
+#include"debug_system.h"
 #include"packet.h"
 #include"event.h"
 

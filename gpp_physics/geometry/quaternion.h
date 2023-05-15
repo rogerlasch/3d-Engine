@@ -84,5 +84,6 @@ vector3d quaternion_vector_rotate(const quaternion& q, const vector3d& v);
 quaternion quaternion_from_euler_angles(float x, float y, float z);
 //Extrai os ângulos de Euler do quatérnion.
 vector3d quaternion_extract_euler_angles(const quaternion& q);
+matrix3x3 quaternion_extract_matrix(const quaternion& q);
 }
 #endif

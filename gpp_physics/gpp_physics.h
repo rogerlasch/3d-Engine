@@ -19,11 +19,11 @@
 #include<gpp/debug_system.h>
 #endif
 #include"types.h"
-#include"geometry/geometry.h"
 #include"gpp_index.h"
+#include"geometry/geometry.h"
+#include"interfaces/interfaces.h"
 #include"IndexTable.h"
 #include"RigidBody.h"
-#include"IntegratorVerlet.h"
 #include"BinaryUtils.h"
 #include"octree.h"
 #include"BroadPhase.h"

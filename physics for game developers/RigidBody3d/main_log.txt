@@ -1,0 +1,992 @@
+Info: Imprimindo corpos antes da simulação...
+Info: radius:10
+mass:250
+inverseMass:0.004
+linearDamping:0.3
+angularDamping:0.3
+restitution:0.99
+position:50:50:1000
+linearMomentum:0:0:0
+angularMomentum:0:0:0
+linearVelocity:0:0:0
+angularVelocity:0:0:0
+linearAcceleration:0:0:0
+angularAcceleration:0:0:0
+force:0:0:0
+torque:0:0:0
+inertiaTensor:10000.000000,0.000000,0.000000
+0.000000,10000.000000,0.000000
+0.000000,0.000000,10000.000000
+
+inverseInertiaTensor:0.000100,0.000000,0.000000
+0.000000,0.000100,0.000000
+0.000000,0.000000,0.000100
+
+orientation:0:0:0:1
+
+Info: radius:50
+mass:0
+inverseMass:0
+linearDamping:0.3
+angularDamping:0.3
+restitution:0.5
+position:50:50:-50
+linearMomentum:0:0:0
+angularMomentum:0:0:0
+linearVelocity:0:0:0
+angularVelocity:0:0:0
+linearAcceleration:0:0:0
+angularAcceleration:0:0:0
+force:0:0:0
+torque:0:0:0
+inertiaTensor:0.000000,0.000000,0.000000
+0.000000,0.000000,0.000000
+0.000000,0.000000,0.000000
+
+inverseInertiaTensor:0.000000,0.000000,0.000000
+0.000000,0.000000,0.000000
+0.000000,0.000000,0.000000
+
+orientation:0:0:0:1
+
+Info: 1000.00
+Info: 1000.00
+Info: 999.51
+Info: 998.15
+Info: 996.22
+Info: 994.50
+Info: 993.73
+Info: 993.52
+Info: 992.83
+Info: 991.32
+Info: 989.35
+Info: 987.78
+Info: 987.21
+Info: 986.98
+Info: 986.13
+Info: 984.49
+Info: 982.52
+Info: 981.12
+Info: 980.71
+Info: 980.42
+Info: 979.41
+Info: 977.67
+Info: 975.73
+Info: 974.52
+Info: 974.20
+Info: 973.81
+Info: 972.64
+Info: 970.80
+Info: 968.94
+Info: 967.93
+Info: 967.67
+Info: 967.15
+Info: 965.81
+Info: 963.89
+Info: 962.16
+Info: 961.36
+Info: 961.14
+Info: 960.46
+Info: 958.96
+Info: 957.00
+Info: 955.42
+Info: 954.83
+Info: 954.61
+Info: 953.77
+Info: 952.13
+Info: 950.16
+Info: 948.75
+Info: 948.33
+Info: 948.05
+Info: 947.05
+Info: 945.31
+Info: 943.37
+Info: 942.14
+Info: 941.82
+Info: 941.44
+Info: 940.28
+Info: 938.45
+Info: 936.58
+Info: 935.55
+Info: 935.29
+Info: 934.78
+Info: 933.45
+Info: 931.54
+Info: 929.79
+Info: 928.98
+Info: 928.76
+Info: 928.10
+Info: 926.61
+Info: 924.64
+Info: 923.05
+Info: 922.45
+Info: 922.23
+Info: 921.40
+Info: 919.78
+Info: 917.80
+Info: 916.38
+Info: 915.95
+Info: 915.67
+Info: 914.69
+Info: 912.95
+Info: 911.01
+Info: 909.77
+Info: 909.44
+Info: 909.07
+Info: 907.92
+Info: 906.09
+Info: 904.22
+Info: 903.18
+Info: 902.92
+Info: 902.42
+Info: 901.10
+Info: 899.19
+Info: 897.43
+Info: 896.61
+Info: 896.38
+Info: 895.73
+Info: 894.25
+Info: 892.29
+Info: 890.68
+Info: 890.07
+Info: 889.85
+Info: 889.03
+Info: 887.42
+Info: 885.44
+Info: 884.01
+Info: 883.57
+Info: 883.30
+Info: 882.32
+Info: 880.60
+Info: 878.65
+Info: 877.39
+Info: 877.06
+Info: 876.70
+Info: 875.56
+Info: 873.74
+Info: 871.86
+Info: 870.80
+Info: 870.54
+Info: 870.05
+Info: 868.74
+Info: 866.84
+Info: 865.07
+Info: 864.23
+Info: 864.00
+Info: 863.36
+Info: 861.89
+Info: 859.94
+Info: 858.32
+Info: 857.69
+Info: 857.47
+Info: 856.67
+Info: 855.06
+Info: 853.09
+Info: 851.64
+Info: 851.18
+Info: 850.92
+Info: 849.96
+Info: 848.24
+Info: 846.29
+Info: 845.02
+Info: 844.68
+Info: 844.32
+Info: 843.20
+Info: 841.39
+Info: 839.50
+Info: 838.43
+Info: 838.16
+Info: 837.68
+Info: 836.39
+Info: 834.49
+Info: 832.71
+Info: 831.85
+Info: 831.62
+Info: 831.00
+Info: 829.54
+Info: 827.58
+Info: 825.95
+Info: 825.31
+Info: 825.09
+Info: 824.30
+Info: 822.70
+Info: 820.73
+Info: 819.27
+Info: 818.80
+Info: 818.54
+Info: 817.59
+Info: 815.88
+Info: 813.93
+Info: 812.65
+Info: 812.30
+Info: 811.95
+Info: 810.84
+Info: 809.03
+Info: 807.14
+Info: 806.05
+Info: 805.78
+Info: 805.31
+Info: 804.03
+Info: 802.14
+Info: 800.35
+Info: 799.47
+Info: 799.25
+Info: 798.63
+Info: 797.18
+Info: 795.23
+Info: 793.59
+Info: 792.93
+Info: 792.71
+Info: 791.93
+Info: 790.34
+Info: 788.37
+Info: 786.90
+Info: 786.42
+Info: 786.17
+Info: 785.23
+Info: 783.52
+Info: 781.57
+Info: 780.27
+Info: 779.92
+Info: 779.58
+Info: 778.48
+Info: 776.68
+Info: 774.78
+Info: 773.68
+Info: 773.40
+Info: 772.94
+Info: 771.67
+Info: 769.79
+Info: 767.99
+Info: 767.10
+Info: 766.87
+Info: 766.26
+Info: 764.83
+Info: 762.88
+Info: 761.22
+Info: 760.55
+Info: 760.33
+Info: 759.57
+Info: 757.99
+Info: 756.01
+Info: 754.53
+Info: 754.04
+Info: 753.79
+Info: 752.86
+Info: 751.17
+Info: 749.21
+Info: 747.90
+Info: 747.54
+Info: 747.21
+Info: 746.12
+Info: 744.32
+Info: 742.42
+Info: 741.30
+Info: 741.02
+Info: 740.57
+Info: 739.32
+Info: 737.44
+Info: 735.63
+Info: 734.72
+Info: 734.49
+Info: 733.89
+Info: 732.47
+Info: 730.53
+Info: 728.86
+Info: 728.17
+Info: 727.95
+Info: 727.20
+Info: 725.63
+Info: 723.66
+Info: 722.16
+Info: 721.66
+Info: 721.41
+Info: 720.50
+Info: 718.81
+Info: 716.85
+Info: 715.53
+Info: 715.16
+Info: 714.83
+Info: 713.76
+Info: 711.97
+Info: 710.06
+Info: 708.93
+Info: 708.64
+Info: 708.20
+Info: 706.96
+Info: 705.08
+Info: 703.27
+Info: 702.35
+Info: 702.11
+Info: 701.53
+Info: 700.12
+Info: 698.17
+Info: 696.50
+Info: 695.79
+Info: 695.58
+Info: 694.83
+Info: 693.27
+Info: 691.30
+Info: 689.79
+Info: 689.28
+Info: 689.04
+Info: 688.13
+Info: 686.45
+Info: 684.49
+Info: 683.15
+Info: 682.77
+Info: 682.46
+Info: 681.39
+Info: 679.62
+Info: 677.70
+Info: 676.55
+Info: 676.26
+Info: 675.83
+Info: 674.60
+Info: 672.73
+Info: 670.91
+Info: 669.97
+Info: 669.73
+Info: 669.16
+Info: 667.76
+Info: 665.82
+Info: 664.14
+Info: 663.42
+Info: 663.20
+Info: 662.47
+Info: 660.92
+Info: 658.94
+Info: 657.42
+Info: 656.90
+Info: 656.66
+Info: 655.77
+Info: 654.09
+Info: 652.13
+Info: 650.78
+Info: 650.39
+Info: 650.08
+Info: 649.03
+Info: 647.26
+Info: 645.34
+Info: 644.18
+Info: 643.88
+Info: 643.46
+Info: 642.24
+Info: 640.38
+Info: 638.55
+Info: 637.59
+Info: 637.35
+Info: 636.79
+Info: 635.40
+Info: 633.47
+Info: 631.77
+Info: 631.04
+Info: 630.82
+Info: 630.10
+Info: 628.56
+Info: 626.59
+Info: 625.05
+Info: 624.52
+Info: 624.28
+Info: 623.40
+Info: 621.74
+Info: 619.77
+Info: 618.41
+Info: 618.01
+Info: 617.71
+Info: 616.67
+Info: 614.90
+Info: 612.98
+Info: 611.80
+Info: 611.50
+Info: 611.09
+Info: 609.89
+Info: 608.03
+Info: 606.19
+Info: 605.22
+Info: 604.97
+Info: 604.42
+Info: 603.05
+Info: 601.12
+Info: 599.41
+Info: 598.66
+Info: 598.44
+Info: 597.73
+Info: 596.20
+Info: 594.23
+Info: 592.68
+Info: 592.14
+Info: 591.90
+Info: 591.03
+Info: 589.38
+Info: 587.41
+Info: 586.03
+Info: 585.63
+Info: 585.34
+Info: 584.31
+Info: 582.55
+Info: 580.62
+Info: 579.43
+Info: 579.12
+Info: 578.72
+Info: 577.53
+Info: 575.68
+Info: 573.83
+Info: 572.84
+Info: 572.59
+Info: 572.06
+Info: 570.69
+Info: 568.77
+Info: 567.05
+Info: 566.28
+Info: 566.06
+Info: 565.37
+Info: 563.85
+Info: 561.88
+Info: 560.32
+Info: 559.76
+Info: 559.52
+Info: 558.67
+Info: 557.02
+Info: 555.05
+Info: 553.66
+Info: 553.25
+Info: 552.96
+Info: 551.95
+Info: 550.19
+Info: 548.26
+Info: 547.05
+Info: 546.74
+Info: 546.35
+Info: 545.17
+Info: 543.33
+Info: 541.47
+Info: 540.47
+Info: 540.21
+Info: 539.69
+Info: 538.34
+Info: 536.42
+Info: 534.69
+Info: 533.90
+Info: 533.68
+Info: 533.00
+Info: 531.49
+Info: 529.52
+Info: 527.95
+Info: 527.37
+Info: 527.15
+Info: 526.30
+Info: 524.66
+Info: 522.69
+Info: 521.29
+Info: 520.87
+Info: 520.59
+Info: 519.58
+Info: 517.84
+Info: 515.90
+Info: 514.68
+Info: 514.36
+Info: 513.98
+Info: 512.81
+Info: 510.97
+Info: 509.11
+Info: 508.09
+Info: 507.83
+Info: 507.32
+Info: 505.98
+Info: 504.07
+Info: 502.33
+Info: 501.52
+Info: 501.30
+Info: 500.63
+Info: 499.13
+Info: 497.17
+Info: 495.58
+Info: 494.99
+Info: 494.77
+Info: 493.94
+Info: 492.30
+Info: 490.33
+Info: 488.92
+Info: 488.49
+Info: 488.21
+Info: 487.22
+Info: 485.48
+Info: 483.54
+Info: 482.31
+Info: 481.98
+Info: 481.61
+Info: 480.45
+Info: 478.62
+Info: 476.75
+Info: 475.71
+Info: 475.46
+Info: 474.95
+Info: 473.63
+Info: 471.72
+Info: 469.96
+Info: 469.15
+Info: 468.92
+Info: 468.26
+Info: 466.78
+Info: 464.82
+Info: 463.22
+Info: 462.61
+Info: 462.39
+Info: 461.57
+Info: 459.95
+Info: 457.97
+Info: 456.55
+Info: 456.11
+Info: 455.83
+Info: 454.85
+Info: 453.12
+Info: 451.18
+Info: 449.93
+Info: 449.60
+Info: 449.23
+Info: 448.09
+Info: 446.27
+Info: 444.39
+Info: 443.34
+Info: 443.08
+Info: 442.58
+Info: 441.27
+Info: 439.37
+Info: 437.60
+Info: 436.77
+Info: 436.54
+Info: 435.90
+Info: 434.42
+Info: 432.46
+Info: 430.85
+Info: 430.23
+Info: 430.01
+Info: 429.20
+Info: 427.59
+Info: 425.62
+Info: 424.17
+Info: 423.73
+Info: 423.46
+Info: 422.49
+Info: 420.77
+Info: 418.82
+Info: 417.56
+Info: 417.22
+Info: 416.86
+Info: 415.73
+Info: 413.91
+Info: 412.03
+Info: 410.96
+Info: 410.70
+Info: 410.21
+Info: 408.91
+Info: 407.01
+Info: 405.24
+Info: 404.39
+Info: 404.16
+Info: 403.53
+Info: 402.07
+Info: 400.11
+Info: 398.49
+Info: 397.85
+Info: 397.63
+Info: 396.83
+Info: 395.23
+Info: 393.26
+Info: 391.80
+Info: 391.34
+Info: 391.08
+Info: 390.13
+Info: 388.41
+Info: 386.46
+Info: 385.18
+Info: 384.84
+Info: 384.49
+Info: 383.37
+Info: 381.56
+Info: 379.67
+Info: 378.59
+Info: 378.32
+Info: 377.84
+Info: 376.56
+Info: 374.66
+Info: 372.88
+Info: 372.01
+Info: 371.79
+Info: 371.16
+Info: 369.71
+Info: 367.76
+Info: 366.12
+Info: 365.47
+Info: 365.25
+Info: 364.47
+Info: 362.87
+Info: 360.90
+Info: 359.43
+Info: 358.96
+Info: 358.71
+Info: 357.76
+Info: 356.05
+Info: 354.10
+Info: 352.81
+Info: 352.46
+Info: 352.12
+Info: 351.01
+Info: 349.21
+Info: 347.31
+Info: 346.21
+Info: 345.94
+Info: 345.47
+Info: 344.20
+Info: 342.31
+Info: 340.52
+Info: 339.64
+Info: 339.41
+Info: 338.80
+Info: 337.35
+Info: 335.40
+Info: 333.76
+Info: 333.09
+Info: 332.87
+Info: 332.10
+Info: 330.52
+Info: 328.54
+Info: 327.06
+Info: 326.58
+Info: 326.33
+Info: 325.40
+Info: 323.70
+Info: 321.74
+Info: 320.44
+Info: 320.08
+Info: 319.74
+Info: 318.65
+Info: 316.85
+Info: 314.95
+Info: 313.84
+Info: 313.56
+Info: 313.11
+Info: 311.84
+Info: 309.96
+Info: 308.16
+Info: 307.26
+Info: 307.03
+Info: 306.43
+Info: 305.00
+Info: 303.05
+Info: 301.39
+Info: 300.71
+Info: 300.49
+Info: 299.73
+Info: 298.16
+Info: 296.19
+Info: 294.69
+Info: 294.20
+Info: 293.95
+Info: 293.03
+Info: 291.34
+Info: 289.38
+Info: 288.06
+Info: 287.70
+Info: 287.37
+Info: 286.29
+Info: 284.50
+Info: 282.59
+Info: 281.46
+Info: 281.18
+Info: 280.74
+Info: 279.49
+Info: 277.61
+Info: 275.80
+Info: 274.88
+Info: 274.65
+Info: 274.06
+Info: 272.64
+Info: 270.70
+Info: 269.03
+Info: 268.33
+Info: 268.12
+Info: 267.37
+Info: 265.80
+Info: 263.83
+Info: 262.32
+Info: 261.82
+Info: 261.57
+Info: 260.66
+Info: 258.98
+Info: 257.02
+Info: 255.69
+Info: 255.32
+Info: 255.00
+Info: 253.93
+Info: 252.14
+Info: 250.23
+Info: 249.09
+Info: 248.80
+Info: 248.37
+Info: 247.13
+Info: 245.26
+Info: 243.44
+Info: 242.51
+Info: 242.27
+Info: 241.69
+Info: 240.29
+Info: 238.35
+Info: 236.67
+Info: 235.96
+Info: 235.74
+Info: 235.00
+Info: 233.44
+Info: 231.47
+Info: 229.95
+Info: 229.44
+Info: 229.20
+Info: 228.30
+Info: 226.62
+Info: 224.66
+Info: 223.32
+Info: 222.93
+Info: 222.62
+Info: 221.56
+Info: 219.79
+Info: 217.87
+Info: 216.71
+Info: 216.42
+Info: 216.00
+Info: 214.77
+Info: 212.91
+Info: 211.08
+Info: 210.13
+Info: 209.89
+Info: 209.33
+Info: 207.93
+Info: 206.00
+Info: 204.30
+Info: 203.58
+Info: 203.36
+Info: 202.63
+Info: 201.09
+Info: 199.12
+Info: 197.59
+Info: 197.06
+Info: 196.82
+Info: 195.93
+Info: 194.27
+Info: 192.30
+Info: 190.94
+Info: 190.55
+Info: 190.25
+Info: 189.20
+Info: 187.43
+Info: 185.51
+Info: 184.34
+Info: 184.04
+Info: 183.63
+Info: 182.41
+Info: 180.56
+Info: 178.72
+Info: 177.76
+Info: 177.51
+Info: 176.96
+Info: 175.58
+Info: 173.65
+Info: 171.94
+Info: 171.20
+Info: 170.98
+Info: 170.27
+Info: 168.73
+Info: 166.76
+Info: 165.22
+Info: 164.68
+Info: 164.44
+Info: 163.57
+Info: 161.91
+Info: 159.94
+Info: 158.57
+Info: 158.17
+Info: 157.87
+Info: 156.84
+Info: 155.08
+Info: 153.15
+Info: 151.97
+Info: 151.66
+Info: 151.26
+Info: 150.06
+Info: 148.20
+Info: 146.36
+Info: 145.38
+Info: 145.13
+Info: 144.59
+Info: 143.22
+Info: 141.30
+Info: 139.58
+Info: 138.82
+Info: 138.60
+Info: 137.90
+Info: 136.38
+Info: 134.41
+Info: 132.85
+Info: 132.30
+Info: 132.06
+Info: 131.20
+Info: 129.55
+Info: 127.58
+Info: 126.20
+Info: 125.79
+Info: 125.50
+Info: 124.48
+Info: 122.72
+Info: 120.79
+Info: 119.59
+Info: 119.28
+Info: 118.88
+Info: 117.70
+Info: 115.85
+Info: 114.00
+Info: 113.00
+Info: 112.75
+Info: 112.22
+Info: 110.87
+Info: 108.94
+Info: 107.22
+Info: 106.44
+Info: 106.22
+Info: 105.53
+Info: 104.02
+Info: 102.05
+Info: 100.48
+Info: 99.92
+Info: 99.69
+Info: 98.84
+Info: 97.19
+Info: 95.22
+Info: 93.83
+Info: 93.41
+Info: 93.12
+Info: 92.11
+Info: 90.37
+Info: 88.43
+Info: 87.22
+Info: 86.90
+Info: 86.51
+Info: 85.34
+Info: 83.50
+Info: 81.64
+Info: 80.63
+Info: 80.37
+Info: 79.85
+Info: 78.51
+Info: 76.59
+Info: 74.86
+Info: 74.06
+Info: 73.84
+Info: 73.17
+Info: 71.66
+Info: 69.70
+Info: 68.12
+Info: 67.53
+Info: 67.31
+Info: 66.47
+Info: 64.83
+Info: 62.86
+Info: 61.45
+Info: 61.03
+Info: 60.75
+Info: 59.75
+Info: 58.01
+Info: 56.07
+Info: 54.84
+Info: 54.52
+Info: 54.14
+Info: 52.98
+Info: 51.15
+Info: 49.28
+Info: 48.25
+Info: 48.00
+Info: 47.49
+Info: 46.16
+Info: 44.24
+Info: 42.50
+Info: 41.69
+Info: 41.46
+Info: 40.80
+Info: 39.31
+Info: 37.34
+Info: 35.75
+Info: 35.15
+Info: 34.93
+Info: 34.10
+Info: 32.48
+Info: 30.50
+Info: 29.08
+Info: 28.65
+Info: 28.37
+Info: 27.39
+Info: 25.65
+Info: 23.71
+Info: 22.47
+Info: 22.14
+Info: 21.77
+Info: 20.62
+Info: 18.79
+Info: 16.92
+Info: 15.88
+Info: 15.62
+Info: 15.12
+Info: 13.80
+Info: 11.89
+Info: 10.13
+Info: vv:2.4604976
+Info: 10.00
+Info: Imprimindo corpos depois da simulação...
+Info: radius:10
+mass:250
+inverseMass:0.004
+linearDamping:0.3
+angularDamping:0.3
+restitution:0.99
+position:37.7375:37.7375:-1533.12
+linearMomentum:0:0:-3559.72
+angularMomentum:0:0:0
+linearVelocity:-217.431:-217.431:-27355.1
+angularVelocity:0:0:0
+linearAcceleration:0:0:-68.82
+angularAcceleration:0:0:0
+force:0:0:0
+torque:0:0:0
+inertiaTensor:10000.000000,0.000000,0.000000
+0.000000,10000.000000,0.000000
+0.000000,0.000000,10000.000000
+
+inverseInertiaTensor:10000.000000,0.000000,0.000000
+0.000000,10000.000000,0.000000
+0.000000,0.000000,10000.000000
+
+orientation:0:0:0:1
+
+Info: radius:50
+mass:0
+inverseMass:0
+linearDamping:0.3
+angularDamping:0.3
+restitution:0.5
+position:50:50:-50
+linearMomentum:0:0:0
+angularMomentum:0:0:0
+linearVelocity:0:0:0
+angularVelocity:0:0:0
+linearAcceleration:0:0:0
+angularAcceleration:0:0:0
+force:0:0:0
+torque:0:0:0
+inertiaTensor:0.000000,0.000000,0.000000
+0.000000,0.000000,0.000000
+0.000000,0.000000,0.000000
+
+inverseInertiaTensor:0.000000,0.000000,0.000000
+0.000000,0.000000,0.000000
+0.000000,0.000000,0.000000
+
+orientation:0:0:0:1
+

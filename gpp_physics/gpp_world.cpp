@@ -73,24 +73,6 @@ return NULL;
 void gpp_world::update(float dt)
 {
 profiler_snap();
-for(auto& it : bodies)
-{
-it->setForce(gravity);
-if(bdebug.find(it->getIndex())!=bdebug.end())
-{
-_FLOG("{}", it->getPosition().toString());
-}
-}
-IntegratorVerlet vt;
-BroadPhase ph;
-NarrowPhase nr;
-CollisionSolver cs;
-CollisionPairList pcollisions;
-CollisionList collisions;
-vt.integrate(bodies, dt);
-ph.scan(bodies, pcollisions);
-nr.scan(pcollisions, collisions);
-cs.solve(collisions);
 }
 
 string gpp_world::toString()const

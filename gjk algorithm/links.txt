@@ -10,11 +10,18 @@ quaternion.cpp
 https://github.com/rogerlasch/3d-Engine/blob/main/gpp_physics/geometry/quaternion.cpp
 quaternion.h
 https://github.com/rogerlasch/3d-Engine/blob/main/gpp_physics/geometry/quaternion.h
-
 RigidBody.cpp
 https://github.com/rogerlasch/3d-Engine/blob/main/gpp_physics/RigidBody.cpp
 RigidBody.h
 https://github.com/rogerlasch/3d-Engine/blob/main/gpp_physics/RigidBody.h
+CollisionInfo.cpp
+https://github.com/rogerlasch/3d-Engine/blob/main/gpp_physics/geometry/CollisionInfo.cpp
+CollisionInfo.h
+https://github.com/rogerlasch/3d-Engine/blob/main/gpp_physics/geometry/CollisionInfo.h
+CollisionSolver.cpp
+https://github.com/rogerlasch/3d-Engine/blob/main/gpp_physics/CollisionSolver.cpp
+CollisionSolver.h
+https://github.com/rogerlasch/3d-Engine/blob/main/gpp_physics/CollisionSolver.h
 
 
 

@@ -11,9 +11,9 @@ namespace gpp
 struct SweepComparator
 {
 uint32 gSortAxis;
-bool operator()(RigidBody* rb1, RigidBody* rb2)
+bool operator()(iRigidBody* rb1, iRigidBody* rb2)
 {
-return rb1->getMin()[gSortAxis]<rb2->getMin()[gSortAxis];
+return rb1->getAABB()->getMin()[gSortAxis]<rb2->getAABB()->getMin()[gSortAxis];
 }
 };
 
@@ -22,31 +22,32 @@ BroadPhase::BroadPhase()
 gsortaxis=0;
 }
 
-void BroadPhase::scan(RigidBodyList& bodies, CollisionPairList& collisions)
+void BroadPhase::scan(vector<iRigidBody*>& bodies, vector<CollisionInfo>& collisions)
 {
     // Sort the array on currently selected sorting axis (gsortAxis)
 SweepComparator scp;
 scp.gSortAxis=getgSortAxis();
-RigidBodyList bodies2(bodies.begin(), bodies.end());
-std::sort(bodies2.begin(), bodies2.end(), scp);
+std::sort(bodies.begin(), bodies.end(), scp);
     // Sweep the array for collisions
     float s[3] = { 0.0f, 0.0f, 0.0f }, s2[3] = { 0.0f, 0.0f, 0.0f }, v[3];
-    for (uint32 i=0; i<bodies2.size(); i++) {
+    for (uint32 i=0; i<bodies.size(); i++) {
           // Determine AABB center point
-          vector3d p = 0.5f * (bodies2[i]->min + bodies2[i]->max);
+          vector3d p = 0.5f * (bodies[i]->aabb->min + bodies[i]->aabb->max);
           // Update sum and sum2 for computing variance of AABB centers
           for (uint32 c = 0; c < 3; c++) {
                 s[c] += p[c];
                 s2[c] += p[c] * p[c];
           }
           // Test collisions against all possible overlapping AABBs following current one
-          for (uint32 j = i + 1; j < bodies2.size(); j++) {
+          for (uint32 j = i + 1; j < bodies.size(); j++) {
                 // Stop when tested AABBs are beyond the end of current AABB
-                if (bodies2[j]->min[gsortaxis] > bodies2[i]->max[gsortaxis])
+                if (bodies[j]->aabb->min[gsortaxis] > bodies[i]->aabb->max[gsortaxis])
                       break;
-                if (aabbOverlap(bodies2[i], bodies2[j]))
+                if (aabbOverlap(bodies[i]->aabb, bodies[j]->aabb))
 {
-collisions.emplace_back(bodies2[i], bodies2[j]);
+auto& info=collisions.emplace_back();
+info.r1=bodies[i];
+info.r2=bodies[j];
 }
           }
       }
@@ -58,15 +59,6 @@ uint32 x=0;
         if (v[1] > v[0]) x = 1;
         if (v[2] > v[gsortaxis]) x = 2;
 setgSortAxis(x);
-}
-
-void BroadPhase::scan(RigidBodyList& bodies, CollisionPairList& collisions, std::shared_mutex& m)
-{
-unique_lock<shared_mutex> lck(m, defer_lock);
-while(!lck.try_lock())
-{
-}
-this->scan(bodies, collisions);
 }
 
 uint32 BroadPhase::getgSortAxis()const

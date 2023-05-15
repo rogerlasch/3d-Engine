@@ -28,7 +28,7 @@ float radius;
 uint32 dept;
 octree_node* parent;
 std::vector<octree_node*> childs;
-std::vector<RigidBody*> bodies;
+std::vector<iRigidBody*> bodies;
 octree_node();
 octree_node(const octree_node& qw)=delete;
 octree_node& operator=(const octree_node& qw)=delete;
@@ -36,7 +36,7 @@ virtual ~octree_node();
 std::string toString()const;
 };
 
-typedef std::vector<std::pair<RigidBody*, RigidBody*>> CollisionPairList;
+typedef std::vector<std::pair<iRigidBody*, iRigidBody*>> CollisionPairList;
 class octree
 {
 private:
@@ -56,7 +56,7 @@ bool empty()const;
 void create(const vector3d& min, float size);
 void clear();
 void reserve(uint32 dept);
-void insert(RigidBody* rb);
+void insert(iRigidBody* rb);
 private:
 void spliteNode(octree_node* node);
 void redistribute(octree_node* node);

@@ -4,8 +4,7 @@
 #include<atomic>
 #include<string>
 #include<mutex>
-#include"types.h"
-#include"debug.h"
+#include"debug_system.h"
 #include"packet.h"
 #include"event.h"
 #include"EventQueue.h"

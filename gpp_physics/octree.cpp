@@ -176,7 +176,7 @@ sf=it;
 }
 }
 
-void octree::insert(RigidBody* rb)
+void octree::insert(iRigidBody* rb)
 {
 _GASSERT(rb!=NULL);
 _GASSERT(root!=NULL);
@@ -185,7 +185,7 @@ octree_node* sf=root;
 bool done=false;
 while(done==false)
 {
-bool inside=aabbInsideAll(sf->center, sf->radius, rb);
+bool inside=aabbInsideAll(sf->center, sf->radius, rb->aabb);
 if((inside)&&(sf->childs.size()==0))
 {
 if(sf->bodies.size()>=info.blimit)
@@ -206,7 +206,7 @@ else if((inside)&&(sf->childs.size()>0))
 bool found=false;
 for(auto& it : sf->childs)
 {
-if(!aabbInsideAll(it->center, it->radius, rb))
+if(!aabbInsideAll(it->center, it->radius, rb->aabb))
 {
 continue;
 }
@@ -269,10 +269,10 @@ spliteNode(node);
 }
 for(uint32 i=0; i<node->bodies.size(); i++)
 {
-RigidBody* rb=node->bodies[i];
+iRigidBody* rb=node->bodies[i];
 for(auto& it2 : node->childs)
 {
-if(aabbInsideAll(it2->center, it2->radius, rb))
+if(aabbInsideAll(it2->center, it2->radius, rb->aabb))
 {
 BinaryUtils::insert(it2->bodies, rb);
 node->bodies.erase(node->bodies.begin()+i);

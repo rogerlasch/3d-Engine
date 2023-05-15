@@ -5,10 +5,8 @@
 #endif
 #include<picojson.h>
 #include<string>
-#include"types.h"
-#include"debug.h"
+#include"debug_system.h"
 #include"cmd_parser.h"
-#include"time.h"
 #include"packet.h"
 
 using namespace std;
@@ -122,7 +120,7 @@ this->command=((obj.count("command")>0) ? obj.at("command").get<string>() : "");
 this->data=((obj.count("data")>0) ? obj.at("data").get<string>() : "");
 this->errormsg=((obj.count("errormsg")>0) ? obj.at("errormsg").get<string>() : "");
 } catch(const exception& e) {
-_LOG_EXCEPT(e.what());
+_GEXCEPT(e.what());
 this->reset();
 return false;
 }

@@ -1,0 +1,7 @@
+Tempo de execução total: 9 ms
+
+Imprimindo funções monitoradas:
+Total de funções monitoradas: 1
+
+updateSimulation: Tempo total: 6.712 ms, Total de execuções: 889, Duração média: 0.008 ms
+

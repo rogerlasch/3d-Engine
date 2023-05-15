@@ -16,8 +16,7 @@ typedef std::vector<CollisionInfo> CollisionList;
 class NarrowPhase
 {
 public:
-void scan(CollisionPairList& pairs, CollisionList& colisions);
-void scan(CollisionPairList& pairs, CollisionList& colisions, std::shared_mutex& m);
+virtual void detectCollisions(std::vector<CollisionInfo>& iPhase, std::vector<CollisionInfo>& collisions);
 };
 }
 #endif

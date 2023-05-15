@@ -1,0 +1,63 @@
+class RigidBody {
+private:
+    float mass; // Massa do corpo
+    float inverseMass;
+    float linearDamping;
+    float angularDamping;
+    float restitution;
+    vector3d position; // Posição do corpo
+    vector3d linearMomentum;
+    vector3d angularMomentum;
+    vector3d linearVelocity;
+    vector3d angularVelocity;
+    vector3d linearAcceleration;
+    vector3d angularAcceleration;
+    vector3d force;
+    vector3d torque;
+    matrix3x3 inertiaTensor;
+    matrix3x3 inverseInertiaTensor;
+    quaternion orientation;
+
+public:
+    // Construtor e outros métodos...
+
+    void updateVerlet(float dt) {
+        // Atualiza posição e velocidade linear
+        vector3d displacement = linearVelocity * dt + 0.5f * linearAcceleration * dt * dt;
+        position += displacement;
+        linearVelocity += linearAcceleration * dt;
+        linearVelocity *= pow(linearDamping, dt);
+
+        // Atualiza orientação e velocidade angular
+        quaternion orientation1 = orientation + quaternion(0.0f, angularVelocity * 0.5f * dt) * orientation;
+        orientation1.normalize();
+        angularVelocity += angularAcceleration * dt;
+        angularVelocity *= pow(angularDamping, dt);
+
+        // Atualiza momento linear e angular
+        linearMomentum += force * dt;
+        angularMomentum += torque * dt;
+
+        // Atualiza matrizes de inércia e vetores de aceleração
+        matrix3x3 worldInertiaTensor = orientation1.toMatrix() * inverseInertiaTensor * orientation1.toMatrix().transpose();
+        linearAcceleration = force * inverseMass;
+        angularAcceleration = worldInertiaTensor * torque;
+
+        // Atualiza orientação, normaliza e atualiza a matriz de rotação
+        orientation = orientation + quaternion(0.0f, angularVelocity * 0.5f * dt) * orientation;
+        orientation.normalize();
+
+        // Atualiza matriz de inércia invertida
+        inverseInertiaTensor = worldInertiaTensor.inverse();
+
+        // Atualiza força e torque
+        force = vector3d(0.0f, 0.0f, 0.0f);
+        torque = vector3d(0.0f, 0.0f, 0.0f);
+
+        // Atualiza posição e orientação do objeto geométrico associado (se existir)
+        if (geometricShape != NULL) {
+            geometricShape->Translate(displacement);
+            geometricShape->Rotate(orientation);
+        }
+    }
+};

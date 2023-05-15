@@ -4,8 +4,7 @@
 #include<functional>
 #include<shared_mutex>
 #include<mutex>
-#include"types.h"
-#include"debug.h"
+#include"debug_system.h"
 #include"SafeFlags.h"
 #include"command.h"
 

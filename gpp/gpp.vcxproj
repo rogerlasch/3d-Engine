@@ -21,14 +21,17 @@
   <ItemGroup>
     <ClCompile Include="cmd_parser.cpp" />
     <ClCompile Include="command.cpp" />
-    <ClCompile Include="debug.cpp" />
     <ClCompile Include="event.cpp" />
     <ClCompile Include="EventQueue.cpp" />
+    <ClCompile Include="gpp_calendar.cpp" />
     <ClCompile Include="gpp_client.cpp" />
     <ClCompile Include="gpp_peer.cpp" />
     <ClCompile Include="gpp_server.cpp" />
     <ClCompile Include="gpp_steamsockets.cpp" />
     <ClCompile Include="gpp_value.cpp" />
+    <ClCompile Include="logger\gpp_exception.cpp" />
+    <ClCompile Include="logger\log.cpp" />
+    <ClCompile Include="logger\logger.cpp" />
     <ClCompile Include="packet.cpp" />
     <ClCompile Include="profiler\FunctionInfo.cpp" />
     <ClCompile Include="profiler\profiler.cpp" />
@@ -40,16 +43,19 @@
   <ItemGroup>
     <ClInclude Include="cmd_parser.h" />
     <ClInclude Include="command.h" />
-    <ClInclude Include="debug.h" />
     <ClInclude Include="event.h" />
     <ClInclude Include="EventQueue.h" />
     <ClInclude Include="gpp.h" />
+    <ClInclude Include="gpp_calendar.h" />
     <ClInclude Include="gpp_client.h" />
     <ClInclude Include="gpp_networkinterface.h" />
     <ClInclude Include="gpp_peer.h" />
     <ClInclude Include="gpp_server.h" />
     <ClInclude Include="gpp_steamsockets.h" />
     <ClInclude Include="gpp_value.h" />
+    <ClInclude Include="logger\gpp_exception.h" />
+    <ClInclude Include="logger\log.h" />
+    <ClInclude Include="logger\logger.h" />
     <ClInclude Include="packet.h" />
     <ClInclude Include="profiler\FunctionInfo.h" />
     <ClInclude Include="profiler\profiler.h" />

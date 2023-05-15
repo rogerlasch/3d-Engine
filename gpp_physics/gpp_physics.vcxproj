@@ -35,7 +35,6 @@
     <ClCompile Include="geometry\vector3d.cpp" />
     <ClCompile Include="gpp_index.cpp" />
     <ClCompile Include="gpp_world.cpp" />
-    <ClCompile Include="IntegratorVerlet.cpp" />
     <ClCompile Include="NarrowPhase.cpp" />
     <ClCompile Include="octree.cpp" />
     <ClCompile Include="RigidBody.cpp" />
@@ -62,7 +61,12 @@
     <ClInclude Include="gpp_physics.h" />
     <ClInclude Include="gpp_world.h" />
     <ClInclude Include="IndexTable.h" />
-    <ClInclude Include="IntegratorVerlet.h" />
+    <ClInclude Include="interfaces\iBroadPhase.h" />
+    <ClInclude Include="interfaces\iCollisionSolver.h" />
+    <ClInclude Include="interfaces\iMotion.h" />
+    <ClInclude Include="interfaces\iNarrowPhase.h" />
+    <ClInclude Include="interfaces\interfaces.h" />
+    <ClInclude Include="interfaces\iRigidBody.h" />
     <ClInclude Include="NarrowPhase.h" />
     <ClInclude Include="octree.h" />
     <ClInclude Include="RigidBody.h" />

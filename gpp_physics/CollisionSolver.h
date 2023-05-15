@@ -15,8 +15,8 @@ namespace gpp
 class CollisionSolver
 {
 public:
-void solve(CollisionList& collisions);
-void solvePair(RigidBody* r1, RigidBody* r2, CollisionInfo* data);
+void solve(std::vector<CollisionInfo>& collisions);
+void solvePair(CollisionInfo& info);
 };
 }
 #endif

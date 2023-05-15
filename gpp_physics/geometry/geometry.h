@@ -10,8 +10,8 @@
 #endif
 #include"../types.h"
 #include"vector3d.h"
-#include"quaternion.h"
 #include"matrix3x3.h"
+#include"quaternion.h"
 #include"gjk.h"
 #include"GeometricShape.h"
 #include"box3d.h"

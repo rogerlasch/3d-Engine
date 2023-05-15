@@ -3,6 +3,7 @@
 #include<codecvt>
 #include<string>
 #include"types.h"
+#include"logger/gpp_exception.h"
 #include"string_utils.h"
 
 using namespace std;
@@ -20,7 +21,26 @@ final+=tolower(s[i]);
 return final;
 }
 
+wstring wstring_to_lower_case(const wstring& s)
+{
+wstring final=L"";
+final.reserve(s.size());
+for(uint32 i=0; i<s.size(); i++)
+{
+final+=tolower(s[i]);
+}
+return final;
+}
+
 void string_to_lower_case(string& s)
+{
+for(uint32 i=0; i<s.size(); i++)
+{
+s[i]=tolower(s[i]);
+}
+}
+
+void wstring_to_lower_case(wstring& s)
 {
 for(uint32 i=0; i<s.size(); i++)
 {
@@ -39,7 +59,26 @@ final+=toupper(s[i]);
 return final;
 }
 
+wstring wstring_to_upper_case(const wstring& s)
+{
+wstring final=L"";
+final.reserve(s.size());
+for(uint32 i=0; i<s.size(); i++)
+{
+final+=toupper(s[i]);
+}
+return final;
+}
+
 void string_to_upper_case(string& s)
+{
+for(uint32 i=0; i<s.size(); i++)
+{
+s[i]=toupper(s[i]);
+}
+}
+
+void wstring_to_upper_case(wstring& s)
 {
 for(uint32 i=0; i<s.size(); i++)
 {
@@ -62,6 +101,21 @@ if(i ==std::string::npos)
 }
 }
 
+wstring wstring_trim(const wstring& s)
+{
+static wstring t =L" \t\r\n";
+wstring d = s;
+wstring::size_type i = d.find_last_not_of(t);
+if(i ==std::wstring::npos)
+{
+         return L"";
+}
+      else
+{
+         return d.erase(i + 1).erase(0, s.find_first_not_of(t));
+}
+}
+
 void string_trim(string& s)
 {
 static string t = " \t\r\n";
@@ -76,6 +130,70 @@ s.erase(i + 1).erase(0, s.find_first_not_of(t));
 }
 }
 
+void wstring_trim(wstring& s)
+{
+static wstring t = L" \t\r\n";
+wstring::size_type i=s.find_last_not_of(t);
+if(i ==std::wstring::npos)
+{
+return;
+}
+      else
+{
+s.erase(i + 1).erase(0, s.find_first_not_of(t));
+}
+}
+
+string string_replace(const string& str, const string& old, const string& new_str)
+{
+string mstr(str);
+size_t x=0;
+while((x=mstr.find(old, x))!=string::npos)
+{
+mstr.replace(x, old.size(), new_str);
+}
+return mstr;
+}
+
+string string_replace(const string& str, const vector<pair<string, string>>& args)
+{
+string mstr(str);
+for(auto& it : args)
+{
+size_t x=0;
+while((x=mstr.find(it.first, x))!=string::npos)
+{
+mstr.replace(x, it.first.size(), it.second);
+}
+}
+return mstr;
+}
+
+wstring wstring_replace(const wstring& str, const wstring& old, const wstring& new_str)
+{
+wstring mstr(str);
+size_t x=0;
+while((x=mstr.find(old, x))!=wstring::npos)
+{
+mstr.replace(x, old.size(), new_str);
+}
+return mstr;
+}
+
+wstring wstring_replace(const wstring& str, const vector<pair<wstring, wstring>>& args)
+{
+wstring mstr(str);
+for(auto& it : args)
+{
+size_t x=0;
+while((x=mstr.find(it.first, x))!=wstring::npos)
+{
+mstr.replace(x, it.first.size(), it.second);
+}
+}
+return mstr;
+}
+
 //Conversions...
 
 string string_utf8_encode(const wstring& str)
@@ -84,7 +202,7 @@ try {
     wstring_convert<codecvt_utf8_utf16<wchar_t>> myconv;
     return myconv.to_bytes(str);
 } catch(const exception& e) {
-e.what();
+_GEXCEPT(e.what());
 }
 return "";
 }
@@ -95,7 +213,7 @@ try {
 wstring_convert<codecvt_utf8_utf16<wchar_t>> myconv;
     return myconv.from_bytes(str);
 } catch(const exception& e) {
-e.what();
+_GEXCEPT(e.what());
 }
 return L"";
 }

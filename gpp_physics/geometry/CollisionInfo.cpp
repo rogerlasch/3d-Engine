@@ -14,8 +14,8 @@ CollisionInfo::CollisionInfo()
 point={0,0,0};
 normal={0,0,0};
 depth=0.0f;
-b1=NULL;
-b2=NULL;
+r1=NULL;
+r2=NULL;
 }
 
 CollisionInfo::CollisionInfo(const CollisionInfo& c)
@@ -28,8 +28,8 @@ CollisionInfo& CollisionInfo::operator=(const CollisionInfo& c)
 this->point=c.point;
 this->normal=c.normal;
 this->depth=c.depth;
-this->b1=c.b1;
-this->b2=c.b2;
+this->r1=c.r1;
+this->r2=c.r2;
 return *this;
 }
 
@@ -38,8 +38,8 @@ void CollisionInfo::reset()
 point={0,0,0};
 normal={0,0,0};
 depth=0.0f;
-b1=NULL;
-b2=NULL;
+r1=NULL;
+r2=NULL;
 }
 
 string CollisionInfo::toString()const

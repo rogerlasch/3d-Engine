@@ -12,9 +12,7 @@
 #include<shared_mutex>
 #include<string>
 #include<unordered_map>
-#include"types.h"
-#include"debug.h"
-#include"time.h"
+#include"debug_system.h"
 #include"SafeFlags.h"
 #include"packet.h"
 #include"event.h"
@@ -187,7 +185,6 @@ packet* pack=new packet();
 if(!pack->deserialize(msg))
 {
 delete pack;
-_FLOG("Erro ao deserializar o pacote \"{}\"", msg);
 return;
 }
 //Analise o pacote recebido...
@@ -243,7 +240,6 @@ switch(ev->type)
 //O servidor respondeu ao pacote ping, então aqui está o resultado...
 case GEVENT_PING:
 {
-_FLOG("O ping foi de {} ms.", ev->data);
 break;
 }
 }

@@ -8,15 +8,15 @@
 namespace gpp
 {
 
-class RigidBody;
+class iRigidBody;
 class CollisionInfo
 {
 public:
 vector3d point;
 vector3d normal;
 float depth;
-RigidBody* b1;
-RigidBody* b2;
+iRigidBody* r1;
+iRigidBody* r2;
 CollisionInfo();
 CollisionInfo(const CollisionInfo& c);
 CollisionInfo& operator=(const CollisionInfo& c);

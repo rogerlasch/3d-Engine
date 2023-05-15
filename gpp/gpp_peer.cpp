@@ -11,9 +11,7 @@
 #include<memory>
 #include<shared_mutex>
 #include<string>
-#include"types.h"
-#include"debug.h"
-#include"time.h"
+#include"debug_system.h"
 #include"SafeFlags.h"
 #include"packet.h"
 #include"event.h"

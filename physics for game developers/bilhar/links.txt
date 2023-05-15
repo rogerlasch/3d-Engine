@@ -1,0 +1,2 @@
+https://github.com/rogerlasch/3d-Engine/blob/main/physics%20for%20game%20developers/bilhar/main.cpp
+https://github.com/rogerlasch/3d-Engine/blob/main/physics%20for%20game%20developers/bilhar/ rigidbody3d.h

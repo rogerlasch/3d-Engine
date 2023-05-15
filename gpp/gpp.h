@@ -18,7 +18,6 @@
 #include"string_utils.h"
 #include"cmd_parser.h"
 #include"time.h"
-#include"debug.h"
 #include"packet.h"
 #include"event.h"
 #include"EventQueue.h"

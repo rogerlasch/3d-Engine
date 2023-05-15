@@ -2,6 +2,7 @@
 
 #include<sstream>
 #include"vector3d.h"
+#include"matrix3x3.h"
 #include"functions.h"
 #include"quaternion.h"
 
@@ -259,16 +260,6 @@ return quaternion(q1.x-q2.x, q1.y-q2.y, q1.z-q2.z, q1.w-q2.w);
 
 quaternion operator*(const quaternion& q1, const quaternion& q2)
 {
-/*
-return quaternion(q1.w*q2.w - q1.x*q2.x
- - q1.y*q2.y - q1.z*q2.z,
- q1.w *q2.x + q1.x*q2.w
- + q1.y*q2.z - q1.z*q2.y,
- q1.w*q2.y + q1 .v.y*q2.w
- + q1.z*q2.x - q1.x*q2.z,
- q1.w*q2.z + q1.z*q2.w
- + q1.x*q2.y - q1.y*q2.x);
-*/
   float w = q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z;
   float x = q1.w * q2.x + q1.x * q2.w + q1.y * q2.z - q1.z * q2.y;
   float y = q1.w * q2.y - q1.x * q2.z + q1.y * q2.w + q1.z * q2.x;
@@ -377,4 +368,32 @@ u.z = radians_to_degrees((float) atan2(r21, r11)); // yaw
 
 return u;
 }
+
+matrix3x3 quaternion_extract_matrix(const quaternion& q)
+{
+    // Extrai os valores do quaternion
+    float x = q.x;
+    float y = q.y;
+    float z = q.z;
+    float w = q.w;
+
+    // Calcula os elementos da matriz
+    float xx = x * x;
+    float yy = y * y;
+    float zz = z * z;
+    float xy = x * y;
+    float xz = x * z;
+    float yz = y * z;
+    float wx = w * x;
+    float wy = w * y;
+    float wz = w * z;
+
+    // Cria a matriz 3x3 a partir dos elementos calculados
+    return matrix3x3(
+        1 - 2 * (yy + zz), 2 * (xy - wz), 2 * (xz + wy),
+        2 * (xy + wz), 1 - 2 * (xx + zz), 2 * (yz - wx),
+        2 * (xz - wy), 2 * (yz + wx), 1 - 2 * (xx + yy)
+    );
+}
+
 }
