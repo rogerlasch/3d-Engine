@@ -10,7 +10,8 @@ class iMotion
 public:
 iMotion()=default;
 virtual ~iMotion()=default;
-virtual void moveBody(iRigidBody* rb)=0;
+virtual void moveBodyList(std::vector<iRigidBody*>& hbodies, float dt)=0;
+virtual void moveBody(iRigidBody* rb, float dt)=0;
 };
 }
 #endif

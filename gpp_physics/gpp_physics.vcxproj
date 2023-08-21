@@ -19,8 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BroadPhase.cpp" />
-    <ClCompile Include="CollisionSolver.cpp" />
+    <ClCompile Include="defaults\BroadPhase.cpp" />
+    <ClCompile Include="defaults\CollisionSolver.cpp" />
+    <ClCompile Include="defaults\DefaultMotion.cpp" />
+    <ClCompile Include="defaults\NarrowPhase.cpp" />
+    <ClCompile Include="defaults\RigidBody.cpp" />
     <ClCompile Include="geometry\AABB.cpp" />
     <ClCompile Include="geometry\aabbutil.cpp" />
     <ClCompile Include="geometry\box3d.cpp" />
@@ -28,21 +31,24 @@
     <ClCompile Include="geometry\CollisionInfo.cpp" />
     <ClCompile Include="geometry\functions.cpp" />
     <ClCompile Include="geometry\gjk.cpp" />
-    <ClCompile Include="geometry\line3d.cpp" />
     <ClCompile Include="geometry\matrix3x3.cpp" />
     <ClCompile Include="geometry\quaternion.cpp" />
     <ClCompile Include="geometry\sphere3d.cpp" />
     <ClCompile Include="geometry\vector3d.cpp" />
-    <ClCompile Include="gpp_index.cpp" />
     <ClCompile Include="gpp_world.cpp" />
-    <ClCompile Include="NarrowPhase.cpp" />
-    <ClCompile Include="octree.cpp" />
-    <ClCompile Include="RigidBody.cpp" />
+    <ClCompile Include="interfaces\gpp_index.cpp" />
+    <ClCompile Include="octree\octree.cpp" />
+    <ClCompile Include="octree\octreeinfo.cpp" />
+    <ClCompile Include="octree\octreenode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinaryUtils.h" />
-    <ClInclude Include="BroadPhase.h" />
-    <ClInclude Include="CollisionSolver.h" />
+    <ClInclude Include="defaults\BroadPhase.h" />
+    <ClInclude Include="defaults\CollisionSolver.h" />
+    <ClInclude Include="defaults\DefaultMotion.h" />
+    <ClInclude Include="defaults\defaults.h" />
+    <ClInclude Include="defaults\NarrowPhase.h" />
+    <ClInclude Include="defaults\RigidBody.h" />
     <ClInclude Include="geometry\AABB.h" />
     <ClInclude Include="geometry\aabbutil.h" />
     <ClInclude Include="geometry\box3d.h" />
@@ -52,24 +58,23 @@
     <ClInclude Include="geometry\GeometricShape.h" />
     <ClInclude Include="geometry\geometry.h" />
     <ClInclude Include="geometry\gjk.h" />
-    <ClInclude Include="geometry\line3d.h" />
     <ClInclude Include="geometry\matrix3x3.h" />
     <ClInclude Include="geometry\quaternion.h" />
     <ClInclude Include="geometry\sphere3d.h" />
     <ClInclude Include="geometry\vector3d.h" />
-    <ClInclude Include="gpp_index.h" />
     <ClInclude Include="gpp_physics.h" />
     <ClInclude Include="gpp_world.h" />
     <ClInclude Include="IndexTable.h" />
+    <ClInclude Include="interfaces\gpp_index.h" />
     <ClInclude Include="interfaces\iBroadPhase.h" />
     <ClInclude Include="interfaces\iCollisionSolver.h" />
     <ClInclude Include="interfaces\iMotion.h" />
     <ClInclude Include="interfaces\iNarrowPhase.h" />
     <ClInclude Include="interfaces\interfaces.h" />
     <ClInclude Include="interfaces\iRigidBody.h" />
-    <ClInclude Include="NarrowPhase.h" />
-    <ClInclude Include="octree.h" />
-    <ClInclude Include="RigidBody.h" />
+    <ClInclude Include="octree\octree.h" />
+    <ClInclude Include="octree\octreeinfo.h" />
+    <ClInclude Include="octree\octreenode.h" />
     <ClInclude Include="types.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

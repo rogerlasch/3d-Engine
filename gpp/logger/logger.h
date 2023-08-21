@@ -11,6 +11,7 @@ class logger
 {
 public:
 int32 level;
+uint32 flags;
 std::string filename;
 std::vector<std::string> stacktrace;
 std::ofstream ofn;

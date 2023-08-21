@@ -13,66 +13,21 @@ AABB()
 {
 setMin({0,0,-1000000});
 setMax({1000000, 1000000, 1000000});
-bdebug.clear();
+setGravity({0,0,-9.81f});
+geo=make_shared<octree>();
 }
 
 gpp_world::~gpp_world()
 {
-}
-
-void gpp_world::setGravity(const vector3d& gravity)
+geo->clear();
+geo.reset();
+dynamicbodies.clear();
+rbDeletions.clear();
+for(auto& it : bodies)
 {
-this->gravity=gravity;
+delete it;
 }
-
-vector3d gpp_world::getGravity()const
-{
-return this->gravity;
-}
-
-void gpp_world::setBodyDebug(const gpp_index& id)
-{
-bdebug.insert(id);
-}
-
-void gpp_world::removeBodyDebug(const gpp_index& id)
-{
-bdebug.erase(id);
-}
-
-vector<RigidBody*>& gpp_world::getBodies()
-{
-return bodies;
-}
-
-void gpp_world::addBody(RigidBody* rb)
-{
-if(BinaryUtils::find(bodies, rb->index, NULL))
-{
-return;
-}
-BinaryUtils::insert(bodies, rb);
-}
-
-bool gpp_world::removeBody(const gpp_index& id)
-{
-RigidBody* r=NULL;
-return BinaryUtils::remove(bodies, id, &r);
-}
-
-RigidBody* gpp_world::getBody(const gpp_index& id)const
-{
-uint32 x=0;
-if(BinaryUtils::find(bodies, id, &x))
-{
-return bodies[x];
-}
-return NULL;
-}
-
-void gpp_world::update(float dt)
-{
-profiler_snap();
+bodies.clear();
 }
 
 string gpp_world::toString()const
@@ -90,5 +45,77 @@ for(auto& it : bodies)
 ss<<it->toString()<<endl;
 }
 return ss.str();
+}
+
+void gpp_world::setGravity(const vector3d& gravity)
+{
+this->gravity=gravity;
+}
+
+vector3d gpp_world::getGravity()const
+{
+return this->gravity;
+}
+
+void gpp_world::addBody(iRigidBody* rb)
+{
+profiler_snap();
+if(BinaryUtils::find(bodies, rb->index, NULL))
+{
+return;
+}
+BinaryUtils::insert(bodies, rb);
+if(rb->mass==0.0f)
+{
+geo->insert(rb);
+}
+else
+{
+dynamicbodies.push_back(rb);
+}
+}
+
+bool gpp_world::removeBody(const gpp_index& id)
+{
+iRigidBody* rb=getBody(id);
+if(rb!=NULL)
+{
+pushBodyDelete(rb);
+return true;
+}
+return false;
+}
+
+iRigidBody* gpp_world::getBody(const gpp_index& id)const
+{
+uint32 x=0;
+if(BinaryUtils::find(bodies, id, &x))
+{
+return bodies[x];
+}
+return NULL;
+}
+
+void gpp_world::update(float dt)
+{
+profiler_snap();
+}
+
+void gpp_world::pushBodyDelete(iRigidBody* rb)
+{
+rbDeletions.push_back(rb);
+}
+
+void gpp_world::processDeletions()
+{
+if(rbDeletions.size()==0)return;
+for(auto& it : rbDeletions)
+{
+iRigidBody* r=NULL;
+geo->remove(it);
+BinaryUtils::remove(bodies, it->index, &r);
+
+}
+rbDeletions.clear();
 }
 }

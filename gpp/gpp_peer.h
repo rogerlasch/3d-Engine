@@ -15,6 +15,7 @@ namespace gpp
 enum PEER_STATES
 {
 PEER_DEFAULT=0,//Padrão, quando não existe conexão aberta...
+PEER_CONNECTING,//Tentando se conectar...
 PEER_ALT,//Aguardando a autenticação...
 PEER_CONNECTED,//conectado...
 PEER_DISCONNECTING,//A conexão está em processo de desconexão...
@@ -42,7 +43,7 @@ std::string peer_name;
 gpp_networkinterface* hcon;//Objeto gerenciador de rede...
 mutable std::shared_mutex mtx_con;
 public:
-gpp_peer(gpp_networkinterface* hcon);
+gpp_peer();
 gpp_peer(const gpp_peer& pr)=delete;
 gpp_peer& operator=(const gpp_peer& pr)=delete;
 virtual ~gpp_peer();
@@ -64,13 +65,13 @@ void setHState(uint32 hstate);
 int64 getConnectionTime()const;
 void setConnectionTime(int64 connection_time);
 gpp_networkinterface* getHcon()const;
-void setHcon(gpp_networkinterface* hserver);
+void setHcon(gpp_networkinterface* hcon);
 bool sendUnreliable(const std::string& data);
 bool sendReliable(const std::string& data);
 bool sendPacketUnreliable(uint32 type, uint32 flags, int64 timeout, const std::string& data);
 bool sendPacketReliable(uint32 type, uint32 flags, int64 timeout, const std::string& data);
-void sendAnswerSuccess(const std::string& cmd, const std::string& data);
-void sendAnswerError(const std::string& cmd, uint32 errorcode, const std::string& msg);
+virtual void sendAnswerSuccess(const std::string& cmd, const std::string& data);
+virtual void sendAnswerError(const std::string& cmd, uint32 errorcode, const std::string& msg);
 bool disconnect();
 bool disconnectNow();
 void makePing();

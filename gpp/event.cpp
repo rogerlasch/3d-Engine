@@ -13,6 +13,7 @@ Event::Event()
 {
 pack=NULL;
 next=NULL;
+user=NULL;
 this->reset();
 }
 
@@ -25,9 +26,11 @@ void Event::reset()
 {
 type=GEVENT_DEFAULT;
 peer_id=0;
+code=0;
 timestamp=get_timestamp_ms();
 timeout=0;
 data="";
+user=NULL;
 next=NULL;
 if(pack!=NULL)
 {

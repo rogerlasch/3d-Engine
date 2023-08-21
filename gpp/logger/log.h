@@ -22,9 +22,17 @@ LG_INFO,
 LG_CRITICAL
 };
 
+
+enum GPP_LOGGER_FLAGS
+{
+GLOG_CONSOLE=1
+};
+
 bool log_create(const std::string& filename, int32 level);
 void log_close(const std::string& filename);
 bool log_set_level(const std::string& filename, int32 level);
+bool log_setopt(const std::string& filename, uint32 opt, bool enable);
+bool log_getopt(const std::string& filename, uint32 opt);
 bool log_set_default(const std::string& filename);
 void log_write(const std::string& filename, int32 level, const std::string& str);
 void log_start_backtrace(const std::string& filename);

@@ -90,4 +90,25 @@ return true;
 }
 return false;
 }
+
+vector3d get_closest_point_from_aabb(const vector3d& pt, const vector3d& min, const vector3d& max)
+{
+vector3d closestPoint;
+                       for (int i = 0; i < 3; i++) {
+                             float v = pt[i];
+                             if (v < min[i]) v = min[i]; // v = max(v, min[i])
+                             if (v > max[i]) v = max[i]; // v = min(v, max[i])
+closestPoint[i] = v;
+                       }
+return closestPoint;
+}
+
+bool point_in_aabb(const vector3d& pt, const vector3d& min, const vector3d& max)
+{
+for(uint32 i=0; i<3; i++)
+{
+if((pt[i]<min[i])||(pt[i]>max[i])) return false;
+}
+return true;
+}
 }

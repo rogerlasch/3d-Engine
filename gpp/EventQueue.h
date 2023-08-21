@@ -3,6 +3,8 @@
 #ifndef GPP_EVENTQUEUE_H
 #define GPP_EVENTQUEUE_H
 
+#include<functional>
+
 namespace gpp
 {
 
@@ -25,5 +27,6 @@ bool eventGet(Event** ev);
 void eventPost(uint32 peer_id, uint32 type, int64 timeout=0, packet* pack=NULL);
 void eventPost(Event* ev);
 };
+typedef std::function<void(Event*)> EVENTPOSTCALLBACK;
 }
 #endif

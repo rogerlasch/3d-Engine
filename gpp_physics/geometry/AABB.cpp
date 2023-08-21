@@ -13,7 +13,7 @@ AABB::AABB(const vector3d& min, const vector3d& max, GeometricShape* sh)
 this->shape=NULL;
 this->min=min;
 this->max=max;
-this->setShape(sh);
+this->setGeometricShape(sh);
 }
 
 AABB::~AABB()
@@ -25,7 +25,13 @@ delete shape;
 shape=NULL;
 }
 
-void AABB::setShape(GeometricShape* sh)
+float AABB::getVolume()const
+{
+vector3d v(fabs(max.x-min.x), fabs(max.y-min.y), fabs(max.z-min.z));
+return (v.x*v.y)*v.z;
+}
+
+void AABB::setGeometricShape(GeometricShape* sh)
 {
 if(this->shape!=NULL)
 {
@@ -66,7 +72,7 @@ this->min+=v;
 this->max+=v;
 if(shape!=NULL)
 {
-shape->Translate(v);
+shape->translate(v);
 }
 }
 
@@ -75,7 +81,16 @@ void AABB::scale(float sk)
 max*=sk;
 if(shape!=NULL)
 {
-shape->Scale(sk);
+shape->scale(sk);
+}
+}
+
+void AABB::rotate(const quaternion& orientation)
+{
+if(shape!=NULL)
+{
+shape->rotate(orientation);
+recalculateBoundingBox();
 }
 }
 
@@ -86,7 +101,7 @@ if(sh==NULL)
 {
 return;
 }
-switch(sh->GetGeometricType())
+switch(sh->getGeometricType())
 {
 case GTYPE_SPHERE:
 {
@@ -99,7 +114,7 @@ case GTYPE_BOX:
 {
 box3d* b=(box3d*)sh;
 min=b->min;
-max=(b->min+b->measures);
+max=b->max;
 break;
 }
 /*
@@ -110,13 +125,6 @@ case GTYPE_POLYHEDRON:
 break;
 }
 */
-case GTYPE_LINE:
-{
-line3d* l=(line3d*)sh;
-vector<vector3d> arr={l->min, l->max};
-calculateBoundingBox(arr, *this);
-break;
-}
 }
 }
 

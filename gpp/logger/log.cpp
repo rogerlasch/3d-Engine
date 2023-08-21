@@ -67,7 +67,43 @@ return true;
 return false;
 }
 
-bool  log_set_default(const std::string& filename)
+bool log_setopt(const string& filename, uint32 opt, bool enable)
+{
+shared_logger lg=get_log(filename);
+if(lg==NULL)
+{
+return false;
+}
+if(enable)
+{
+if((lg->flags&opt)==0)
+{
+lg->flags|=opt;
+return true;
+}
+}
+else
+{
+if((lg->flags&opt)==opt)
+{
+lg->flags^=opt;
+return true;
+}
+}
+return true;
+}
+
+bool log_getopt(const string& filename, uint32 opt)
+{
+shared_logger lg=get_log(filename);
+if(lg==NULL)
+{
+return false;
+}
+return (lg->flags&opt)==opt;
+}
+
+bool  log_set_default(const string& filename)
 {
 if(filename.size()==0)
 {
@@ -114,6 +150,10 @@ break;
 default:
 {
 lg->ofn<<final<<endl;
+if((lg->flags&GLOG_CONSOLE))
+{
+cout<<final<<endl;
+}
 break;
 }
 }

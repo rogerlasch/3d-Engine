@@ -26,3 +26,7 @@ debug/
 Release/
 debug/
 gpp_physics/*.txt
+proto3d/gui_project/*.h
+proto3d/gui_project/*.cpp
+*.bak
+__pycache__/

@@ -12,6 +12,7 @@
 #include<shared_mutex>
 #include<string>
 #include<unordered_map>
+#include<set>
 #include"debug_system.h"
 #include"SafeFlags.h"
 #include"packet.h"
@@ -26,8 +27,8 @@ using namespace std;
 namespace gpp
 {
 
-gpp_client::gpp_client(gpp_networkinterface* hcon):
-gpp_peer(hcon), EventQueue()
+gpp_client::gpp_client():
+gpp_peer(), EventQueue()
 {
 port=0;
 ipaddress="";
@@ -35,6 +36,11 @@ ipaddress="";
 
 gpp_client::~gpp_client()
 {
+for(auto it=answers.begin(); it!=answers.end(); ++it)
+{
+delete it->second.second;
+}
+answers.clear();
 }
 
 uint16 gpp_client::getPort()const
@@ -59,21 +65,18 @@ if((address.size()==0)||(port==0)||(this->getHState()!=PEER_DEFAULT))
 {
 return false;
 }
-GPPCONNECTIONCALLBACK hcall=std::bind(&gpp_client::netCallBack, this, std::placeholders::_1, std::placeholders::_2);
+this->setHState(PEER_CONNECTING);
+EVENTPOSTCALLBACK  hcall=std::bind(&gpp_client::eventPostCallback, this, std::placeholders::_1);
 uint32 sock=hcon->connectToServer(address, port, hcall);
 if(sock>0)
 {
 this->port=port;
 this->ipaddress=address;
 this->setPeerId(sock);
-hstate.store(PEER_ALT);
-if(!altConnection())
-{
-this->shutdown();
-return false;
-}
+hstate.store(PEER_CONNECTED);
 return true;
 }
+this->setHState(PEER_DEFAULT);
 return false;
 }
 
@@ -99,27 +102,7 @@ return true;
 void gpp_client::shutdown()
 {
 _GASSERT_MSG(hcon!=NULL, "A steamnetworkingsockets não foi iniciada!");
-if(isConnected())
-{
 this->disconnect();
-bool onforse=true;
-int64 start=get_timestamp_ms();
-while((get_timestamp_ms()-start)<2000)
-{
-wait_ms(20);
-pollNet();
-if(getHState()!=PEER_CONNECTED)
-{
-onforse=false;
-break;
-}
-}
-if(onforse)
-{
-this->disconnectNow();
-this->setHState(PEER_DISCONNECTED);
-}
-}
 }
 
 /**
@@ -129,10 +112,20 @@ this->setHState(PEER_DISCONNECTED);
 **/
 void gpp_client::run()
 {
-while(hstate.load()==PEER_CONNECTED)
+bool done=false;
+while(done==false)
 {
 wait_ms(5);
 this->update();
+switch(getHState())
+{
+case PEER_DEFAULT:
+case PEER_DISCONNECTED:
+{
+done=true;
+break;
+}
+}
 }
 }
 
@@ -154,6 +147,7 @@ case PEER_ALT:
 case PEER_CONNECTED:
 case PEER_DISCONNECTING:
 {
+pollAnswers();
 hcon->onLoop();
 vector<string> msgs;
 if(hcon->receiveMessages(this->getPeerId(), msgs, 10)==0)
@@ -177,6 +171,48 @@ while(eventGet(&ev))
 dispatchEvent(ev);
 delete ev;
 }
+}
+
+void gpp_client::pollAnswers()
+{
+if(answers.size()==0) return;
+set<string> hdeletes;
+int64 ms_time=get_timestamp_ms();
+for(auto it=answers.begin(); it!=answers.end(); ++it)
+{
+if((ms_time-it->second.first)>=60000)
+{
+hdeletes.insert(it->first);
+}
+}
+for(auto& it : hdeletes)
+{
+auto it2=answers.find(it);
+_GASSERT(it2==answers.end());
+delete it2->second.second;
+answers.erase(it);
+}
+}
+
+void gpp_client::pushAnswer(packet* hpack)
+{
+auto it=answers.find(hpack->command);
+if(it!=answers.end())
+{
+delete it->second.second;
+answers.erase(it);
+}
+answers.insert(make_pair(hpack->command, make_pair(get_timestamp_ms(), hpack)));
+}
+
+bool gpp_client::getAnswer(const std::string& cmd, packet** hpack)
+{
+auto it=answers.find(cmd);
+if(it==answers.end()) return false;
+if(hpack==NULL) return true;
+*hpack=it->second.second;
+answers.erase(it);
+return true;
 }
 
  void gpp_client::processNetMessage(const string& msg)
@@ -212,6 +248,11 @@ onping.store(0);
 delete pack;
 break;
 }
+case PACKET_ANSWER:
+{
+pushAnswer(pack);
+break;
+}
 //Caso seja um outro tipo de pacote, gere o evento e despache ele para a fila de eventos.
 default:
 {
@@ -240,6 +281,20 @@ switch(ev->type)
 //O servidor respondeu ao pacote ping, então aqui está o resultado...
 case GEVENT_PING:
 {
+_GINFO("O ping é de {} ms", ev->data);
+break;
+}
+case GEVENT_CONNECTED:
+{
+setHState(PEER_CONNECTED);
+_GINFO("Conexão estabelecida");
+break;
+}
+case GEVENT_DISCONNECTED:
+{
+setPeerId(0);
+setHState(PEER_DISCONNECTED);
+_GINFO("Conexão encerrada.");
 break;
 }
 }
@@ -247,25 +302,8 @@ break;
 
 //Private metods...
 
-/**
-*Callback para mudança de estados na conexão.
-**/
-void gpp_client::netCallBack(uint32 event, uint32 peer_id)
+void gpp_client::eventPostCallback(Event* ev)
 {
-switch(event)
-{
-case GEVENT_CONNECTED:
-{
-this->setPeerId(peer_id);
-this->setHState(PEER_CONNECTED);
-break;
-}
-case GEVENT_DISCONNECTED:
-{
-this->disconnectNow();
-this->setHState(PEER_DISCONNECTED);
-break;
-}
-}
+EventQueue::eventPost(ev);
 }
 }

@@ -15,7 +15,6 @@
 #include"gjk.h"
 #include"GeometricShape.h"
 #include"box3d.h"
-#include"line3d.h"
 #include"sphere3d.h"
 #include"CollisionInfo.h"
 #include"collision3d.h"

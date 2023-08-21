@@ -1,9 +1,0 @@
-O teste da função testSum passou!
-O teste da função testSub passou!
-O teste da função testMul passou!
-O teste da função testDiv passou!
-O teste da função testIdentity passou!
-O teste da função testTranspose passou!
-O teste da função testDeterminant passou!
-O teste da função testInverse passou!
-O teste da função testVector passou!

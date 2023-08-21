@@ -21,8 +21,8 @@ gpp_steamsockets();
 gpp_steamsockets(const gpp_steamsockets& gp)=delete;
 gpp_steamsockets& operator=(const gpp_steamsockets& gp)=delete;
 virtual ~gpp_steamsockets();
-virtual uint32 connectToServer(const std::string& address, uint16 port, GPPCONNECTIONCALLBACK hcall);
-virtual uint32 createListenSocket(uint16 port, GPPCONNECTIONCALLBACK hcall);
+virtual uint32 connectToServer(const std::string& address, uint16 port, EVENTPOSTCALLBACK hcall);
+virtual uint32 createListenSocket(uint16 port, EVENTPOSTCALLBACK hcall);
 virtual uint32 closeListenSocket(uint32 sock);
 virtual uint32 sendReliable(uint32 peer_id, const GMESSAGE& msg);
 virtual uint32 sendUnreliable(uint32 peer_id, const GMESSAGE& msg);
@@ -32,8 +32,10 @@ virtual bool disconnectPeer(uint32 peer_id, uint32 gmode);
 virtual void onLoop();
 private:
 void safeRunCallbacks();
-void connectionStatusCallback(SteamNetConnectionStatusChangedCallback_t* pinfo);
-static void staticConnectionStatusCallback(SteamNetConnectionStatusChangedCallback_t* pinfo);
+void connectionStatusCallback_server(SteamNetConnectionStatusChangedCallback_t* pinfo);
+static void staticConnectionStatusCallback_server(SteamNetConnectionStatusChangedCallback_t* pinfo);
+void connectionStatusCallback_client(SteamNetConnectionStatusChangedCallback_t* pinfo);
+static void staticConnectionStatusCallback_client(SteamNetConnectionStatusChangedCallback_t* pinfo);
 };
 }
 #endif

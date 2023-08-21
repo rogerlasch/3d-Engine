@@ -12,18 +12,17 @@ GMODE_NOW=0,
 GMODE_SOFTLY
 };
 
-typedef std::function<void(uint32, uint32)> GPPCONNECTIONCALLBACK;
 typedef std::string GMESSAGE;
 typedef std::vector<GMESSAGE> GMESSAGELIST;
 class gpp_networkinterface
 {
 protected:
-GPPCONNECTIONCALLBACK hcall;
+EVENTPOSTCALLBACK hcall;
 public:
-GPPCONNECTIONCALLBACK getConnectionCallBack()const { return this->hcall;}
-void setConnectionCallBack(GPPCONNECTIONCALLBACK hcall) { this->hcall=hcall;}
-virtual uint32 connectToServer(const std::string& address, uint16 port, GPPCONNECTIONCALLBACK hcall)=0;
-virtual uint32 createListenSocket(uint16 port, GPPCONNECTIONCALLBACK hcall)=0;
+inline EVENTPOSTCALLBACK getEventPostCallback()const { return this->hcall;}
+inline void setEventPostCallback(EVENTPOSTCALLBACK  hcall) { this->hcall=hcall;}
+virtual uint32 connectToServer(const std::string& address, uint16 port, EVENTPOSTCALLBACK hcall)=0;
+virtual uint32 createListenSocket(uint16 port, EVENTPOSTCALLBACK hcall)=0;
 virtual uint32 closeListenSocket(uint32 sock)=0;
 virtual uint32 sendReliable(uint32 peer_id, const GMESSAGE& msg)=0;
 virtual uint32 sendUnreliable(uint32 peer_id, const GMESSAGE& msg)=0;

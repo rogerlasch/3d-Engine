@@ -26,10 +26,9 @@ using namespace std;
 namespace gpp
 {
 
-gpp_server::gpp_server(gpp_networkinterface* hcon):
+gpp_server::gpp_server():
 EventQueue()
 {
-this->hcon=hcon;
 hstate.store(SERVER_DEFAULT);
 listensock=0;
 }
@@ -73,6 +72,11 @@ gpp_networkinterface* gpp_server::getHCon()const
 return this->hcon;
 }
 
+void gpp_server::setHcon(gpp_networkinterface* hcon)
+{
+this->hcon=hcon;
+}
+
 bool gpp_server::start(uint16 port, uint32 max_players)
 {
 _GASSERT_MSG(hcon!=NULL, "Nenhuma interface de rede definida!");
@@ -85,7 +89,7 @@ switch(hstate.load())
 case SERVER_DEFAULT:
 {
 this->setHState(SERVER_STARTING);
-GPPCONNECTIONCALLBACK hcall=std::bind(&gpp_server::netCallBack, this, std::placeholders::_1, std::placeholders::_2);
+EVENTPOSTCALLBACK  hcall=std::bind(&gpp_server::eventPostCallback, this, std::placeholders::_1);
 listensock=hcon->createListenSocket(port, hcall);
 if(listensock>0)
 {
@@ -142,6 +146,7 @@ while((get_timestamp_ms()-start)<2000)
 {
 wait_ms(25);
 pollNet();
+pollEvents();
 if(playerCount()==0)
 {
 onforse=false;
@@ -237,8 +242,31 @@ break;
 _GASSERT_MSG(ev!=NULL, "O evento é nulo!!!");
 switch(ev->type)
 {
-case GEVENT_PING:
+case GEVENT_CONNECTED:
 {
+_GINFO("O par com id {} se conectou.", ev->peer_id);
+gpp_peer* ch=new gpp_peer();
+ch->setHcon(hcon);
+ch->setPFlags(PEER_CLIENT|PEER_SERVER);
+ch->setPeerId(ev->peer_id);
+ch->setHState(PEER_CONNECTED);
+ch->setConnectionTime(get_timestamp_ms());
+peers.insert(make_pair(ev->peer_id, ch));
+break;
+}
+case GEVENT_DISCONNECTED:
+{
+auto it=peers.find(ev->peer_id);
+if(it!=peers.end())
+{
+_GINFO("O par com id {} se desconectou depois de {} ms...", ev->peer_id, it->second->getConnectionTime()-get_timestamp_ms());
+delete it->second;
+peers.erase(it);
+}
+else
+{
+_GINFO("Não achei.");
+}
 break;
 }
 case GEVENT_RECEIVE:
@@ -249,38 +277,8 @@ break;
 }
 }
 
-void gpp_server::netCallBack(uint32 event, uint32 peer_id)
+void gpp_server::eventPostCallback(Event* ev)
 {
-switch(event)
-{
-case GEVENT_CONNECTED:
-{
-gpp_peer* p=createNewPeer();
-p->setPFlags(PEER_CLIENT|PEER_SERVER);
-p->setPeerId(peer_id);
-p->setHState(PEER_ALT);
-p->setConnectionTime(get_timestamp_ms());
-peers.insert(make_pair(peer_id, p));
-eventPost(peer_id, GEVENT_CONNECTED);
-break;
-}
-case GEVENT_DISCONNECTED:
-{
-auto it=peers.find(peer_id);
-if(it==peers.end())
-{
-return;
-}
-delete it->second;
-peers.erase(it);
-eventPost(peer_id, GEVENT_DISCONNECTED);
-break;
-}
-}
-}
-
-gpp_peer* gpp_server::createNewPeer()
-{
-return new gpp_peer(hcon);
+EventQueue::eventPost(ev);
 }
 }

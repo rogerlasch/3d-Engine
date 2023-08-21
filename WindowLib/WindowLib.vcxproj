@@ -19,16 +19,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="gkeyboard.cpp" />
-    <ClCompile Include="gsound.cpp" />
-    <ClCompile Include="gspeak.cpp" />
-    <ClCompile Include="g_window.cpp" />
+    <ClCompile Include="ralert.cpp" />
+    <ClCompile Include="rkeyboard.cpp" />
+    <ClCompile Include="rspeak.cpp" />
+    <ClCompile Include="r_window.cpp" />
+    <ClCompile Include="rstring_utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="gkeyboard.h" />
-    <ClInclude Include="gsound.h" />
-    <ClInclude Include="gspeak.h" />
-    <ClInclude Include="g_window.h" />
+    <ClInclude Include="ralert.h" />
+    <ClInclude Include="RdialogBase.h" />
+    <ClInclude Include="rkeyboard.h" />
+    <ClInclude Include="rspeak.h" />
+    <ClInclude Include="r_types.h" />
+    <ClInclude Include="r_window.h" />
+    <ClInclude Include="rstring_utils.h" />
+    <ClInclude Include="windialogs.h" />
+    <ClInclude Include="windowlib.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -261,4 +261,30 @@ return final;
 }
 return L"";
 }
+
+uint32 string_split(const std::string& str, const std::string& delin, std::vector<std::string>& out) {
+    out.clear();
+    size_t start = 0;
+    size_t end = str.find(delin);
+    while (end != std::string::npos) {
+        out.push_back(str.substr(start, end - start));
+        start = end + delin.length();
+        end = str.find(delin, start);
+    }
+    out.push_back(str.substr(start));
+return out.size();
+}
+
+uint32 sstring_split(const std::wstring& str, const std::wstring& delin, std::vector<std::wstring>& out) {
+    out.clear();
+    size_t start = 0;
+    size_t end = str.find(delin);
+    while (end != std::wstring::npos) {
+        out.push_back(str.substr(start, end - start));
+        start = end + delin.length();
+        end = str.find(delin, start);
+    }
+    out.push_back(str.substr(start));
+return out.size();
+}
 }

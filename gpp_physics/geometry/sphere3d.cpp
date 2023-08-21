@@ -30,52 +30,35 @@ sphere3d:: ~sphere3d()
 {
 }
 
- vector3d sphere3d::GetCenter()const
+ vector3d sphere3d::getCenter()const
 {
 return center;
 }
 
-   bool sphere3d::Contains(const vector3d& point) const
+   void sphere3d::translate(const vector3d& translation)
 {
-float sqdist=vector3d::get_squared_distance(center, point);
-return sqdist<=(radius*radius);
-}
-
-   void sphere3d::Translate(const vector3d& translation)
-{
+setLastPosition(center);
 center+=translation;
 }
 
-   void sphere3d::Scale(float scale)
+   void sphere3d::scale(float s)
 {
-radius/=scale;
+radius*=s;
 }
 
- void sphere3d::Scale(const vector3d& scale)
+ void sphere3d::scale(const vector3d& sc)
 {
 }
 
-void sphere3d::Rotate(const quaternion& orientation)
+void sphere3d::rotate(const quaternion& orientation)
 {
-vector3d origem=this->GetCenter();
-Translate(vector3d::inverse(origem));
+vector3d origem=this->getCenter();
+translate(vector3d::inverse(origem));
 center=quaternion_vector_rotate(orientation, center);
-Translate(origem);
+translate(origem);
 }
 
-   vector3d sphere3d::ClosestPointOnSurface(const vector3d& point) const
-{
-vector3d direction=center-point;
-direction.normalize();
-return center+direction*radius;
-}
-
-   float sphere3d::Volume() const
-{
-return (4.0f / 3.0f) * GPP_PI * radius * radius * radius;
-}
-
- matrix3x3 sphere3d::GetInertiaTensor(float mass)const
+ matrix3x3 sphere3d::getInertiaTensor(float mass)const
 {
   float i = (2.0f/5.0f) * mass * radius * radius;
   matrix3x3 inertiaTensor;

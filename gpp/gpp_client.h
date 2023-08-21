@@ -11,8 +11,9 @@ class gpp_client : public gpp_peer, public EventQueue
 private:
 uint16 port;
 std::string ipaddress;
+std::unordered_map<std::string, std::pair<int64, packet*>> answers;
 public:
-gpp_client(gpp_networkinterface* hcon);
+gpp_client();
 gpp_client(const gpp_client& hc)=delete;
 gpp_client& operator=(const gpp_client& hc)=delete;
 virtual ~gpp_client();
@@ -25,10 +26,12 @@ virtual void run();
 virtual void update();
 virtual void pollNet();
 virtual void pollEvents();
+virtual void pollAnswers();
+virtual void pushAnswer(packet* hpack);
+virtual bool getAnswer(const std::string& cmd, packet** hpack);
 virtual void processNetMessage(const std::string& msg);
 virtual void dispatchEvent(Event* ev);
-private:
-virtual void netCallBack(uint32 event, uint32 peer_id);
+virtual void eventPostCallback(Event* ev);
 };
 }
 #endif

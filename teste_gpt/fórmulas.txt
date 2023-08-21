@@ -1,8 +1,0 @@
-
-
-Calcular o momento:
-momento=maça*velocidade
-
-Calcular a velocidade:
-Se um carro passar por um marcador no tempo t1 e depois de 30 metros passar por outro marcador no tempo t2 e o tempo que levou para passar pelos 2 marcadores for de 1.136 segundos basta fazer d/t para encontrar a velocidade média.
-velocidade=distância/tempo

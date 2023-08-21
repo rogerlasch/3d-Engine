@@ -45,6 +45,14 @@ inline         virtual AABB* getAABB() const { return this->aabb; }
 
 virtual std::string toString()const=0;
 
+inline void setGeometricShape(GeometricShape* sh)
+{
+_GASSERT(aabb!=NULL);
+aabb->setGeometricShape(sh);
+setPosition(sh->getCenter());
+}
+inline GeometricShape* getGeometricShape()const {return this->aabb->getGeometricShape();}
+
 inline void setBodyFlag(uint16 bf)
 {
 if((bflags&bf)!=bf)

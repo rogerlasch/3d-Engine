@@ -23,7 +23,7 @@ using namespace std;
 
 namespace gpp
 {
-gpp_peer::gpp_peer(gpp_networkinterface* hcon)
+gpp_peer::gpp_peer()
 {
 peer_id=0;
 connection_time=0;
@@ -157,7 +157,6 @@ switch(x)
 {
 case PEER_ALT:
 case PEER_CONNECTED:
-case PEER_DISCONNECTING:
 {
 return hcon->sendUnreliable(peer_id, data)>0;
 break;
@@ -183,7 +182,6 @@ switch(x)
 {
 case PEER_ALT:
 case PEER_CONNECTED:
-case PEER_DISCONNECTING:
 {
 return hcon->sendReliable(peer_id, data)>0;
 }
@@ -264,10 +262,18 @@ if((hcon==NULL)||(peer_id==0))
 {
 return false;
 }
+switch(this->getHState())
+{
+case PEER_ALT:
+case PEER_CONNECTED:
+{
 if(hcon->disconnectPeer(peer_id, GMODE_SOFTLY))
 {
 hstate.store(PEER_DISCONNECTING);
 return true;
+}
+break;
+}
 }
 return false;
 }
@@ -283,10 +289,18 @@ if((hcon==NULL)||(peer_id==0))
 {
 return false;
 }
+switch(this->getHState())
+{
+case PEER_ALT:
+case PEER_CONNECTED:
+{
 if(hcon->disconnectPeer(peer_id, GMODE_NOW))
 {
 hstate.store(PEER_DISCONNECTED);
 return true;
+}
+break;
+}
 }
 return false;
 }

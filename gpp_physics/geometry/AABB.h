@@ -26,7 +26,8 @@ AABB(const vector3d& min={0.0f, 0.0f, 0.0f}, const vector3d& max={0.0f, 0.0f, 0.
 AABB(const AABB& ab)=delete;
 AABB& operator=(const AABB& ab)=delete;
 virtual ~AABB();
-void setShape(GeometricShape* sh);
+float getVolume()const;
+void setGeometricShape(GeometricShape* sh);
 GeometricShape* getGeometricShape()const;
 void setMin(const vector3d& m);
 vector3d getMin()const;
@@ -34,6 +35,7 @@ void setMax(const vector3d& m);
 vector3d getMax()const;
 virtual void translate(const vector3d& v);
 virtual void scale(float sk);
+virtual void rotate(const quaternion& orientation);
 virtual void recalculateBoundingBox();
 virtual std::string toString()const;
 friend class BroadPhase;

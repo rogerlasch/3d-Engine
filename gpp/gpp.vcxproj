@@ -43,6 +43,7 @@
   <ItemGroup>
     <ClInclude Include="cmd_parser.h" />
     <ClInclude Include="command.h" />
+    <ClInclude Include="debug_system.h" />
     <ClInclude Include="event.h" />
     <ClInclude Include="EventQueue.h" />
     <ClInclude Include="gpp.h" />

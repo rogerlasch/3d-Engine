@@ -28,5 +28,7 @@ std::string string_utf8_encode(const std::wstring& str);
 std::wstring string_utf8_decode(const std::string& str);
 std::string wstring_to_string(const std::wstring& str);
 std::wstring string_to_wstring(const std::string& str);
+uint32 string_split(const std::string& str, const std::string& delin, std::vector<std::string>& out);
+uint32 string_split(const std::string& str, const std::string& delin, std::vector<std::string>& out);
 }
 #endif

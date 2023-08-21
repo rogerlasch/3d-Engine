@@ -37,7 +37,7 @@ hsteam=NULL;
 }
 }
 
- uint32 gpp_steamsockets::connectToServer(const string& address, uint16 port, GPPCONNECTIONCALLBACK hcall)
+ uint32 gpp_steamsockets::connectToServer(const string& address, uint16 port, EVENTPOSTCALLBACK hcall)
 {
 if((address.size()==0)||(port==0))
 {
@@ -51,17 +51,17 @@ return 0;
 }
 serverAddress.m_port=port;
 SteamNetworkingConfigValue_t opt;
-opt.SetPtr( k_ESteamNetworkingConfig_Callback_ConnectionStatusChanged, staticConnectionStatusCallback);
+opt.SetPtr( k_ESteamNetworkingConfig_Callback_ConnectionStatusChanged, staticConnectionStatusCallback_client);
 uint32 sock=hsteam->ConnectByIPAddress( serverAddress, 1, &opt );
 if(sock==k_HSteamNetConnection_Invalid )
 {
 return 0;
 }
-this->setConnectionCallBack(hcall);
+this->setEventPostCallback(hcall);
 return sock;
 }
 
-uint32 gpp_steamsockets::createListenSocket(uint16 port, GPPCONNECTIONCALLBACK hcall)
+uint32 gpp_steamsockets::createListenSocket(uint16 port, EVENTPOSTCALLBACK hcall)
 {
 _GASSERT_MSG(hsteam!=NULL, "A isteamnetworkingsockets não foi inicializada!");
 _GASSERT(hsteam!=NULL);
@@ -69,13 +69,13 @@ SteamNetworkingIPAddr localAddress;
 localAddress.Clear();
 localAddress.m_port=port;
 SteamNetworkingConfigValue_t opt;
-opt.SetPtr(k_ESteamNetworkingConfig_Callback_ConnectionStatusChanged, staticConnectionStatusCallback);
+opt.SetPtr(k_ESteamNetworkingConfig_Callback_ConnectionStatusChanged, staticConnectionStatusCallback_server);
 int32 listensock=hsteam->CreateListenSocketIP(localAddress, 1, &opt );
 if(listensock==k_HSteamListenSocket_Invalid)
 {
 return 0;
 }
-this->setConnectionCallBack(hcall);
+this->setEventPostCallback(hcall);
 return listensock;
 }
 
@@ -175,7 +175,7 @@ hinstance=NULL;
 }
 }
 
-void gpp_steamsockets::connectionStatusCallback(SteamNetConnectionStatusChangedCallback_t* pinfo)
+void gpp_steamsockets::connectionStatusCallback_server(SteamNetConnectionStatusChangedCallback_t* pinfo)
 {
 _GASSERT_MSG(hcall!=NULL, "O retorno de chamada não foi definido corretamente.");
 _GASSERT_MSG(hsteam!=NULL, "A isteamnetworkingsockets não foi inicializada!");
@@ -189,20 +189,30 @@ if(res!=k_EResultOK)
 //hsteam->CloseConnection( pinfo->m_hConn, 0, nullptr, false );
 break;
 }
-hcall(GEVENT_CONNECTED, pinfo->m_hConn );
+Event* ev=new Event();
+ev->type=GEVENT_CONNECTED;
+ev->peer_id=pinfo->m_hConn ;
+hcall(ev);
 break;
 }
+case k_ESteamNetworkingConnectionState_None:
                         case k_ESteamNetworkingConnectionState_ClosedByPeer:
                         case k_ESteamNetworkingConnectionState_ProblemDetectedLocally:
                         {
                                 if ( pinfo->m_eOldState == k_ESteamNetworkingConnectionState_Connected )
                                 {
-hcall(GEVENT_DISCONNECTED, pinfo->m_hConn );
+Event* ev=new Event();
+ev->type=GEVENT_DISCONNECTED;
+ev->peer_id=pinfo->m_hConn ;
+hcall(ev);
 hsteam->CloseConnection(pinfo->m_hConn, 0, NULL, false);
 }
 else
 {
-hcall(GEVENT_DISCONNECTED, pinfo->m_hConn );
+Event* ev=new Event();
+ev->type=GEVENT_DISCONNECTED;
+ev->peer_id=pinfo->m_hConn ;
+hcall(ev);
 }
 break;
                         }
@@ -213,11 +223,66 @@ break;
 }
 }
 
-void gpp_steamsockets::staticConnectionStatusCallback(SteamNetConnectionStatusChangedCallback_t* pinfo)
+void gpp_steamsockets::staticConnectionStatusCallback_server(SteamNetConnectionStatusChangedCallback_t* pinfo)
 {
 if(hinstance!=NULL)
 {
-hinstance->connectionStatusCallback(pinfo);
+hinstance->connectionStatusCallback_server(pinfo);
+}
+}
+
+//Client...
+void gpp_steamsockets::connectionStatusCallback_client(SteamNetConnectionStatusChangedCallback_t* pinfo)
+{
+_GASSERT_MSG(hcall!=NULL, "O retorno de chamada não foi definido corretamente.");
+_GASSERT_MSG(hsteam!=NULL, "A isteamnetworkingsockets não foi inicializada!");
+switch(pinfo->m_info.m_eState)
+{
+case k_ESteamNetworkingConnectionState_Connecting:
+{
+break;
+}
+case k_ESteamNetworkingConnectionState_None:
+                        case k_ESteamNetworkingConnectionState_ClosedByPeer:
+                        case k_ESteamNetworkingConnectionState_ProblemDetectedLocally:
+                        {
+                                if ( pinfo->m_eOldState == k_ESteamNetworkingConnectionState_Connected )
+                                {
+Event* ev=new Event();
+ev->type=GEVENT_DISCONNECTED;
+ev->peer_id=pinfo->m_hConn ;
+hcall(ev);
+hsteam->CloseConnection(pinfo->m_hConn, 0, NULL, false);
+}
+else
+{
+Event* ev=new Event();
+ev->type=GEVENT_DISCONNECTED;
+ev->peer_id=pinfo->m_hConn ;
+hcall(ev);
+}
+break;
+                        }
+case k_ESteamNetworkingConnectionState_Connected:
+{
+Event* ev=new Event();
+ev->type=GEVENT_CONNECTED;
+ev->peer_id=pinfo->m_hConn ;
+hcall(ev);
+break;
+}
+default:
+{
+break;
+}
+}
+}
+
+void gpp_steamsockets::staticConnectionStatusCallback_client(SteamNetConnectionStatusChangedCallback_t* pinfo)
+{
+if(hinstance!=NULL)
+{
+hinstance->connectionStatusCallback_client(pinfo);
 }
 }
 }

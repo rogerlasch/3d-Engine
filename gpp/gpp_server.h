@@ -22,7 +22,7 @@ SERVER_FINISHED
 
 class gpp_server : public EventQueue
 {
-private:
+protected:
 uint32 listenport;
 uint32 listensock;
 uint32 max_players;
@@ -30,7 +30,7 @@ std::atomic<uint32> hstate;
 std::unordered_map<uint32, gpp_peer*> peers;
 gpp_networkinterface* hcon;
 public:
-gpp_server(gpp_networkinterface* hcon);
+gpp_server();
 gpp_server(const gpp_server& gs)=delete;
 gpp_server& operator=(const gpp_server& gs)=delete;
 virtual ~gpp_server();
@@ -40,6 +40,7 @@ uint32 playerCount()const;
 uint32 getHState()const;
 void setHState(uint32 hstate);
 gpp_networkinterface* getHCon()const;
+void setHcon(gpp_networkinterface* hcon);
 virtual bool start(uint16 port, uint32 max_players);
 virtual void shutdown();
 gpp_peer* getPeer(uint32 peer_id)const;
@@ -50,9 +51,7 @@ virtual void pollNet();
 virtual void pollEvents();
 virtual void processNetMessage(gpp_peer* peer, const std::string& msg);
 virtual void dispatchEvent(Event* ev);
-private:
-virtual void netCallBack(uint32 event, uint32 peer_id);
-virtual gpp_peer* createNewPeer();
+virtual void eventPostCallback(Event* ev);
 };
 }
 #endif

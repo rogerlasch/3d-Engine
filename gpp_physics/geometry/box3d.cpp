@@ -10,7 +10,7 @@ box3d::box3d(const vector3d& min, const vector3d& measures):
 GeometricShape(GTYPE_BOX)
 {
 this->min=min;
-this->measures=measures;
+this->max=(min+measures);
 }
 
 box3d::box3d(const box3d& b):
@@ -22,7 +22,7 @@ GeometricShape(GTYPE_BOX)
 box3d& box3d::operator=(const box3d& b)
 {
 this->min=b.min;
-this->measures=b.measures;
+this->max=b.max;
 return *this;
 }
 
@@ -30,114 +30,68 @@ box3d:: ~box3d()
 {
 }
 
- vector3d box3d::GetCenter()const
+ vector3d box3d::getCenter()const
 {
-return min+(measures*0.5f);
+return (min+max)*0.5f;
 }
 
 void box3d::GetVertices(vector<vector3d>& vertices)
 {
 vertices.resize(0);
 vertices.push_back(min);
-vertices.push_back({min.x, min.y+measures.y, min.z});
-vertices.push_back({min.x+measures.x, min.y+measures.y, min.z});
-vertices.push_back({min.x+measures.x, min.y, min.z});
-vertices.push_back({min.x, min.y, min.z+measures.z});
-vertices.push_back({min.x, min.y+measures.y, min.z+measures.z});
-vertices.push_back({min.x+measures.x, min.y+measures.y, min.z+measures.z});
-vertices.push_back({min.x+measures.x, min.y, min.z+measures.z});
+vertices.push_back({min.x, max.y, min.z});
+vertices.push_back({max.x, max.y, min.z});
+vertices.push_back({max.x, min.y, min.z});
+vertices.push_back({min.x, min.y, max.z});
+vertices.push_back({min.x, max.y, max.z});
+vertices.push_back(max);
+vertices.push_back({max.x, min.y, max.z});
 }
 
-   bool box3d::Contains(const vector3d& point) const
+   void box3d::translate(const vector3d& translation)
 {
-vector3d max=(min+measures);
-return ((min.x<=point.x)&&(max.x>=point.x)&&(min.y<=point.y)&&(max.y>=point.y)&&(min.z<=point.z)&&(max.z>=point.z));
-}
-
-   void box3d::Translate(const vector3d& translation)
-{
+setLastPosition(getCenter());
 min+=translation;
+max+=translation;
 }
 
-   void box3d::Scale(float scale)
+   void box3d::scale(float s)
 {
-  vector3d center = (min + measures) * 0.5f;
-  min = center + (min - center) * scale;
-measures=measures*scale;
+vector3d center=getCenter();
+min=(min*s)+center;
+max=(max*s)+center;
 }
 
- void box3d::Scale(const vector3d& scale)
+ void box3d::scale(const vector3d& sc)
 {
-  vector3d center = (min + measures) * 0.5f;
-  min = center + (min - center) * scale;
-measures=measures*scale;
-}
-
-void box3d::Rotate(const quaternion& orientation)
+vector3d center=getCenter();
+for(uint32 i=0; i<3; i++)
 {
-  // rotate each vertex of the box
-vector<vector3d> vertices;
-  GetVertices(vertices);
-  for (int i = 0; i < 8; i++)
-  {
-    vertices[i] = quaternion_vector_rotate(orientation, vertices[i]);
-  }
-
-  // Update the min and measures properties based on the rotated vertices
-  min = vertices[0];
-  measures = vector3d(0, 0, 0);
-  for (int i = 1; i < 8; i++)
-  {
-    for (int j = 0; j < 3; j++)
-    {
-      if (vertices[i][j] < min[j])
-      {
-        min[j] = vertices[i][j];
-      }
-      if (vertices[i][j] > min[j] + measures[j])
-      {
-        measures[j] = vertices[i][j] - min[j];
-      }
-    }
-  }
+min[i]*=sc[i];
+max[i]*=sc[i];
+}
+min+=center;
+max+=center;
 }
 
-   vector3d box3d::ClosestPointOnSurface(const vector3d& point) const
+void box3d::rotate(const quaternion& orientation)
 {
-  vector3d closestPoint = point;
-
-  // Verifica se o ponto está fora da caixa no eixo X
-  if (point.x < min.x) {
-    closestPoint.x = min.x;
-  } else if (point.x > min.x + measures.x) {
-    closestPoint.x = min.x + measures.x;
-  }
-
-  // Verifica se o ponto está fora da caixa no eixo Y
-  if (point.y < min.y) {
-    closestPoint.y = min.y;
-  } else if (point.y > min.y + measures.y) {
-    closestPoint.y = min.y + measures.y;
-  }
-
-  // Verifica se o ponto está fora da caixa no eixo Z
-  if (point.z < min.z) {
-    closestPoint.z = min.z;
-  } else if (point.z > min.z + measures.z) {
-    closestPoint.z = min.z + measures.z;
-  }
-  return closestPoint;
-}
-
-   float box3d::Volume() const
+min=quaternion_vector_rotate(orientation, min);
+max=quaternion_vector_rotate(orientation, min);
+for(uint32 i=0; i<3; i++)
 {
-return (measures.x*measures.y)*measures.z;
+if(max[i]<min[i])
+{
+swap(min[i], max[i]);
+}
+}
 }
 
-matrix3x3 box3d::GetInertiaTensor(float mass) const
+matrix3x3 box3d::getInertiaTensor(float mass) const
 {
     const float one_twelfth = 1.0f / 12.0f;
     matrix3x3 inertiaTensor;
+vector3d measures=(max-min);
     float x = measures.x, y = measures.y, z = measures.z;
     vector3d v;
     v.x = mass * (y*y + z*z) * one_twelfth;
