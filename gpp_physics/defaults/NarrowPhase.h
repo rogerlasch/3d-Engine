@@ -13,7 +13,7 @@ namespace gpp
 {
 
 typedef std::vector<CollisionInfo> CollisionList;
-class NarrowPhase
+class NarrowPhase : public iNarrowPhase
 {
 public:
 virtual void detectCollisions(std::vector<CollisionInfo>& iPhase, std::vector<CollisionInfo>& collisions);

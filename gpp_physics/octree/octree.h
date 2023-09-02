@@ -25,7 +25,7 @@ octree& operator=(const octree& oc)=delete;
 virtual ~octree();
 std::string toString()const;
 octreeinfo getInfo()const;
-void create(uint32 max_depth, uint32 blimit, float alph);
+void create(const vector3d& min, uint32 max_depth, uint32 blimit, float alph);
 void clear();
 void insert(iRigidBody* rb);
 void remove(iRigidBody* rb);

@@ -2,27 +2,15 @@
 
 void main()
 {
-string [] folders={"gpp", "gpp_physics", "gpp_physics\\geometry"};
-uint final=0;
-uint arquivos=0;
-for(uint i=0; i<folders.length; i++)
+uint32 final=0;
+string [] files;
+findFiles("gpp", files);
+findFiles("gpp_physics", files);
+for(uint32 i=0; i<files.length; i++)
 {
-string [] files=find_files(folders[i]+"/*.*");
-if(files.length==0)
-{
-continue;
+final+=getlines(files[i]);
 }
-for(uint i1=0; i1<files.length; i1++)
-{
-if((string_contains(files[i1], ".cpp", 1)>0)||(string_contains(files[i1], ".h", 1)>0))
-{
-arquivos++;
-final+=getlines(folders[i]+"/"+files[i1]);
-}
-}
-}
-alert("Info", "O projeto conta com um total de: "+final+" linhas em
-"+arquivos+" arquivos.");
+alert("Info", "O projeto conta com um total de "+final+" linhas em "+files.length+" arquivos.");
 }
 
 uint getlines(string filename)
@@ -33,4 +21,19 @@ string s=(f.read());
 f.close;
 string [] lines=string_split(s, "\r\n", false);
 return lines.length;
+}
+
+void findFiles(string path, string []& files){
+string [] dirs=find_directories(path+"\\*");
+for(uint32 i=0; i<dirs.length; i++)
+{
+findFiles(path+"\\"+dirs[i], files);
+}
+string [] fs=find_files(path+"\\*.*");
+for(uint32 i=0; i<fs.length; i++){
+if((string_contains(fs[i], ".cpp", 1)>-1)||(string_contains(fs[i], ".h", 1)>-1))
+{
+files.insert_last(path+"\\"+fs[i]);
+}
+}
 }

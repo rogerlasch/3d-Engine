@@ -1,8 +1,7 @@
 
 
-
-#include"../types.h"
-#include"vector3d.h"
+#include"../common.h"
+#include"../math/math.h"
 #include"gjk.h"
 
 using namespace std;

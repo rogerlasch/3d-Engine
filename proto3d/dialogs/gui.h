@@ -17,7 +17,6 @@ using namespace gpp;
 #include"AmbienteEditorDialog.h"
 #include"ObjectManagerDialog.h"
 #include"ProtoFrame.h"
-#include"VectorDialog.h"
 
 #define _ALERT(msg, ...) wxMessageBox(safe_format(msg, __VA_ARGS__), "Info", wxOK | wxICON_INFORMATION)
 #define _INPUTBOX(str, value) wxGetTextFromUser ( str, "Info", value).ToStdString()

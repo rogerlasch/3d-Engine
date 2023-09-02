@@ -9,4 +9,5 @@
 #include"BroadPhase.h"
 #include"NarrowPhase.h"
 #include"CollisionSolver.h"
+#include"DefaultFilter.h"
 #endif

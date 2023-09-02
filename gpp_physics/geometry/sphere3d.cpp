@@ -1,5 +1,6 @@
 
 
+#include<sstream>
 #include"geometry.h"
 
 using namespace std;
@@ -28,6 +29,17 @@ return *this;
 
 sphere3d:: ~sphere3d()
 {
+}
+
+string sphere3d::toString()const
+{
+stringstream ss;
+ss<<fixed;
+ss.precision(2);
+ss<<"Tipo: "<<getGeometricType()<<": esfera"<<endl;
+ss<<"Centro: "<<center<<endl;
+ss<<"Raio: "<<radius<<endl;
+return ss.str();
 }
 
  vector3d sphere3d::getCenter()const

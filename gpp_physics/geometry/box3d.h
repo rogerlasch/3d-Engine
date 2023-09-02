@@ -19,6 +19,7 @@ box3d(const vector3d& min={0.0f, 0.0f, 0.0f}, const vector3d& measures={0.0f, 0.
 box3d(const box3d& b);
 box3d& operator=(const box3d& b);
 virtual ~box3d();
+virtual std::string toString()const;
 virtual vector3d getCenter()const;//Retorna o centro da geometria...
 void GetVertices(std::vector<vector3d>& vertices);
   virtual void translate(const vector3d& translation);//Translada a geometria...

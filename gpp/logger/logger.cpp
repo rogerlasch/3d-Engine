@@ -21,6 +21,7 @@ _GEXCEPT("Erro ao abrir o arquivo: "+filename);
 }
 this->filename=filename;
 this->level=level;
+this->flags=0;
 stacktrace.clear();
 }
 

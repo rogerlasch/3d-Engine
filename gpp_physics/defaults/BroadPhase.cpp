@@ -1,8 +1,7 @@
 
 
 #include<algorithm>
-#include"../geometry/geometry.h"
-#include"../interfaces/interfaces.h"
+#include"../gpp_physics.h"
 #include"BroadPhase.h"
 
 using namespace std;

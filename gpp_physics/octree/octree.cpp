@@ -1,6 +1,7 @@
 
 #include<stack>
 #include<string.h>
+#include<sstream>
 #include"../gpp_physics.h"
 #include"octree.h"
 
@@ -41,7 +42,7 @@ ss<<m1[i]<<":"<<m2[i]<<", ";
 return ss.str();
 }
 
-void octree::create(uint32 max_depth, uint32 blimit, float alph)
+void octree::create(const vector3d& min, uint32 max_depth, uint32 blimit, float alph)
 {
     _GASSERT(root == NULL);
 profiler_snap();
@@ -49,7 +50,7 @@ info.blimit = blimit;
 info.max_depth = max_depth;
 this->root = new octreenode();
 alph = alph * 0.5f;
-root->center = vector3d(0, 0, 0) + alph;
+root->center = min + alph;
 root->radius = alph;
 info.nodes+=1;
 vector<octreenode*> pstack;
@@ -113,6 +114,21 @@ void octree::insert(iRigidBody* rb){
 void octree::remove(iRigidBody* rb)
 {
     profiler_snap();
+    vector<octreenode*>  hstack;
+    hstack.push_back(root);
+    iRigidBody* b = NULL;
+    while (hstack.size() > 0) {
+        octreenode* hnode = hstack.back();
+        hstack.pop_back();
+        if (BinaryUtils::remove(hnode->bodies, rb->index, &b)) {
+            return;
+        }
+        for (uint32 i = 0; i < 8; i++) {
+            if (aabbInsideAll(hnode->childs[i]->center, hnode->childs[i]->radius, rb->aabb)) {
+                hstack.push_back(hnode->childs[i]);
+            }
+        }
+    }
 }
 
 void octree::BroadPhase(vector<iRigidBody*>& hbodies, vector<CollisionInfo>& collisions)

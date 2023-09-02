@@ -1,8 +1,0 @@
-
-
-void main()
-{
-uint32 x=3;
-assert(x==3);
-alert("info", "okai");
-}

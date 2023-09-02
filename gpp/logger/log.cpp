@@ -150,7 +150,7 @@ break;
 default:
 {
 lg->ofn<<final<<endl;
-if((lg->flags&GLOG_CONSOLE))
+if((lg->flags&GLOG_CONSOLE)==GLOG_CONSOLE)
 {
 cout<<final<<endl;
 }

@@ -14,6 +14,8 @@ std::string name;
         gpp_index index;
         AABB* aabb;
         vector3d position;
+vector3d velocity;
+vector3d forces;
         quaternion orientation;
 std::atomic<uint16> bflags;
         iRigidBody() = default;
@@ -37,6 +39,12 @@ inline         virtual gpp_index getIndex() const { return this->index; }
 inline         virtual void setPosition(const vector3d& position) { this->position = position; }
 inline         virtual vector3d getPosition() const { return this->position; }
 
+inline         virtual void setVelocity(const vector3d& velocity) { this->velocity = velocity; }
+inline         virtual vector3d getVelocity() const { return this->velocity; }
+
+inline         virtual void setForce(const vector3d& forces) { this->forces = forces; }
+inline         virtual vector3d getForce() const { return this->forces; }
+inline virtual void applyForce(const vector3d& fv){this->forces+=fv;}
 inline         virtual void setOrientation(const quaternion& orientation) { this->orientation = orientation; }
 inline         virtual quaternion getOrientation() const { return this->orientation; }
 

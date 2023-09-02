@@ -1,5 +1,5 @@
 
-
+#include<sstream>
 #include"geometry.h"
 
 using namespace std;
@@ -28,6 +28,20 @@ return *this;
 
 box3d:: ~box3d()
 {
+}
+
+string box3d::toString()const
+{
+stringstream ss;
+ss<<fixed;
+ss.precision(2);
+vector<string> achis={"X", "Y", "Z"};
+ss<<"Tipo: "<<getGeometricType()<<": Caixa"<<endl;
+for(uint32 i=0; i<3; i++)
+{
+ss<<safe_format("{}: {:.2f}:{:.2f}", achis[i], min[i], max[i])<<endl;
+}
+return ss.str();
 }
 
  vector3d box3d::getCenter()const

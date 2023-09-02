@@ -9,7 +9,7 @@
 namespace gpp
 {
 
-class DefaultMotion
+class DefaultMotion : public iMotion
 {
 public:
 virtual void moveBodyList(std::vector<iRigidBody*>& hbodies, float dt);

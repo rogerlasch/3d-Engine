@@ -9,16 +9,13 @@
 #include<gpp/debug_system.h>
 #endif
 #include"../types.h"
-#include"vector3d.h"
-#include"matrix3x3.h"
-#include"quaternion.h"
+#ifndef GPP_MATH_H
+#include"../math/math.h"
+#endif
 #include"gjk.h"
 #include"GeometricShape.h"
 #include"box3d.h"
 #include"sphere3d.h"
-#include"CollisionInfo.h"
-#include"collision3d.h"
 #include"AABB.h"
 #include"aabbutil.h"
-#include"functions.h"
 #endif

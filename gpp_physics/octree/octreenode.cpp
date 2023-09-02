@@ -6,9 +6,7 @@
 #include<mutex>
 #include<shared_mutex>
 #include<algorithm>
-#include"../types.h"
-#include"../interfaces/interfaces.h"
-#include"../BinaryUtils.h"
+#include"../gpp_physics.h"
 #include"octreenode.h"
 
 using namespace std;

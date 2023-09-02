@@ -1,6 +1,5 @@
 
-#include"../geometry/geometry.h"
-#include"../interfaces/interfaces.h"
+#include"../gpp_physics.h"
 #include"NarrowPhase.h"
 
 using namespace std;

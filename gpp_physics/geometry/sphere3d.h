@@ -19,6 +19,7 @@ sphere3d(const vector3d& center={0.0f, 0.0f, 0.0f},float radius=1.0f);
 sphere3d(const sphere3d& b);
 sphere3d& operator=(const sphere3d& b);
 virtual ~sphere3d();
+virtual std::string toString()const;
 virtual vector3d getCenter()const;
   virtual void translate(const vector3d& translation);
   virtual void scale(float s);

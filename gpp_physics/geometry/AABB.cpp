@@ -131,9 +131,22 @@ break;
 string AABB::toString()const
 {
 stringstream ss;
-ss.precision(2);
 ss<<fixed;
-ss<<"AABB: "<<min.x<<":"<<max.x<<", "<<min.y<<":"<<max.y<<", "<<min.z<<":"<<max.z<<endl;
+ss.precision(2);
+ss<<"Mostrando AABB..."<<endl;
+vector<string> achis={"X", "Y", "Z"};
+for(uint32 i=0; i<3; i++)
+{
+ss<<safe_format("{}: {:.2f}:{:.2f}", achis[i], min[i], max[i])<<endl;
+}
+if(shape==NULL)
+{
+ss<<"Forma geométrica: NULL"<<endl;
+}
+else
+{
+ss<<"Forma geométrica: "<<shape->toString();
+}
 return ss.str();
 }
 }

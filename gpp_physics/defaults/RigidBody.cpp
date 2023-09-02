@@ -1,6 +1,5 @@
 
-#include"../geometry/geometry.h"
-#include"../interfaces/interfaces.h"
+#include"../gpp_physics.h"
 #include<sstream>
 #include<bitset>
 #include"RigidBody.h"

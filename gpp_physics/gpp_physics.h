@@ -15,15 +15,18 @@
 #include<shared_mutex>
 #include<string>
 #include<vector>
+
 #ifndef GPP_DEBUG_SYSTEM_H
 #include<gpp/debug_system.h>
 #endif
+
 #include"types.h"
+#include"math/math.h"
 #include"geometry/geometry.h"
+#include"collision/collision.h"
+#include"containers/containers.h"
 #include"interfaces/interfaces.h"
 #include"defaults/defaults.h"
-#include"IndexTable.h"
 #include"octree/octree.h"
-#include"BinaryUtils.h"
-#include"gpp_world.h"
+#include"world/gpp_world.h"
 #endif

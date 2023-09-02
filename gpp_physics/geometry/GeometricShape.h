@@ -26,6 +26,7 @@ vector3d lastPosition;
 public:
 GeometricShape(uint32 geometricType) : geometricType(geometricType){}
 virtual ~GeometricShape()=default;
+virtual std::string toString()const=0;
 uint32 getGeometricType()const {return geometricType;}
 virtual vector3d getCenter()const=0;//Retorna o centro da geometria...
   virtual void translate(const vector3d& translation) = 0;//Translada a geometria...

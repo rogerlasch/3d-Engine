@@ -12,7 +12,7 @@
 namespace gpp
 {
 
-class CollisionSolver
+class CollisionSolver : public iCollisionSolver
 {
 public:
 void solve(std::vector<CollisionInfo>& collisions);

@@ -1,7 +1,7 @@
 
 
-#include"../geometry/geometry.h"
-#include"../interfaces/interfaces.h"
+#include"../common.h"
+#include"../gpp_physics.h"
 #include"CollisionSolver.h"
 
 using namespace std;
