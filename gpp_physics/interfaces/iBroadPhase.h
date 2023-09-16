@@ -11,7 +11,7 @@ class iBroadPhase
 public:
 iBroadPhase()=default;
 virtual ~iBroadPhase()=default;
-void scan(std::vector<iRigidBody*>& bodies, std::vector<CollisionInfo>& collisions);
+virtual void scan(std::vector<iRigidBody*>& bodies, CollisionCache* cache)=0;
 };
 }
 #endif

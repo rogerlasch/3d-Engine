@@ -42,6 +42,7 @@ ss.precision(2);
 ss<<"Tempo atual do mundo em segundos: "<<currenttime<<endl;
 ss<<"Último passo de tempo: "<<timestep<<endl;
 ss<<"Gravidade habilitada? "<<_TF(GWF_GRAVITY)<<endl;
+ss<<"Gravidade: "<<gravity<<endl;
 ss<<"Limites do mundo: ";
 for(uint32 i=0; i<3; i++)
 {
@@ -58,6 +59,7 @@ min={0,0,0};
 max={0,0,0};
 gravity={0,0,0};
 currenttime=0;
+timestep=0.0f;
 flags=0;
 }
 

@@ -1,0 +1,212 @@
+#include <iostream>
+#include<sstream>
+#include <gpp/gpp.h>
+#include <gpp_physics/gpp_physics.h>
+#include"g_start.h"
+
+using namespace gpp;
+using namespace std;
+typedef vector<vector3d> polyhedron;
+void poly_translate(polyhedron& poly, const vector3d& t);
+void poly_get_center(const polyhedron& poly, vector3d& c);
+void poly_sort_wc(polyhedron& poly);
+void poly_sort_wwc(polyhedron& poly);
+void poly_get_normals(const polyhedron& poly, polyhedron& normals);
+vector3d calculateFaceNormal(const vector3d& vertexA, const vector3d& vertexB, const vector3d& vertexC) ;
+bool rayIntersectsFace(const vector3d& rayOrigin, const vector3d& rayDirection,                        const vector3d& vertexA, const vector3d& vertexB, const vector3d& vertexC,                        vector3d& intersectionPoint) ;
+bool rayPolyhedron(const vector3d& origin, const vector3d& dir, const polyhedron& poly, vector3d& pt1, vector3d& pt2);
+vector3d calculateQuadNormal(const vector3d& A, const vector3d& B, const vector3d& C, const vector3d& D);
+bool rayQuad(const vector3d& origin, const vector3d& dir, const vector3d& a, const vector3d& b, const vector3d& c, const vector3d& d, vector3d& in, vector3d& out);
+int main()
+{
+G_STARTER hstart;
+
+polyhedron sf;
+sf={
+{10,10,0},
+{20,10,0},
+{20,20,0},
+{10,20,0},
+
+{10,10,5},
+{20,10,5},
+{20,20,5},
+{10,20,5},
+};
+vector3d v1={15,15,10};
+vector3d v2={0,0,-1};
+vector3d v3, v4;
+if(rayPolyhedron(v1, v2, sf, v3, v4)){
+cout<<"Intercessão no  ponto: "<<endl<<v3<<endl;
+}
+else{
+cout<<"Não tem intercessão..."<<endl;
+}
+return 0;
+}
+
+void poly_translate(polyhedron& poly, const vector3d& t)
+{
+uint32 size=poly.size();
+for(uint32 i=0; i<size; i++){
+poly[i]+=t;
+}
+}
+
+void poly_get_center(const polyhedron& poly, vector3d& c)
+{
+c={0,0,0};
+uint32 size=poly.size();
+for(uint32 i=0; i<size; i++){
+c+=poly[i];
+}
+c/=size;
+}
+
+void poly_sort_wc(polyhedron& poly)
+{
+}
+
+void poly_sort_wwc(polyhedron& poly)
+{
+}
+
+void poly_get_normals(const polyhedron& poly, polyhedron& normals)
+{
+uint32 size=poly.size();
+for(uint32 i=0; i<size; i++){
+uint32 v1=i;
+uint32 v2=(i+1)%size;
+uint32 v3=(i+2)%size;
+normals.push_back(calculateFaceNormal(poly[v1], poly[v2], poly[v3]));
+}
+}
+
+// Função para calcular a normal de uma face.
+vector3d calculateFaceNormal(const vector3d& vertexA, const vector3d& vertexB, const vector3d& vertexC) {
+    vector3d edgeAB = vertexB - vertexA;
+    vector3d edgeAC = vertexC - vertexA;
+    return vector3d::crossProduct(edgeAB, edgeAC).normalize();
+}
+
+bool rayIntersectsFace(const vector3d& rayOrigin, const vector3d& rayDirection,                        const vector3d& vertexA, const vector3d& vertexB, const vector3d& vertexC,                        vector3d& intersectionPoint) {
+    // Calcular a normal da face.
+    vector3d faceNormal = calculateFaceNormal(vertexA, vertexB, vertexC);
+
+    // Calcular o plano que contém a face.
+    float d = -vector3d::dotProduct(faceNormal, vertexA);
+
+    // Calcular a distância entre o raio e o plano.
+    float denominator = vector3d::dotProduct(rayDirection,faceNormal);
+
+    // Verificar se o raio é paralelo ao plano (sem interseção).
+    if (denominator == 0.0) {
+        return false;
+    }
+
+    // Calcular a distância do ponto de origem do raio ao ponto de interseção com o plano.
+    float t = -(vector3d::dotProduct(rayOrigin,faceNormal) + d) / denominator;
+
+    // Verificar se o ponto de interseção está na direção do raio.
+    if (t < 0.0) {
+        return false;
+    }
+
+    // Calcular o ponto de interseção.
+    intersectionPoint = rayOrigin + rayDirection * t;
+
+    // Verificar se o ponto de interseção está dentro da face (usando coordenadas barycentricas).
+    vector3d edge1 = vertexB - vertexA;
+    vector3d edge2 = vertexC - vertexA;
+    vector3d edge3 = intersectionPoint - vertexA;
+
+    float dot11 = vector3d::dotProduct(edge1, edge1);
+    float dot12 = vector3d::dotProduct(edge1,edge2);
+    float dot22 = vector3d::dotProduct(edge2,edge2);
+    float dot33 = vector3d::dotProduct(edge3, edge3);
+    float dot13 = vector3d::dotProduct(edge1,edge3);
+    float dot23 = vector3d::dotProduct(edge2, edge3);
+
+    float invDenom = 1.0 / (dot11 * dot22 - dot12 * dot12);
+    float u = (dot22 * dot13 - dot12 * dot23) * invDenom;
+    float v = (dot11 * dot23 - dot12 * dot13) * invDenom;
+
+    // Verificar se u e v estão dentro do intervalo [0, 1] e se sua soma não excede 1.
+    if (u >= 0.0 && v >= 0.0 && (u + v) <= 1.0) {
+        return true; // O raio intersecta a face.
+    }
+
+    return false; // O raio não intersecta a face.
+}
+
+bool rayPolyhedron(const vector3d& origin, const vector3d& dir, const polyhedron& poly, vector3d& pt1, vector3d& pt2) {
+uint32 size=poly.size();
+for(uint32 i=0; i<size; i++){
+uint32 v1=i;
+uint32 v2=(i+1)%size;
+uint32 v3=(i+2)%size;
+uint32 v4=(i+3)%size;
+if(rayQuad(origin, dir, poly[v1], poly[v2], poly[v3], poly[v4], pt1, pt2)){
+cout<<pt1<<endl<<pt2<<endl;
+return true;
+}
+}
+return false;
+}
+
+vector3d calculateQuadNormal(const vector3d& A, const vector3d& B, const vector3d& C, const vector3d& D) {
+    // Calcule dois vetores no plano do quadrilátero.
+    vector3d AB = B - A;
+    vector3d AC = C - A;
+    // Calcule a normal do quadrilátero usando o produto vetorial dos vetores AB e AC.
+    vector3d normal = vector3d::crossProduct(AB,AC);
+    // Certifique-se de normalizar a normal para obter uma unidade de comprimento, se necessário.
+    normal.normalize();
+    return normal;
+}
+
+bool rayQuad(const vector3d& origin, const vector3d& dir, const vector3d& a, const vector3d& b, const vector3d& c, const vector3d& d, vector3d& in, vector3d& out) {
+    // Intersect the ray with the plane of the quadrilateral
+    vector3d normal = vector3d::crossProduct(b - a, c - a).normalize();
+    float denom = vector3d::dotProduct(normal, dir);
+
+    // Check if the ray is parallel or nearly parallel to the plane
+    if (std::fabs(denom) < GPP_EPSILON) {
+        return false;
+    }
+
+    // Calculate the distance from the ray origin to the plane
+    float t = vector3d::dotProduct(a - origin, normal) / denom;
+
+    // Check if the intersection point is behind the ray origin
+    if (t < 0.0f) {
+        return false;
+    }
+
+    // Calculate the intersection point
+    vector3d intersection = origin + dir * t;
+
+    // Check if the intersection point is inside the quadrilateral
+    vector3d ab = b - a;
+    vector3d bc = c - b;
+    vector3d cd = d - c;
+    vector3d da = a - d;
+    vector3d ap = intersection - a;
+    vector3d bp = intersection - b;
+    vector3d cp = intersection - c;
+    vector3d dp = intersection - d;
+
+    float dotABAP = vector3d::dotProduct(ab, ap);
+    float dotBCBP = vector3d::dotProduct(bc, bp);
+    float dotCDCP = vector3d::dotProduct(cd, cp);
+    float dotDADP = vector3d::dotProduct(da, dp);
+
+    if (dotABAP >= 0.0f && dotBCBP >= 0.0f && dotCDCP >= 0.0f && dotDADP >= 0.0f) {
+        // The intersection point is inside the quadrilateral
+        in = intersection;
+        out = intersection + dir; // Extend the line for out point
+        return true;
+    }
+
+    return false;
+}

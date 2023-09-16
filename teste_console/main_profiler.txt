@@ -1,13 +1,5 @@
-Tempo de execução total: 121 ms
+Tempo de execução total: 12 ms
 
 Imprimindo funções monitoradas:
-Total de funções monitoradas: 4
-
-gpp::CollisionManager::insert: Tempo total: 3.055 ms, Total de execuções: 5000, Duração média: 0.001 ms
-
-gpp::CollisionManager::internalUpdateRows: Tempo total: 0.343 ms, Total de execuções: 2, Duração média: 0.171 ms
-
-gpp::CollisionManager::removeByHashs: Tempo total: 0.289 ms, Total de execuções: 1, Duração média: 0.289 ms
-
-gpp::CollisionManager::removeByIndexs: Tempo total: 0.289 ms, Total de execuções: 1, Duração média: 0.289 ms
+Total de funções monitoradas: 0
 

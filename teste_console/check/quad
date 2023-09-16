@@ -1,0 +1,180 @@
+
+#include <iostream>
+#include<sstream>
+#include <gpp/gpp.h>
+#include <gpp_physics/gpp_physics.h>
+#include"g_start.h"
+
+using namespace gpp;
+using namespace std;
+
+class quad{
+public:
+vector3d a, b, c, d;
+quad(const vector3d& a, const vector3d& b, const vector3d& c, const vector3d& d){
+this->a=a;
+this->b=b;
+this->c=c;
+this->d=d;
+}
+/*
+vector3d getNormal()const{
+return vector3d::crossProduct(c-a, d-b).normalize();
+}
+*/
+vector3d getNormal() const {
+
+    // Calcula os vetores que representam os lados da quadra.
+    vector3d ab = b - a;
+    vector3d bc = c - b;
+    vector3d cd = d - c;
+    vector3d da = a - d;
+
+    // Calcula o vetor normal do quadrilátero.
+    vector3d normal = (ab ^ bc)^ab;
+    normal = normal.normalize();
+
+    return normal;
+}
+
+vector3d getCenter()const{
+vector3d center=a+b+c+d;
+return center/4.0f;
+}
+vector3d getClosestPoint(const vector3d& v) {
+
+    // Calcula o vetor normal do quadrilátero.
+    vector3d normal = getNormal();
+
+    // Calcula o vetor do ponto para o centro do quadrilátero.
+    vector3d dir = getCenter()-v;
+
+    // Calcula a distância do ponto ao centro do quadrilátero.
+    float d = normal * dir;
+
+    // Calcula o ponto de interseção do raio com o plano do quadrilátero.
+    vector3d intersection = v+ (normal*d);
+
+    // Calcula o ponto mais próximo do quadrilátero.
+    vector3d closestPoint;
+cout<<"inter: "<<intersection <<endl;
+    if (isFront(intersection)) {
+        closestPoint = intersection;
+    } else {
+        closestPoint = v;
+    }
+
+    return closestPoint;
+}
+
+bool isFront(const vector3d& v){
+vector3d normal=getNormal();
+vector3d center=getCenter();
+vector3d dir=v-center;
+float d=normal*dir;
+cout<<d<<endl;
+return d>0.0f;
+}
+bool contains(const vector3d& v){
+    // Calcula os vetores que representam os lados da quadra.
+    vector3d ab = b - a;
+    vector3d bc = c - b;
+    vector3d cd = d - c;
+    vector3d da = a - d;
+
+    // Calcula os vetores do ponto para os vértices da quadra.
+    vector3d vector_to_a = a - v;
+    vector3d vector_to_b = b - v;
+    vector3d vector_to_c = c - v;
+    vector3d vector_to_d = d - v;
+
+    // Calcula os produtos vetoriais.
+    vector3d cross_product_ab = ab^vector_to_a;
+    vector3d cross_product_bc = bc^vector_to_b;
+    vector3d cross_product_cd = cd^vector_to_c;
+    vector3d cross_product_da = da^vector_to_d;
+
+    // Verifica se todos os produtos vetoriais têm a mesma direção.
+    return cross_product_ab*cross_product_bc > 0 &&
+            cross_product_bc*cross_product_cd > 0 &&
+            cross_product_cd*cross_product_da > 0 &&
+            cross_product_da*cross_product_ab > 0;
+}
+};
+
+bool sphereQuad(sphere3d* s, quad* q, CollisionInfo* info);
+int main()
+{
+G_STARTER hstart;
+quad q({10,10,0}, {20,10,0}, {20,35, 10}, {10,35,10});
+sphere3d s({15,0, 2.5f}, 2.5f);
+vector3d n=q.getNormal();
+_GINFO("{:.2f}:{:.2f}:{:.2f}", n.x, n.y, n.z);
+cout<<q.isFront(s.center)<<endl;
+/*
+while(s.center.y<50){
+s.center.y++;
+_GINFO("{:.2f}:{:.2f}", s.center.y, s.center.z);
+CollisionInfo info;
+if(sphereQuad(&s, &q, &info)){
+_GINFO("Collision!");
+_GINFO("{}", info.toString());
+s.translate(info.normal*info.depth);
+}
+}
+*/
+cout<<q.getClosestPoint(s.center)<<endl;
+return 0;
+}
+
+bool rayQuad(const vector3d& origin, const vector3d& dir, const vector3d& a, const vector3d& b, const vector3d& c, const vector3d& d, vector3d& in, vector3d& out) {
+    // Intersect the ray with the plane of the quadrilateral
+    vector3d normal = vector3d::crossProduct(b - a, c - a).normalize();
+    float denom = vector3d::dotProduct(normal, dir);
+    // Check if the ray is parallel or nearly parallel to the plane
+    if (std::fabs(denom) < GPP_EPSILON) {
+        return false;
+    }
+    // Calculate the distance from the ray origin to the plane
+    float t = vector3d::dotProduct(a - origin, normal) / denom;
+    // Check if the intersection point is behind the ray origin
+    if (t < 0.0f) {
+        return false;
+    }
+    // Calculate the intersection point
+    vector3d intersection = origin + dir * t;
+    // Check if the intersection point is inside the quadrilateral
+    vector3d ab = b - a;
+    vector3d bc = c - b;
+    vector3d cd = d - c;
+    vector3d da = a - d;
+    vector3d ap = intersection - a;
+    vector3d bp = intersection - b;
+    vector3d cp = intersection - c;
+    vector3d dp = intersection - d;
+    float dotABAP = vector3d::dotProduct(ab, ap);
+    float dotBCBP = vector3d::dotProduct(bc, bp);
+    float dotCDCP = vector3d::dotProduct(cd, cp);
+    float dotDADP = vector3d::dotProduct(da, dp);
+    if (dotABAP >= 0.0f && dotBCBP >= 0.0f && dotCDCP >= 0.0f && dotDADP >= 0.0f) {
+        // The intersection point is inside the quadrilateral
+        in = intersection;
+        out = intersection + dir; // Extend the line for out point
+        return true;
+    }
+    return false;
+}
+
+bool sphereQuad(sphere3d* s, quad* q, CollisionInfo* info){
+vector3d closestPoint=q->getClosestPoint(s->center);
+vector3d dir=s->center-closestPoint;
+float sqdist=dir*dir;
+float sqradius=s->radius*s->radius;
+if(sqdist>sqradius)return false;
+info->normal=vector3d::normalize(dir);
+info->depth=fabs(sqrt(sqdist)-sqradius);
+vector3d maxPenetration=s->center+(vector3d::inverse(info->normal)*s->radius);
+maxPenetration+=info->normal*info->depth;
+info->point=maxPenetration;
+return true;
+}

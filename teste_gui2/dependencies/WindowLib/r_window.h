@@ -14,6 +14,7 @@
 #include"rkeyboard.h"
 #include"rspeak.h"
 #include"windialogs.h"
+#include"rsound.h"
 
 namespace rgames
 {
@@ -32,12 +33,14 @@ SDL_Window* handle;
 SDL_GLContext renderer;
 RKEYBOARDHANDLER hkeyboard;
 std::vector<RdialogBase*> hdialogs;
+std::unique_ptr<rsound> hsound;
 public:
 r_window(const std::string& title="Main window", ruint32 x=0, ruint32 y=0, ruint32 width=600, ruint32 height=600);
 r_window(const r_window& rw)=delete;
 r_window& operator=(const r_window& rw)=delete;
 ~r_window();
 bool hasFocus()const;
+rsound* getSound()const;
 void setTitle(const std::string& title);
 std::string getTitle()const;
 void setFPS(rint32 fps);

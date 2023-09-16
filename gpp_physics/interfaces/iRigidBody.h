@@ -10,6 +10,7 @@ namespace gpp
 uint32 btype;
 uint32 userdata;
 float mass;
+float restitution;
 std::string name;
         gpp_index index;
         AABB* aabb;
@@ -18,6 +19,7 @@ vector3d velocity;
 vector3d forces;
         quaternion orientation;
 std::atomic<uint16> bflags;
+std::atomic<uint8> contacts;
         iRigidBody() = default;
         virtual ~iRigidBody() = default;
 
@@ -29,6 +31,9 @@ inline virtual uint32 getUserData()const{return this->userdata;}
 
 inline virtual void setMass(float mass){this->mass=mass;}
 inline virtual float getMass()const{return this->mass;}
+
+inline virtual void setRestitution(float restitution){this->restitution=restitution;}
+inline virtual float getRestitution()const{return this->restitution;}
 
 inline virtual void setName(const std::string& name){this->name=name;}
 inline virtual std::string getName()const{return this->name;}
@@ -80,6 +85,17 @@ bflags^=bf;
 inline bool containsBodyFlag(uint16 bf)const
 {
 return (bflags&bf)==bf;
+}
+
+inline void translate(const vector3d& v){
+this->position+=v;
+aabb->translate(v);
+}
+
+inline void rotate(const vector3d& origin, const quaternion& q){
+    aabb->rotate(origin, q);
+this->orientation=this->orientation*q;
+this->position=aabb->getGeometricShape()->getCenter();
 }
     };
 } // namespace gpp

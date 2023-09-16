@@ -16,7 +16,7 @@ typedef std::vector<CollisionInfo> CollisionList;
 class NarrowPhase : public iNarrowPhase
 {
 public:
-virtual void detectCollisions(std::vector<CollisionInfo>& iPhase, std::vector<CollisionInfo>& collisions);
+virtual void detectCollisions(CollisionCache* cache);
 };
 }
 #endif

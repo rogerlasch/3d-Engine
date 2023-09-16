@@ -18,7 +18,7 @@ class BroadPhase : public iBroadPhase
 uint32 gsortaxis;
 public:
 BroadPhase();
-virtual void scan(std::vector<iRigidBody*>& bodies, std::vector<CollisionInfo>& collisions);
+virtual void scan(std::vector<iRigidBody*>& bodies, CollisionCache* cache);
 uint32 getgSortAxis()const;
 void setgSortAxis(uint32 gsortaxis);
 };

@@ -15,6 +15,8 @@
 #include"gjk.h"
 #include"GeometricShape.h"
 #include"box3d.h"
+#include"capsule3d.h"
+#include"cylinder3d.h"
 #include"sphere3d.h"
 #include"AABB.h"
 #include"aabbutil.h"

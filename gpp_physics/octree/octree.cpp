@@ -131,16 +131,16 @@ void octree::remove(iRigidBody* rb)
     }
 }
 
-void octree::BroadPhase(vector<iRigidBody*>& hbodies, vector<CollisionInfo>& collisions)
+void octree::BroadPhase(vector<iRigidBody*>& hbodies, CollisionCache* cache)
 {
     profiler_snap();
     uint32 size = hbodies.size();
     for (uint32 i = 0; i < size; i++) {
-        broadPhase(hbodies[i], collisions);
+        broadPhaseBody(hbodies[i], cache);
     }
 }
 
-void octree::broadPhase(iRigidBody* rb, vector<CollisionInfo>& collisions) {
+void octree::broadPhaseBody(iRigidBody* rb, CollisionCache* cache) {
     profiler_snap();
 stack<octreenode*> pstack;
 pstack.push(root);
@@ -149,11 +149,17 @@ octreenode* hnode=pstack.top();
 pstack.pop();
 uint32 size = hnode->bodies.size();
 for (uint32 i = 0; i < size; i++) {
+uint64 hash=get_hash_from_index(rb->index, hnode->bodies[i]->index);
+bool contains=cache->contains(hash);
+if(!contains){
     if (aabbOverlap(rb->aabb, hnode->bodies[i]->aabb)) {
-        auto& it = collisions.emplace_back();
-        it.r1 = rb;
-        it.r2 = hnode->bodies[i];
+shared_collisioninfo info=make_shared<CollisionInfo>();
+info->id=hash;
+info->r1=rb;
+info->r2=hnode->bodies[i];
+cache->insert(info);
     }
+}
 }
 size=hnode->childs.size();
 for(uint32 i=0; i<size; i++)

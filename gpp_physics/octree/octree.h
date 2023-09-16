@@ -29,8 +29,8 @@ void create(const vector3d& min, uint32 max_depth, uint32 blimit, float alph);
 void clear();
 void insert(iRigidBody* rb);
 void remove(iRigidBody* rb);
-void BroadPhase(std::vector<iRigidBody*>& hbodies, std::vector<CollisionInfo>& collisions);
-void broadPhase(iRigidBody* rb, std::vector<CollisionInfo>& hcollisions);
+void BroadPhase(std::vector<iRigidBody*>& hbodies, CollisionCache* cache);
+void broadPhaseBody(iRigidBody* rb, CollisionCache* cache);
 private:
 octreenode* getDeepest(iRigidBody* rb, octreenode* start=NULL);
 void splitAndRedistribute(octreenode* node);

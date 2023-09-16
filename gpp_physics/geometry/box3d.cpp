@@ -69,29 +69,37 @@ min+=translation;
 max+=translation;
 }
 
-   void box3d::scale(float s)
+   void box3d::scale(const vector3d& origin, float s)
 {
-vector3d center=getCenter();
-min=(min*s)+center;
-max=(max*s)+center;
+min-=origin;
+max-=origin;
+min*=s;
+max*=s;
+min+=origin;
+max+=origin;
 }
 
- void box3d::scale(const vector3d& sc)
+ void box3d::scale(const vector3d& origin, const vector3d& sc)
 {
-vector3d center=getCenter();
+min-=origin;
+max-=origin;
 for(uint32 i=0; i<3; i++)
 {
 min[i]*=sc[i];
 max[i]*=sc[i];
 }
-min+=center;
-max+=center;
+min+=origin;
+max+=origin;
 }
 
-void box3d::rotate(const quaternion& orientation)
+void box3d::rotate(const vector3d& origin, const quaternion& orientation)
 {
+min-=origin;
+max-=origin;
 min=quaternion_vector_rotate(orientation, min);
-max=quaternion_vector_rotate(orientation, min);
+max=quaternion_vector_rotate(orientation, max);
+min+=origin;
+max+=origin;
 for(uint32 i=0; i<3; i++)
 {
 if(max[i]<min[i])

@@ -22,6 +22,7 @@ bool aabbInsideAll(const vector3d& center, float radius, AABB* b);
 bool aabbInsideAll(AABB* a, AABB* b);
 bool aabbInsidePoint(AABB* a, const vector3d& v);
 vector3d get_closest_point_from_aabb(const vector3d& pt, const vector3d& min, const vector3d& max);
+float get_distance_from_aabb(const vector3d& pt, const vector3d& min, const vector3d& max);
 bool point_in_aabb(const vector3d& pt, const vector3d& min, const vector3d& max);
 }
 #endif

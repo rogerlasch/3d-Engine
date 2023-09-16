@@ -13,12 +13,20 @@ class collision3d
 {
 public:
 static bool isColliding(GeometricShape* s1, GeometricShape* s2, CollisionInfo* info);
+//sphere...
 static bool sphereSphere(sphere3d* s1, sphere3d* s2, CollisionInfo* info);
 static bool sphereBox(sphere3d* s, box3d* b, CollisionInfo* info);
+static bool sphereCapsule(sphere3d* s, capsule3d* c, CollisionInfo* info);
+
+//box...
 static bool boxBox(box3d* b1, box3d* b2, CollisionInfo* info);
-static bool rayPoint(const vector3d& origin, const vector3d& dir, const vector3d& point);
-static bool raySphere(const vector3d& origin, const vector3d& dir, sphere3d* s, vector3d& q);
-static bool rayBox(const vector3d& origin, const vector3d& dir, box3d* b, vector3d& q, bool calculateEntry);
+static bool boxSphere(box3d* b, sphere3d* s, CollisionInfo* info);
+static bool boxCapsule(box3d* b, capsule3d* c, CollisionInfo* info);
+
+//capsule...
+static bool capsuleCapsule(capsule3d* c1, capsule3d* c2, CollisionInfo* info);
+static bool capsuleSphere(capsule3d* c, sphere3d* s, CollisionInfo* info);
+static bool capsuleBox(capsule3d* c, box3d* b, CollisionInfo* info);
 };
 }
 #endif

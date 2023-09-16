@@ -76,20 +76,25 @@ shape->translate(v);
 }
 }
 
-void AABB::scale(float sk)
+void AABB::scale(const vector3d& origin, float sk)
 {
+min-=origin;
+max-=origin;
+min*=sk;
 max*=sk;
+min+=origin;
+max+=origin;
 if(shape!=NULL)
 {
-shape->scale(sk);
+shape->scale(origin, sk);
 }
 }
 
-void AABB::rotate(const quaternion& orientation)
+void AABB::rotate(const vector3d& origin, const quaternion& orientation)
 {
 if(shape!=NULL)
 {
-shape->rotate(orientation);
+shape->rotate(origin, orientation);
 recalculateBoundingBox();
 }
 }
@@ -114,7 +119,16 @@ case GTYPE_BOX:
 {
 box3d* b=(box3d*)sh;
 min=b->min;
-max=b->max;
+max=min;
+for(uint32 i=0; i<3; i++){
+if(b->max[i]>max[i]) max[i]=b->max[i];
+}
+break;
+}
+case GTYPE_CAPSULE:{
+capsule3d* s=(capsule3d*)sh;
+this->min=s->min-s->radius;
+this->max=s->max+s->radius;
 break;
 }
 /*

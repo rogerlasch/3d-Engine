@@ -18,13 +18,14 @@ namespace gpp
 
 class gpp_world
 {
-private:
+public:
 std::unique_ptr<WorldInfo> info;
 std::unique_ptr<WorldCallbacks> hcon;
 std::vector<iRigidBody*> bodies;//Uma lista de todos os corpos existentes no mundo...
 std::vector<iRigidBody*> dynamicbodies;
 std::vector<iRigidBody*> rbDeletions;
 std::unique_ptr<octree> geo;
+std::unique_ptr<CollisionCache> hcache;
 public:
 gpp_world(WorldInfo* winfo=NULL, WorldCallbacks* hcon=NULL);
 gpp_world(const gpp_world& w)=delete;

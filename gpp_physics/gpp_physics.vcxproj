@@ -37,6 +37,8 @@
     <ClInclude Include="geometry\AABB.h" />
     <ClInclude Include="geometry\aabbutil.h" />
     <ClInclude Include="geometry\box3d.h" />
+    <ClInclude Include="geometry\capsule3d.h" />
+    <ClInclude Include="geometry\cylinder3d.h" />
     <ClInclude Include="geometry\GeometricShape.h" />
     <ClInclude Include="geometry\geometry.h" />
     <ClInclude Include="geometry\gjk.h" />
@@ -50,8 +52,10 @@
     <ClInclude Include="interfaces\interfaces.h" />
     <ClInclude Include="interfaces\iRigidBody.h" />
     <ClInclude Include="math\math.h" />
+    <ClInclude Include="math\MathCollision.h" />
     <ClInclude Include="math\matrix3x3.h" />
     <ClInclude Include="math\quaternion.h" />
+    <ClInclude Include="math\ray.h" />
     <ClInclude Include="math\vector3d.h" />
     <ClInclude Include="octree\octree.h" />
     <ClInclude Include="octree\octreeinfo.h" />
@@ -75,11 +79,15 @@
     <ClCompile Include="geometry\AABB.cpp" />
     <ClCompile Include="geometry\aabbutil.cpp" />
     <ClCompile Include="geometry\box3d.cpp" />
+    <ClCompile Include="geometry\capsule3d.cpp" />
+    <ClCompile Include="geometry\cylinder3d.cpp" />
     <ClCompile Include="geometry\gjk.cpp" />
     <ClCompile Include="geometry\sphere3d.cpp" />
     <ClCompile Include="math\math.cpp" />
+    <ClCompile Include="math\MathCollision.cpp" />
     <ClCompile Include="math\matrix3x3.cpp" />
     <ClCompile Include="math\quaternion.cpp" />
+    <ClCompile Include="math\ray.cpp" />
     <ClCompile Include="math\vector3d.cpp" />
     <ClCompile Include="octree\octree.cpp" />
     <ClCompile Include="octree\octreeinfo.cpp" />

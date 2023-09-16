@@ -22,9 +22,9 @@ virtual ~sphere3d();
 virtual std::string toString()const;
 virtual vector3d getCenter()const;
   virtual void translate(const vector3d& translation);
-  virtual void scale(float s);
-virtual void scale(const vector3d& sc);
-virtual void rotate(const quaternion& orientation);
+  virtual void scale(const vector3d& origin, float s);
+virtual void scale(const vector3d& origin, const vector3d& sc);
+virtual void rotate(const vector3d& origin, const quaternion& orientation);
 virtual matrix3x3 getInertiaTensor(float mass)const;
 };
 }

@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="ralert.cpp" />
     <ClCompile Include="rkeyboard.cpp" />
+    <ClCompile Include="rsound.cpp" />
     <ClCompile Include="rspeak.cpp" />
     <ClCompile Include="r_window.cpp" />
     <ClCompile Include="rstring_utils.cpp" />
@@ -29,6 +30,7 @@
     <ClInclude Include="ralert.h" />
     <ClInclude Include="RdialogBase.h" />
     <ClInclude Include="rkeyboard.h" />
+    <ClInclude Include="rsound.h" />
     <ClInclude Include="rspeak.h" />
     <ClInclude Include="r_types.h" />
     <ClInclude Include="r_window.h" />

@@ -9,29 +9,19 @@ using namespace std;
 namespace gpp
 {
 
-struct SweepComparator
-{
-uint32 gSortAxis;
-bool operator()(iRigidBody* rb1, iRigidBody* rb2)
-{
-return rb1->getAABB()->getMin()[gSortAxis]<rb2->getAABB()->getMin()[gSortAxis];
-}
-};
-
 BroadPhase::BroadPhase()
 {
 gsortaxis=0;
 }
 
-void BroadPhase::scan(vector<iRigidBody*>& bodies, vector<CollisionInfo>& collisions)
+void BroadPhase::scan(vector<iRigidBody*>& bodies, CollisionCache* cache)
 {
     // Sort the array on currently selected sorting axis (gsortAxis)
-SweepComparator scp;
-scp.gSortAxis=getgSortAxis();
-std::sort(bodies.begin(), bodies.end(), scp);
+std::sort(bodies.begin(), bodies.end(), [&](iRigidBody* r1, iRigidBody*r2)->bool{return r1->aabb->min[gsortaxis]<r2->aabb->min[gsortaxis];});
     // Sweep the array for collisions
     float s[3] = { 0.0f, 0.0f, 0.0f }, s2[3] = { 0.0f, 0.0f, 0.0f }, v[3];
-    for (uint32 i=0; i<bodies.size(); i++) {
+uint32 nsize=bodies.size();
+    for (uint32 i=0; i<nsize; i++) {
           // Determine AABB center point
           vector3d p = 0.5f * (bodies[i]->aabb->min + bodies[i]->aabb->max);
           // Update sum and sum2 for computing variance of AABB centers
@@ -40,15 +30,21 @@ std::sort(bodies.begin(), bodies.end(), scp);
                 s2[c] += p[c] * p[c];
           }
           // Test collisions against all possible overlapping AABBs following current one
-          for (uint32 j = i + 1; j < bodies.size(); j++) {
+          for (uint32 j = i + 1; j < nsize; j++) {
                 // Stop when tested AABBs are beyond the end of current AABB
                 if (bodies[j]->aabb->min[gsortaxis] > bodies[i]->aabb->max[gsortaxis])
                       break;
+uint64 hash=get_hash_from_index(bodies[i]->index, bodies[j]->index);
+bool contains=cache->contains(hash);
+if(!contains){
                 if (aabbOverlap(bodies[i]->aabb, bodies[j]->aabb))
 {
-auto& info=collisions.emplace_back();
-info.r1=bodies[i];
-info.r2=bodies[j];
+shared_collisioninfo info=make_shared<CollisionInfo>();
+info->id=hash;
+info->r1=bodies[i];
+info->r2=bodies[j];
+cache->insert(info);
+}
 }
           }
       }

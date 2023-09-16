@@ -3,7 +3,6 @@
 
 #include<sstream>
 #include<vector>
-#include<initializer_list>
 #include"math.h"
 #include"vector3d.h"
 
@@ -62,8 +61,9 @@ this->z=dv.z;
 return *this;
 }
 
-vector3d& vector3d::operator=(const initializer_list<float>& points)
+vector3d& vector3d::operator=(const float points[3] )
 {
+/*
 vector<float> df(points);
 switch(df.size())
 {
@@ -86,6 +86,10 @@ this->z=df[2];
 break;
 }
 }
+*/
+x=points[0];
+y=points[1];
+z=points[2];
 return *this;
 }
 
@@ -94,25 +98,9 @@ bool vector3d::operator==(const vector3d& dv)const
 return this->x==dv.x&&this->y==dv.y&&this->z==dv.z;
 }
 
-bool vector3d::operator==(const initializer_list<float>& dv)const
+bool vector3d::operator==(const float  dv[3])const
 {
-vector<float> df(dv);
-switch(df.size())
-{
-case 1:
-{
-return this->x==df[0];
-}
-case 2:
-{
-return this->x==df[0]&&this->y==df[1];
-}
-case 3:
-{
-return this->x==df[0]&&this->y==df[1]&&this->z==df[2];
-}
-}
-return false;
+return x==dv[0]&&y==dv[1]&&z==dv[2];
 }
 
 vector3d& vector3d::operator-()
@@ -211,7 +199,7 @@ return sqrt(x*x+y*y+z*z);
 //Normaliza o vetor...
 vector3d& vector3d::normalize()
 {
-float len=(x*x+y*y+z*z);
+float len=sqrt(x*x+y*y+z*z);
 if(len<=GPP_EPSILON) len=1.0f;
 this->x/=len;
 this->y/=len;
@@ -241,7 +229,7 @@ return vector3d(-v.x, -v.y, -v.z);
 //Útil quando precisamos manter o original intácto.
 vector3d vector3d::normalize(const vector3d& v)
 {
-float len=(v.x*v.x+v.y*v.y+v.z*v.z);
+float len=sqrt(v.x*v.x+v.y*v.y+v.z*v.z);
 if(len<=GPP_EPSILON) len=1.0f;
 vector3d v2(v.x/len, v.y/len, v.z/len);
 if(fabs(v2.x)<GPP_EPSILON) v2.x=0.0f;
@@ -270,7 +258,8 @@ return v;
 //Calcula o produto triplo entre 3 vetores...
 float vector3d::tripleProduct(const vector3d& a, const vector3d& b, const vector3d& c)
 {
-return a.x * (b.y * c.z - c.y * b.z) - a.y * (b.x * c.z - c.x * b.z) + a.z * (b.x * c.y - c.x * b.y);
+//return a.x * (b.y * c.z - c.y * b.z) - a.y * (b.x * c.z - c.x * b.z) + a.z * (b.x * c.y - c.x * b.y);
+return dotProduct(crossProduct(a, b), c);
 }
 
 //Calcula o ângulo entre 2 vetores...
@@ -376,21 +365,19 @@ vector3d operator-(const vector3d& v1, const vector3d& v2)
 return vector3d(v1.x-v2.x, v1.y-v2.y, v1.z-v2.z);
 }
 
-/*
-vector3d operator*(const vector3d& v1, const vector3d& v2)
+vector3d multiVec(const vector3d& v1, const vector3d& v2)
 {
 return vector3d(v1.x*v2.x, v1.y*v2.y, v1.z*v2.z);
-}
-*/
-
-vector3d operator/(const vector3d& v1, const vector3d& v2)
-{
-return vector3d(v1.x/((v2.x!=0) ? v2.x : 1.0f), v1.y/((v2.y!=0) ? v2.y : 1.0f), v1.z/((v2.z!=0) ? v2.z : 1.0f));
 }
 
 float operator*(const vector3d& v1, const vector3d& v2)
 {
 return((v1.x*v2.x)+(v1.y*v2.y)+(v1.z*v2.z));
+}
+
+vector3d operator/(const vector3d& v1, const vector3d& v2)
+{
+return vector3d(v1.x/((v2.x!=0) ? v2.x : 1.0f), v1.y/((v2.y!=0) ? v2.y : 1.0f), v1.z/((v2.z!=0) ? v2.z : 1.0f));
 }
 
 vector3d operator^(const vector3d& v1, const vector3d& v2)

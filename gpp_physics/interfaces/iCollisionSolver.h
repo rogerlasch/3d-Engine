@@ -8,8 +8,8 @@ namespace gpp
     public:
         iCollisionSolver() = default;
         virtual ~iCollisionSolver() = default;
-virtual void solve(std::vector<CollisionInfo>& collisions)=0;
-virtual void solvePair(CollisionInfo& info)=0;
+virtual void solve(CollisionCache* hcache)=0;
+virtual bool solvePair(CollisionInfo* info)=0;
     };
 } // namespace gpp
 

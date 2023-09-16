@@ -30,6 +30,9 @@
     <ClCompile Include="rstring_utils.cpp">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClCompile>
+    <ClCompile Include="rsound.cpp">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="r_types.h">
@@ -57,6 +60,9 @@
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
     <ClInclude Include="rstring_utils.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="rsound.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
   </ItemGroup>

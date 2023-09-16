@@ -53,21 +53,20 @@ setLastPosition(center);
 center+=translation;
 }
 
-   void sphere3d::scale(float s)
+   void sphere3d::scale(const vector3d& origin, float s)
 {
 radius*=s;
 }
 
- void sphere3d::scale(const vector3d& sc)
+ void sphere3d::scale(const vector3d& origin, const vector3d& sc)
 {
 }
 
-void sphere3d::rotate(const quaternion& orientation)
+void sphere3d::rotate(const vector3d& origin, const quaternion& orientation)
 {
-vector3d origem=this->getCenter();
-translate(vector3d::inverse(origem));
+center-=origin;
 center=quaternion_vector_rotate(orientation, center);
-translate(origem);
+center+=origin;
 }
 
  matrix3x3 sphere3d::getInertiaTensor(float mass)const

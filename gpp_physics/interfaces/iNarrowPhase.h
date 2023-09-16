@@ -8,7 +8,7 @@ namespace gpp
     public:
         iNarrowPhase() = default;
         virtual ~iNarrowPhase() = default;
-virtual void detectCollisions(std::vector<CollisionInfo>& iPhase, std::vector<CollisionInfo>& collisions)=0;
+virtual void detectCollisions(CollisionCache* cache)=0;
     };
 } // namespace gpp
 

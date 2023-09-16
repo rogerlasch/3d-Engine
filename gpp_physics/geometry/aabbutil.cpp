@@ -103,6 +103,18 @@ closestPoint[i] = v;
 return closestPoint;
 }
 
+float get_distance_from_aabb(const vector3d& pt, const vector3d& min, const vector3d& max)
+{
+                       float sqDist = 0.0f;
+                       for (int i = 0; i < 3; i++) {
+                             // For each axis count any excess distance outside box extents
+                             float v = pt[i];
+                             if (v < min[i]) sqDist += (min[i] - v) * (min[i] - v);
+                             if (v > max[i]) sqDist += (v - max[i]) * (v - max[i]);
+                       }
+                       return sqDist;
+}
+
 bool point_in_aabb(const vector3d& pt, const vector3d& min, const vector3d& max)
 {
 for(uint32 i=0; i<3; i++)

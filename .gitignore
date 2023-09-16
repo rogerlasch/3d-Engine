@@ -30,3 +30,7 @@ proto3d/gui_project/*.h
 proto3d/gui_project/*.cpp
 *.bak
 __pycache__/
+gpp/*.bgt
+gpp/*.txt
+gpp_physics/*.bgt
+gpp_physics/*.txt

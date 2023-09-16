@@ -15,8 +15,8 @@ namespace gpp
 class CollisionSolver : public iCollisionSolver
 {
 public:
-void solve(std::vector<CollisionInfo>& collisions);
-void solvePair(CollisionInfo& info);
+virtual void solve(CollisionCache* hcache);
+virtual bool solvePair(CollisionInfo* info);
 };
 }
 #endif

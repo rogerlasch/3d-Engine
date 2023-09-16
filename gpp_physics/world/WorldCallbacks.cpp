@@ -14,6 +14,7 @@ nPhase=NULL;
 iSolver=NULL;
 hMotion=NULL;
 filter=NULL;
+hcall=NULL;
 }
 
 WorldCallbacks::~WorldCallbacks() {
@@ -29,25 +30,22 @@ return true;
 }
 
 void WorldCallbacks::cleanup() {
-if(bPhase!=NULL) delete bPhase;
-if(nPhase!=NULL)delete nPhase;
-if(iSolver!=NULL) delete iSolver;
-if(hMotion!=NULL) delete hMotion;
-if(filter!=NULL) delete filter;
 bPhase=NULL;
 nPhase=NULL;
 iSolver=NULL;
 hMotion=NULL;
+hcall=NULL;
 }
 
 void WorldCallbacks::createDefault()
 {
 this->cleanup();
-bPhase=new BroadPhase();
-nPhase=new NarrowPhase();
-iSolver=new CollisionSolver();
-hMotion=new DefaultMotion();
-filter=new DefaultFilter();
+bPhase=make_shared< BroadPhase>();
+nPhase=make_shared< NarrowPhase>();
+iSolver=make_shared< CollisionSolver>();
+hMotion=make_shared< DefaultMotion>();
+filter=make_shared< DefaultFilter>();
+hcall=NULL;
 }
 
 void WorldCallbacks::copy_from(WorldCallbacks* wk)
@@ -58,5 +56,6 @@ this->nPhase=wk->nPhase;
 this->iSolver=wk->iSolver;
 this->hMotion=wk->hMotion;
 this->filter=wk->filter;
+this->hcall=wk->hcall;
 }
 }

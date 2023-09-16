@@ -1,6 +1,5 @@
 
 
-#include<unordered_set>
 #include<sstream>
 #include<algorithm>
 #include<functional>
@@ -40,6 +39,21 @@ hcollisions.clear();
 htable.clear();
 }
 
+IndexMap& CollisionCache::getIndexs()
+{
+return hindexs;
+}
+
+CollisionMap& CollisionCache::getMapped()
+{
+return hcollisions;
+}
+
+CollisionTable& CollisionCache::getTable()
+{
+return htable;
+}
+
 void CollisionCache::insert(const shared_collisioninfo& info)
 {
 profiler_snap();
@@ -48,6 +62,10 @@ profiler_inc("hash_collision", 1);
  return;
 }
 //O objeto dominante é sempre o r1...
+info->r1->contacts.fetch_add(1);
+if(info->r2->mass>0){
+info->r2->contacts.fetch_add(1);
+}
 auto it=hindexs.find(make_pair(info->r1->index.vnum, info->r1->index.subvnum));
 if(it==hindexs.end())
 {
@@ -96,15 +114,18 @@ internalUpdateRows();
 return true;
 }
 
-uint32 CollisionCache::removeByHashs(const std::vector<uint64>& hashs)
+uint32 CollisionCache::removeByHashs(const std::unordered_set<uint64>& hashs)
 {
 profiler_snap();
 uint32 x=0;
 vector<gpp_index> hremove;
 for(auto& it : hashs)
 {
-if(hcollisions.find(it)!=hcollisions.end())
+auto it2=hcollisions.find(it);
+if(it2!=hcollisions.end())
 {
+if(it2->second->r1->contacts.load()>0) it2->second->r1->contacts.fetch_sub(1);
+if(it2->second->r2->contacts.load()>0) it2->second->r2->contacts.fetch_sub(1);
 hcollisions.erase(it);
 x++;
 }

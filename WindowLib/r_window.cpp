@@ -40,6 +40,11 @@ bool r_window::hasFocus()const
 return this->hasfocus;
 }
 
+rsound* r_window::getSound()const
+{
+return hsound.get();
+}
+
 void r_window::setTitle(const string& title)
 {
 if(this->handle!=NULL)
@@ -296,6 +301,7 @@ void r_window::init_window(const string& title, int x, int y, int w, int h)
 {
 this->title=title;
 rspeak_init();
+hsound=make_unique<rsound>();
 rint32 res=SDL_Init(SDL_INIT_VIDEO);
 if(res!=0)
 {
