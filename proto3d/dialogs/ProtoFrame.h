@@ -15,10 +15,9 @@
 #include <wx/wx.h>
 #include <wx/image.h>
 
-
-
-
 class ProtoFrame: public wxFrame {
+private:
+DrawingTool* mtool;
 public:
  ProtoFrame(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos=wxDefaultPosition, const wxSize& size=wxDefaultSize, long style=wxDEFAULT_FRAME_STYLE);
 

@@ -45,6 +45,24 @@ return true;
 }
 else//Caso r1 e r2 sejam dinãmicos...
 {
+float eps=numeric_limits<float>::epsilon();
+vector3d vr=(r1->velocity-r2->velocity)+eps;
+_GINFO("vrn:{}", (info->normal*vr));
+_GINFO("vr:{}\npt:{}", vr.toString(), info->point.toString());
+//j=-(vr • n) * (e + 1) / [1/m1 + 1/m2]
+float j=-(vr*info->normal) * (r1->restitution + 1) / ((1/r1->mass) + (1/r2->mass));
+vector3d vimpulse=(j*info->normal);
+vector3d v1=vimpulse/r1->mass;
+vector3d v2=-vimpulse/r2->mass;
+_GINFO("vp:{}\nv1:{}\nv2:{}", vimpulse.toString(), v1.toString(), v2.toString());
+r1->applyVelocity(v1);
+r2->applyVelocity(v2);
+if(info->depth>0.01f){
+vector3d tv=info->normal*(info->depth*0.5f);
+tv+=numeric_limits<float>::epsilon();
+r1->translate(tv, true);
+r2->translate(-tv, true);
+}
 }
 return false;
 }

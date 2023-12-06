@@ -1,0 +1,104 @@
+#include <iostream>
+#include<sstream>
+#include <gpp/gpp.h>
+#include <gpp_physics/gpp_physics.h>
+#include"g_start.h"
+#include"testes.h"
+#include"mRigidBody.h"
+
+using namespace gpp;
+using namespace std;
+
+#define DIR_FRONT "front"
+#define DIR_BACK "back"
+#define DIR_LEFT "left"
+#define DIR_RIGHT "right"
+
+class BasicMotion {
+public:
+    static const vector3d front;
+    static const vector3d back;
+    static const vector3d down_axis;
+    static const vector3d top_axis; // Added missing type declaration 'vector3d'
+float xAngle;
+    float zAngle;
+    float multiplier;
+    vector3d position;
+    vector3d walkDisplacement;
+
+    BasicMotion(const vector3d& position = {0, 0, 0}, float xAngle=0.0f, float zAngle = 0.0f, float multiplier = 1.0f) {
+        this->position = position;
+this->xAngle=xAngle;
+        this->zAngle = zAngle;
+        this->multiplier = multiplier;
+turn(zAngle);
+    }
+
+    void turn(float angles) {
+        zAngle =fmod(zAngle + angles, 360);
+        quaternion q = quaternion_from_euler_angles(0, 0, zAngle);
+_GINFO("axis: {}", q.getAxis().toString());
+        walkDisplacement = quaternion_vector_rotate(q, front);
+        walkDisplacement *= multiplier;
+    }
+
+    void move_front() {
+        position += walkDisplacement;
+    }
+
+    void move_back() {
+        position += vector3d::inverse(walkDisplacement);
+    }
+
+    void move_left() {
+        vector3d v = walkDisplacement;
+        v = (top_axis ^ v);//Cross product here
+        position += v;
+    }
+
+    void move_right() {
+        vector3d v = walkDisplacement;
+        v = (down_axis ^ v);//Cross product here
+        position += v;
+    }
+
+    static bool isColliding(const vector3d& v1, const vector3d& v2, float tolerance = 0.2f) {
+        float x = fabs(v1.x - v2.x);
+        float y = fabs(v1.y - v2.y);
+        float z = fabs(v1.z - v2.z); // Fixed ',' to '-'
+        return ((x <= tolerance) && (y <= tolerance) && (z <= tolerance));
+    }
+
+std::string toString()const{
+stringstream ss;
+ss<<fixed;
+ss.precision(2);
+ss<<position;
+return ss.str();
+}
+};
+
+const vector3d BasicMotion::front = {0, 1, 0};
+const vector3d BasicMotion::back = {0, -1, 0};
+const vector3d BasicMotion::down_axis = {0, 0, -1};
+const vector3d BasicMotion::top_axis = {0, 0, 1};
+
+void move(const string& dir, BasicMotion& bf, int32 steps);
+int main(){
+G_STARTER gst;
+BasicMotion bf;
+bf.turn(-45);
+move(DIR_LEFT, bf, 5);
+return 0;
+}
+
+void move(const string& dir, BasicMotion& bf, int32 steps){
+_GINFO("Moving Object to {}, in angle of {:.2f}", dir, bf.zAngle);
+for(uint32 i=0; i<steps; i++){
+if(dir==DIR_FRONT) bf.move_front();
+else if(dir==DIR_BACK) bf.move_back();
+else if(dir==DIR_LEFT) bf.move_left();
+else if(dir==DIR_RIGHT) bf.move_right();
+_GINFO("{}", bf.toString());
+}
+}

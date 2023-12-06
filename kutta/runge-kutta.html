@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="">
+        <h6>Parâmetros do Objeto e do Ambiente</h6>
+        Massa: <input type="number" value="2" id="m"><br>
+        Coeficiente Arrasto: <input type="number" value="0.1" step="0.1" id="C"><br>
+        Impuslo: <input type="number" value="9.81" step="0.01" id="T"><br>
+
+
+        <h6>Critérios Iniciais da Simulação</h6>
+        Posição Inicial: <input type="number" value="0" id="posIni"><br>
+        Velocidade Inicial: <input type="number" value="0" id="velIni"><br>
+        Tempo Inicial: <input type="number" value="0" id="tIni"><br>
+        Delta t (passo de tempo): <input type="number" value="0.1" step="0.1" id="dt"><br>
+
+        Número de Iterações: <input type="number" id="iter"><br>
+        
+        <input type="button" id="btn1" value="rk4 ">
+        <input type="button" id="btn2" value="rk4 Livro">
+    </form>
+    <p id="res"></p>
+</body>
+<script>
+    document.getElementById("btn2").addEventListener("click", e=> {
+        let k1,k2,k3,k4,vNovo,sNovo;
+        let res = document.getElementById("res");
+        let m = parseFloat(document.getElementById("m").value);
+        let C = parseFloat(document.getElementById("C").value);
+        let T = parseFloat(document.getElementById("T").value);
+
+        let dt = parseFloat(document.getElementById("dt").value);        
+        
+        let iter = parseInt(document.getElementById("iter").value);        
+        
+        //valores iniciais 
+        let posIni = parseInt(document.getElementById("posIni").value);
+        let velIni = parseInt(document.getElementById("velIni").value);
+        let tIni = parseInt(document.getElementById("tIni").value);
+        y = [velIni,posIni];
+
+        res.innerHTML = `Inicio: y=${posIni}m, ${velIni} m/s <br>`;
+
+        //laço para iterações da simulação (de 0 até iter)
+        //for (i of Array(iter).keys()){
+        for (let i=tIni;i<iter;i+=dt){
+            k1 = func_k1(dt,m,T,C,y);
+            k2 = func_k2(k1,dt,m,T,C,y);
+            k3 = func_k3(k2,dt,m,T,C,y);
+            k4 = func_k4(k3,dt,m,T,C,y);
+
+            vNovo = y[0] + (k1 + 2*k2 + 2*k3 + k4)/6;
+            sNovo = y[1] + vNovo * dt;
+
+            y[0] = vNovo;
+            y[1] = sNovo; 
+
+            res.innerHTML += `Passo ${i.toFixed(2)}: y=${sNovo.toFixed(4)}m, ${vNovo.toFixed(4)} m/s <br>`;
+            console.log(`Passo ${i.toFixed(2)}: y=${sNovo.toFixed(4)}m, ${vNovo.toFixed(4)} m/s`);
+
+        }
+    });
+
+
+    function func_k1(dt,m,T,C,y){
+        let vt = y[0];
+        let arrasto = C*vt;
+        let f = T - arrasto;
+        let a = f/m;
+        
+        return dt * a;
+    }
+
+    function func_k2(k1,dt,m,T,C,y){
+        let vt = y[0];
+        let arrasto = C*(vt+k1/2);
+        let f = T - arrasto;
+        let a = f/m;
+        
+        return dt * a;
+    }
+
+    function func_k3(k2,dt,m,T,C,y){
+        let vt = y[0];
+        let arrasto = C*(vt+k2/2);
+        let f = T - arrasto;
+        let a = f/m;
+        
+        return dt * a;
+    }
+
+    function func_k4(k3,dt,m,T,C,y){
+        let vt = y[0];
+        let arrasto = C*(vt+k3);
+        let f = T - arrasto;
+        let a = f/m;
+        
+        return dt * a;
+    }
+
+
+
+    document.getElementById("btn1").addEventListener("click", e => {
+        let dt = parseFloat(document.getElementById("dt").value);
+        let massa = parseFloat(document.getElementById("m").value);
+        let aceleracao = parseFloat(document.getElementById("a").value);
+        let ts = parseFloat(document.getElementById("ts").value);
+
+        //valores iniciais 
+        let posIni = parseInt(document.getElementById("posIni").value);
+        let velIni = parseInt(document.getElementById("velIni").value);
+        let tIni = parseInt(document.getElementById("tIni").value);
+        
+        let impulso = massa*aceleracao;
+
+        y = [posIni,velIni];
+
+        taxaMudanca(t,y,massa)
+        runge_kutta(y,impulso,dt)
+    });
+
+    function runge_kutta(dt, y,impulso){
+        let k1 = taxaMudanca(t,y);
+    }
+
+    function taxaMudanca(t,y){
+       
+       return 1; 
+    }
+
+</script>
+</html>

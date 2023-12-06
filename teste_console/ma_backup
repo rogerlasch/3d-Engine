@@ -1,0 +1,67 @@
+#include <iostream>
+#include<sstream>
+#include <gpp/gpp.h>
+#include <gpp_physics/gpp_physics.h>
+#include"g_start.h"
+#include"testes.h"
+
+using namespace gpp;
+using namespace std;
+
+void collisioncallback(shared_collisionrow& row);
+int main()
+{
+G_STARTER hstart;
+WorldCallbacks hcalls;
+hcalls.createDefault();
+hcalls.hcall=collisioncallback;
+WorldInfo winfo;
+winfo.flags=GWF_GRAVITY|GWF_AIRDENCITY;
+winfo.airDencity=1.225f;
+winfo.min={0,0,-10000.00f};
+winfo.max={1000000, 1000000, 1000000};
+winfo.gravity={5.0f, 0.0f, -9.81f};
+game=make_shared<gpp_world>(&winfo, &hcalls);
+RigidBody* ground=createBox(winfo.min, {winfo.max.x, winfo.max.y, fabs(winfo.min.z)});
+ground->setName("Chão");
+ground->mass=0.0f;
+game->addBody(ground);
+
+RigidBody* obs=createCapsule({50,0,0}, {50,100,0}, 25.0f);
+obs->setName("Elevado");
+obs->mass=0.0f;
+game->addBody(obs);
+
+RigidBody* rb=createSphere({5.0f, 10.0f,2.75f}, 2.5f);
+rb->setName("Esfera dinâmica");
+game->addBody(rb);
+rb->mass=25.0f;
+rb->restitution=0.20f;
+rb->airDragCoefficient=0.35f;
+_GINFO("{}", game->toString());
+for(uint32 i=0; i<2500; i++)
+{
+game->update(0.2f);
+displayInfos(rb);
+}
+_GINFO("Fim da simulação...\n{}", game->toString());
+/*
+float radius=2.5f;
+vector3d velocity={30,0,0};
+float projectedArea=GPP_PI*(radius*radius);
+float airDencity=1.2231f;
+float airDragCoefficient=0.30f;
+vector3d vdrag=fCalculateAirDrag(velocity, projectedArea, airDencity, airDragCoefficient);
+cout<<vdrag<<endl;
+*/
+return 0;
+}
+
+void collisioncallback(shared_collisionrow& row){
+for(uint32 i=0; i<row->size(); i++){
+auto it=row->at(i);
+if(row->at(i)->r2->getGeometricShape()->getGeometricType()==GTYPE_CAPSULE){
+_GINFO("Normal: {:.2f}:{:.2f}:{:.2f}", it->r1->velocity.x, it->r1->velocity.y, it->r1->velocity.z);
+}
+}
+}

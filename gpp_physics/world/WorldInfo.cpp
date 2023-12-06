@@ -22,6 +22,7 @@ WorldInfo& WorldInfo::operator=(const WorldInfo& dinfo)
 {
 this->currenttime=dinfo.currenttime;
 this->timestep=dinfo.timestep;
+this->airDencity=dinfo.airDencity;
 this->min=dinfo.min;
 this->max=dinfo.max;
 this->gravity=dinfo.gravity;
@@ -42,14 +43,17 @@ ss.precision(2);
 ss<<"Tempo atual do mundo em segundos: "<<currenttime<<endl;
 ss<<"Último passo de tempo: "<<timestep<<endl;
 ss<<"Gravidade habilitada? "<<_TF(GWF_GRAVITY)<<endl;
+ss<<"Dencidade do ar habilitado? "<<_TF(GWF_AIRDENCITY)<<endl;
+if((flags&GWF_AIRDENCITY)){
+ss<<"Dencidade do ar: "<<airDencity<<endl;
+}
 ss<<"Gravidade: "<<gravity<<endl;
 ss<<"Limites do mundo: ";
+string s = "XYZ";
 for(uint32 i=0; i<3; i++)
 {
-ss<<min[i]<<":"<<max[i];
-if(i<2) ss<<",";
+ss<<s[i]<<":"<<min[i]<<":"<<max[i]<<endl;
 }
-ss<<endl;
 return ss.str();
 }
 
@@ -61,6 +65,7 @@ gravity={0,0,0};
 currenttime=0;
 timestep=0.0f;
 flags=0;
+airDencity=0.0f;
 }
 
 void WorldInfo::toDefault()
@@ -69,7 +74,8 @@ float dm=1000000;
 min={0,0,0};
 max={dm, dm, dm};
 gravity={0,0, -9.81f};
-flags=GWF_GRAVITY;
+airDencity=1.25f;
+flags=GWF_GRAVITY|GWF_AIRDENCITY;;
 currenttime=0.0f;
 timestep=0.0f;
 }

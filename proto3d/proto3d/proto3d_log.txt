@@ -1,3 +1,0 @@
-Info: index:0
-Info: index:1
-Info: index:2

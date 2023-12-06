@@ -1,4 +1,4 @@
-Tempo de execução total: 12 ms
+Tempo de execução total: 27 ms
 
 Imprimindo funções monitoradas:
 Total de funções monitoradas: 0

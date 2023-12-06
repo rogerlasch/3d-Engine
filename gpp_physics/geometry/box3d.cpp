@@ -44,6 +44,11 @@ ss<<safe_format("{}: {:.2f}:{:.2f}", achis[i], min[i], max[i])<<endl;
 return ss.str();
 }
 
+float box3d::getProjectedArea()const{
+vector3d v=max-min;
+return v.x*v.y;
+}
+
  vector3d box3d::getCenter()const
 {
 return (min+max)*0.5f;
@@ -62,9 +67,11 @@ vertices.push_back(max);
 vertices.push_back({max.x, min.y, max.z});
 }
 
-   void box3d::translate(const vector3d& translation)
+   void box3d::translate(const vector3d& translation, bool correction)
 {
+if(!correction){
 setLastPosition(getCenter());
+}
 min+=translation;
 max+=translation;
 }

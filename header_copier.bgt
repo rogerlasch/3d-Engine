@@ -1,0 +1,39 @@
+
+
+void main()
+{
+string final="";
+string [] files;
+findFiles("gpp_physics", files);
+for(uint32 i=0; i<files.length; i++)
+{
+final+=getlines(files[i]);
+}
+clipboard_copy_text(final);
+alert("info", "ok");
+}
+
+string getlines(string filename)
+{
+file f;
+f.open(filename, "rb");
+string s=(f.read());
+f.close;
+return s;
+
+}
+
+void findFiles(string path, string []& files){
+string [] dirs=find_directories(path+"\\*");
+for(uint32 i=0; i<dirs.length; i++)
+{
+findFiles(path+"\\"+dirs[i], files);
+}
+string [] fs=find_files(path+"\\*.h");
+for(uint32 i=0; i<fs.length; i++){
+if((string_contains(fs[i], ".cpp", 1)>-1)||(string_contains(fs[i], ".h", 1)>-1))
+{
+files.insert_last(path+"\\"+fs[i]);
+}
+}
+}

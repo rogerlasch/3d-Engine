@@ -33,7 +33,7 @@ void setMin(const vector3d& m);
 vector3d getMin()const;
 void setMax(const vector3d& m);
 vector3d getMax()const;
-virtual void translate(const vector3d& v);
+virtual void translate(const vector3d& v, bool correction=false);
 virtual void scale(const vector3d& origin, float sk);
 virtual void rotate(const vector3d& origin, const quaternion& orientation);
 virtual void recalculateBoundingBox();

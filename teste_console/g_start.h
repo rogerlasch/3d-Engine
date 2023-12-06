@@ -74,8 +74,8 @@ vdir.normalize();
 std::stringstream ss;
 ss<<std::fixed;
 ss.precision(2);
-ss<<"Tempo: "<<game->info->currenttime<<"S, Direção: "<<getDirectionDescription(vdir)<<::std::endl;
-ss<<"Posição atual: "<<rb->position<<", Velocidade: "<<rb->velocity.length()<<"M/S"<<::std::endl;
+ss<<"T: "<<game->info->currenttime<<"S, Dir: "<<getDirectionDescription(vdir)<<::std::endl;
+ss<<"Pos: "<<rb->position<<", Vel: "<<rb->velocity.length()<<"M/S"<<::std::endl;
 _GINFO("{}", ss.str());
 }
 

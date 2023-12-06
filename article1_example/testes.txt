@@ -1,0 +1,10 @@
+
+
+
+testar com 5m/s=18km/h
+testar com 2 testes dinâmicos
+testar com gravidades diferentes
+teste com coeficiente de restituição
+Simulação de partícula
+Força instantânea do projétil
+Resistência do ar, água etc...

@@ -42,14 +42,20 @@ ss<<"Raio: "<<radius<<endl;
 return ss.str();
 }
 
+float sphere3d::getProjectedArea()const{
+return GPP_PI*radius*radius;
+}
+
  vector3d sphere3d::getCenter()const
 {
 return center;
 }
 
-   void sphere3d::translate(const vector3d& translation)
+   void sphere3d::translate(const vector3d& translation, bool correction)
 {
+if(!correction){
 setLastPosition(center);
+}
 center+=translation;
 }
 

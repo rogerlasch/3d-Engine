@@ -4,6 +4,7 @@
 
 namespace gpp
 {
+class WorldInfo;
     class iRigidBody
     {
     public:
@@ -11,6 +12,7 @@ uint32 btype;
 uint32 userdata;
 float mass;
 float restitution;
+float airDragCoefficient;
 std::string name;
         gpp_index index;
         AABB* aabb;
@@ -23,6 +25,7 @@ std::atomic<uint8> contacts;
         iRigidBody() = default;
         virtual ~iRigidBody() = default;
 
+inline virtual void calcLoads(WorldInfo* info){}
 inline virtual void setBType(uint32 btype) {this->btype=btype;}
 inline virtual uint32 getBType()const{return this->btype;}
 
@@ -31,6 +34,9 @@ inline virtual uint32 getUserData()const{return this->userdata;}
 
 inline virtual void setMass(float mass){this->mass=mass;}
 inline virtual float getMass()const{return this->mass;}
+
+inline virtual void setAirDragCoefficient(float airDragCoefficient){this->airDragCoefficient=airDragCoefficient;}
+inline virtual float getAirDragCoefficient()const{return this->airDragCoefficient;}
 
 inline virtual void setRestitution(float restitution){this->restitution=restitution;}
 inline virtual float getRestitution()const{return this->restitution;}
@@ -50,6 +56,9 @@ inline         virtual vector3d getVelocity() const { return this->velocity; }
 inline         virtual void setForce(const vector3d& forces) { this->forces = forces; }
 inline         virtual vector3d getForce() const { return this->forces; }
 inline virtual void applyForce(const vector3d& fv){this->forces+=fv;}
+
+inline void applyVelocity(const vector3d& v){this->velocity+=v;}
+
 inline         virtual void setOrientation(const quaternion& orientation) { this->orientation = orientation; }
 inline         virtual quaternion getOrientation() const { return this->orientation; }
 
@@ -87,9 +96,9 @@ inline bool containsBodyFlag(uint16 bf)const
 return (bflags&bf)==bf;
 }
 
-inline void translate(const vector3d& v){
+inline void translate(const vector3d& v, bool correction=false){
 this->position+=v;
-aabb->translate(v);
+aabb->translate(v, correction);
 }
 
 inline void rotate(const vector3d& origin, const quaternion& q){

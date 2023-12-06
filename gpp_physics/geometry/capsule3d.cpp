@@ -47,14 +47,20 @@ ss<<"Raio: "<<radius<<endl;
 return ss.str();
 }
 
+float capsule3d::getProjectedArea()const{
+return 0.0f;
+}
+
  vector3d capsule3d::getCenter()const
 {
 return (min+max)*0.5f;
 }
 
-   void capsule3d::translate(const vector3d& translation)
+   void capsule3d::translate(const vector3d& translation, bool correction)
 {
+if(!correction){
 setLastPosition((min+max)*0.5f);
+}
 this->min+=translation;
 this->max+=translation;
 }

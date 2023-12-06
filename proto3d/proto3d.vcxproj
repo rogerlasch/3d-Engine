@@ -137,20 +137,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="dialogs\AmbienteEditorDialog.cpp" />
+    <ClCompile Include="dialogs\DrawingTool.cpp" />
     <ClCompile Include="dialogs\ObjectManagerDialog.cpp" />
     <ClCompile Include="dialogs\ProtoFrame.cpp" />
     <ClCompile Include="dialogs\utils.cpp" />
-    <ClCompile Include="dialogs\VectorDialog.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dialogs\AmbienteEditorDialog.h" />
+    <ClInclude Include="dialogs\DrawingTool.h" />
     <ClInclude Include="dialogs\gui.h" />
     <ClInclude Include="dialogs\ids.h" />
     <ClInclude Include="dialogs\ObjectManagerDialog.h" />
     <ClInclude Include="dialogs\ProtoFrame.h" />
     <ClInclude Include="dialogs\utils.h" />
-    <ClInclude Include="dialogs\VectorDialog.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

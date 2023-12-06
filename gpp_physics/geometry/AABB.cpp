@@ -66,13 +66,13 @@ vector3d AABB::getMax()const
 return this->max;
 }
 
-void AABB::translate(const vector3d& v)
+void AABB::translate(const vector3d& v, bool correction)
 {
 this->min+=v;
 this->max+=v;
 if(shape!=NULL)
 {
-shape->translate(v);
+shape->translate(v, correction);
 }
 }
 

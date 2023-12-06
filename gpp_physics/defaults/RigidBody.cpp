@@ -43,4 +43,16 @@ ss<< "orientation: "<<orientation<<endl;
 ss<<aabb->toString();
 return ss.str();
 }
+
+void RigidBody::calcLoads(WorldInfo* info){
+vector3d v={0.0f, 0.0f, 0.0f};
+if((info->flags&GWF_GRAVITY)==GWF_GRAVITY){
+v+=info->gravity*mass;
+}
+if((info->flags&GWF_AIRDENCITY)>0){
+float projectedArea=aabb->getGeometricShape()->getProjectedArea();
+v+=fCalculateAirDrag(velocity, projectedArea, info->airDencity, this->airDragCoefficient);
+}
+applyForce(v);
+}
 }

@@ -34,6 +34,7 @@ RigidBody(const RigidBody& rb)=delete;
 RigidBody& operator=(const RigidBody& rb)=delete;
 virtual ~RigidBody();
 virtual std::string toString()const;
+virtual void calcLoads(WorldInfo* info);
 };
 }
 #endif

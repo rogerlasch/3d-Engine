@@ -1,0 +1,31 @@
+Tempo de execução total: 135 ms
+
+Imprimindo funções monitoradas:
+Total de funções monitoradas: 13
+
+gpp::octree::create: Tempo total: 54.807 ms, Total de execuções: 1, Duração média: 54.807 ms
+
+gpp::octree::getDeepest: Tempo total: 0.001 ms, Total de execuções: 1, Duração média: 0.001 ms
+
+gpp::CollisionCache::removeByHashs: Tempo total: 0.039 ms, Total de execuções: 32, Duração média: 0.001 ms
+
+gpp::gpp_world::gpp_world: Tempo total: 54.851 ms, Total de execuções: 1, Duração média: 54.851 ms
+
+gpp::CollisionCache::contains: Tempo total: 0.275 ms, Total de execuções: 2500, Duração média: 0.000 ms
+
+gpp::DefaultFilter::filter_and_prepare: Tempo total: 0.507 ms, Total de execuções: 2500, Duração média: 0.000 ms
+
+gpp::octree::insert: Tempo total: 0.004 ms, Total de execuções: 1, Duração média: 0.004 ms
+
+gpp::octree::broadPhaseBody: Tempo total: 7.003 ms, Total de execuções: 2500, Duração média: 0.003 ms
+
+gpp::gpp_world::addBody: Tempo total: 0.006 ms, Total de execuções: 2, Duração média: 0.003 ms
+
+gpp::octree::BroadPhase: Tempo total: 8.344 ms, Total de execuções: 2500, Duração média: 0.003 ms
+
+gpp::gpp_world::update: Tempo total: 13.323 ms, Total de execuções: 2500, Duração média: 0.005 ms
+
+gpp::CollisionCache::insert: Tempo total: 0.018 ms, Total de execuções: 32, Duração média: 0.001 ms
+
+gpp::CollisionCache::internalUpdateRows: Tempo total: 0.007 ms, Total de execuções: 32, Duração média: 0.000 ms
+
