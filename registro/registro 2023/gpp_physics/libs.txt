@@ -1,0 +1,38 @@
+MurmurHash3
+domínio público
+
+raySphere
+rayBox
+
+Contrato de Licença de
+Software Este Contrato de Licença de Software é um contrato legal entre o Autor e qualquer
+pessoa ou entidade legal que use ou aceite qualquer software regido por este Contrato.
+O software está disponível no CD-ROM no livro Real-Time Collision Detection,
+publicado pela Morgan Kaufmann Publishers. "O software" é composto por
+todo o código (fragmentos e pseudocódigo) apresentado no livro. Nenhum arquivo adicional está
+no CD-ROM.
+Ao instalar, copiar ou usar o software de outra forma, você concorda em cumprir
+os termos deste Contrato.
+As partes acordam o seguinte:
+1. Concessão de Licença. Concedemos a você uma licença não exclusiva para usar o software para
+qualquer finalidade, comercial ou não comercial, desde que o seguinte crédito seja
+incluído identificando a fonte original do software: "from Real-Time Collision
+Sobre o CD-ROM 593
+Detection by Christer Ericson, publicado por Morgan Kaufmann Publishers, © 2005
+Elsevier Inc
+"
+. seu próprio risco. Você assume todo o
+risco de perda por todas as reclamações ou controvérsias, agora existentes ou futuras, decorrentes do
+uso do software. Não teremos nenhuma responsabilidade com base em uma reclamação de que seu uso ou
+combinação do software com produtos ou dados não fornecido por nós infringe qualquer
+patente, direito autoral ou direito de propriedade. Todas as outras garantias, expressas ou implícitas,
+incluindo, sem limitação, qualquer garantia de comercialização ou adequação a um
+propósito particular são excluídos.
+3. Limitação de responsabilidade. Não teremos nenhuma responsabilidade por danos especiais, incidentais ou consequenciais
+, mesmo se avisados ??da possibilidade de tais danos. Não seremos
+responsáveis ??por quaisquer outros danos ou perdas de qualquer forma relacionados com o software.
+
+
+
+rayCylinder:
+https://github.com/erich666/GraphicsGems/blob/master/LICENSE.md
