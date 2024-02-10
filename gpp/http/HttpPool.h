@@ -4,6 +4,8 @@
 #ifndef HTTPPOOL_H
 #define HTTPPOOL_H
 
+#include<mutex>
+
 namespace gpp{
 class HttpPool{
 private:

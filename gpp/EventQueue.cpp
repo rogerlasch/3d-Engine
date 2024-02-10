@@ -63,9 +63,11 @@ if((ev==NULL)||(m_size.load()==0))
 {
 return false;
 }
+try{
 lock_guard<mutex> lck(mtx_queue);
 *ev=m_first;
 m_first=m_first->next;
+(*ev)->next=NULL;
 m_size.fetch_sub(1);
 if(m_size.load()==0)
 {
@@ -73,15 +75,30 @@ m_first=NULL;
 m_last=NULL;
 }
 return true;
+}catch(const exception& e){
+_GCRITICAL("{}", _GEXCEPT(e.what()).what());
+return false;
+}
+return false;
 }
 
-void EventQueue::eventPost(uint32 peer_id, uint32 type, int64 timeout, packet* pack)
-{
+void EventQueue::eventPost(uint32 type, uint32 v1, uint32 v2, uint32 v3, int64 timeout, packet* pack){
 Event* ev=new Event();
-ev->peer_id=peer_id;
 ev->type=type;
+ev->v1=v1;
+ev->v2=v2;
+ev->v3=v3;
 ev->timeout=timeout;
 ev->pack=pack;
+eventPost(ev);
+}
+
+void EventQueue::eventPost(uint32 type, const string& data, void* user){
+Event* ev=new Event();
+ev->type=type;
+ev->data=data;
+ev->userdata = user;
+ev->timeout=0;
 eventPost(ev);
 }
 
@@ -91,6 +108,7 @@ if(ev==NULL)
 {
 return;
 }
+try{
 lock_guard<mutex> lck(mtx_queue);
 if(m_size.load()==0)
 {
@@ -105,6 +123,9 @@ else
 m_last->next=ev;
 m_last=m_last->next;
 m_size.fetch_add(1);
+}
+}catch(const exception& e){
+_GCRITICAL("{}", _GEXCEPT(e.what()).what());
 }
 }
 }

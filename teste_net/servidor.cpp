@@ -25,10 +25,12 @@ hserver->start(4000, 50);
 hserver->run();
 hserver.reset();
 hnet.reset();
+_GINFO("Servidor finalizado com sucesso");
 return 0;
 }
 
 void sig_callback(int x)
 {
+_GINFO("Parando servidor...");
 hserver->shutdown();
 }

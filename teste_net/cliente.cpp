@@ -22,7 +22,11 @@ hnet=make_unique<gpp_steamsockets>();
 hclient=make_unique<gpp_client>();
 hclient->setHcon(hnet.get());
 _GINFO("se conectando em localhost... {}", hclient->connect("127.0.0.1", 4000));
-hclient->run();
+while(hclient->isConnected()){
+this_thread::yield();
+hclient->makePing();
+hclient->update();
+}
 hclient.reset();
 hnet.reset();
 return 0;

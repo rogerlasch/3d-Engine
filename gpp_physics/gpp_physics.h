@@ -22,12 +22,6 @@
 
 #include"types.h"
 #include"math/math.h"
-#include"geometry/geometry.h"
-#include"collision/collision.h"
-#include"containers/containers.h"
-#include"interfaces/interfaces.h"
-#include"defaults/defaults.h"
-#include"octree/octree.h"
-#include"world/gpp_world.h"
 #include"ffunctions.h"
+#include"gpp_world.h"
 #endif

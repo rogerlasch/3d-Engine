@@ -38,7 +38,7 @@ float& operator[](unsigned int index);
 float operator[](unsigned int index)const;
 bool operator==(const vector3d& dv)const;
 bool operator==(const float dv[3])const;
-vector3d& operator-();
+vector3d operator-();
 vector3d& operator+=(float escalar);
 vector3d& operator-=(float escalar);
 vector3d& operator*=(float escalar);

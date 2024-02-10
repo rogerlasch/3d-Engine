@@ -127,7 +127,8 @@ static unordered_map<int, string> lg_table={
 {LG_BACKTRACE, "BackTrace"},
 {LG_ERROR, "Error"},
 {LG_WARNING, "Warning"},
-{LG_INFO, "Info"},
+//{LG_INFO, "Info"},
+{LG_INFO, ""},
 {LG_CRITICAL, "Falha Crítica"}
 };
 shared_logger lg=((filename.size()>0) ? get_log(filename) : default_log);
@@ -138,8 +139,8 @@ if(level<lg->level)
 return;
 }
 string tname=lg_table.at(level);
-if(tname.size()==0) tname="Unknown";
-string final=safe_format("{}: {}", tname, str);
+//if(tname.size()==0) tname="Unknown";
+string final=safe_format("{} {}", tname, str);
 switch(level)
 {
 case LG_BACKTRACE:

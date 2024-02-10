@@ -4,6 +4,7 @@
 #include<curl/curl.h>
 #include<functional>
 #include"../debug_system.h"
+#include"../StateManager.h"
 #include"CurlHandler.h"
 #include"HttpRequest.h"
 #include"httpPool.h"
@@ -14,19 +15,12 @@ using namespace std;
 
 namespace gpp{
 HttpManager::HttpManager(){
-_GINFO("Iniciando...");
 hpool=new HttpPool();
-run.store(1);
-handle=thread(std::bind(&HttpManager::onLoop, this));
+hstate.setState(0);
 }
 
 HttpManager::~HttpManager(){
-_GINFO("Interrompendo execução...");
-run.store(0);
-hvar.notify_all();
-if(handle.joinable()){
-handle.join();
-}
+stop();
 lock_guard<mutex> lck(mtx);
 for(auto it=handles.begin(); it!=handles.end(); ++it){
 hpool->removeRequest(it->second);
@@ -34,7 +28,31 @@ delete it->second;
 }
 delete hpool;
 hpool=NULL;
-_GINFO("Execução interrompida!");
+}
+
+void HttpManager::start(){
+if(hstate.getState()>0){
+return;
+}
+try{
+hstate.setState(1);
+function<void()> hfunc=std::bind(&HttpManager::onLoop, this);
+handle=thread(hfunc);
+hstate.waitForStage([&](uint32 s)->bool{return s==0;});
+} catch(const exception& e){
+_GCRITICAL("{}", _GEXCEPT(e.what()).what());
+}
+}
+
+void HttpManager::stop(){
+if(hstate.getState()==0){
+return;
+}
+hstate.setState(0);
+hvar.notify_all();
+if(handle.joinable()){
+handle.join();
+}
 }
 
 void HttpManager::setNotificationCallback(NOTIFICATION_HTTP_CALLBACK hcall){
@@ -66,8 +84,11 @@ uint32 HttpManager::count()const{
 lock_guard<mutex> lck(mtx);
 return handles.size();
 }
-uint32 HttpManager::createRequest(const string& method, const string& url, const string& postFields, const vector<string>& headers){
 
+uint32 HttpManager::createRequest(const string& method, const string& url, const string& postFields, const vector<string>& headers){
+if(hstate.getState()==0){
+start();
+}
 HttpRequest* http=new HttpRequest();
 http->method=method;
 http->url=url;
@@ -118,7 +139,7 @@ return ((it==handles.end()) ? HTTPREQUEST_INVALID_HANDLE : it->second->getState(
 }
 
 uint32 HttpManager::wait(uint32 id, string& response){
-while(run.load()!=0){
+while(hstate.getState()!=0){
 this_thread::yield();
 lock_guard<mutex> lck(mtx);
 auto it=handles.find(id);
@@ -143,12 +164,13 @@ return HTTPREQUEST_INVALID_HANDLE;
 void HttpManager::onLoop(){
 mutex mtx_loop;
 unique_lock<mutex> lck_loop(mtx_loop);
-while(run.load()!=0){
+hstate.setStage(1);
+while(hstate.getState()!=0){
 this_thread::yield();
 if(count()==0){
 hvar.wait(lck_loop, [&]() {
 if(count()==0){
-if(run.load()>0){
+if(hstate.getState()>0){
 return false;
 }
 }

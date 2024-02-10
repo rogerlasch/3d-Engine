@@ -17,8 +17,10 @@ gpp_client();
 gpp_client(const gpp_client& hc)=delete;
 gpp_client& operator=(const gpp_client& hc)=delete;
 virtual ~gpp_client();
-uint16 getPort()const;
-std::string getIpAddress()const;
+inline uint16 getPort()const { return this->port; }
+inline std::string getIpAddress()const { return this->ipaddress; }
+
+
 virtual bool connect(const std::string& ipaddress, uint16 port);
 virtual bool altConnection();
 virtual void shutdown();

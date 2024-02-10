@@ -2,7 +2,6 @@
 
 /**
 *Uma implementação básica de uma octhree.
-*No momento ela não está sendo utilizada, mas talvez seja futuramente.
 **/
 #ifndef OCTREE_H
 #define OCTREE_H
@@ -13,11 +12,14 @@
 namespace gpp
 {
 
+
+        typedef std::function<bool(octreenode*)> OCTREEVISITORCALLBACK;
 class octree
 {
 private:
 octreeinfo info;
 octreenode* root;
+std::unordered_map<uint64, octreenode*> nodes;
 public:
 octree();
 octree(const octree& oc)=delete;
@@ -25,20 +27,17 @@ octree& operator=(const octree& oc)=delete;
 virtual ~octree();
 std::string toString()const;
 octreeinfo getInfo()const;
-void create(const vector3d& min, uint32 max_depth, uint32 blimit, float alph);
-void clear();
-void insert(iRigidBody* rb);
-void remove(iRigidBody* rb);
-void BroadPhase(std::vector<iRigidBody*>& hbodies, CollisionCache* cache);
-void broadPhaseBody(iRigidBody* rb, CollisionCache* cache);
+
+void create(const vector3d& center, float radius);
+void traverse(OCTREEVISITORCALLBACK hvisitor);
+
+void insert(RigidBody* rb);
+void remove(RigidBody* rb);
+
 private:
-octreenode* getDeepest(iRigidBody* rb, octreenode* start=NULL);
-void splitAndRedistribute(octreenode* node);
-void splitNode(octreenode* node);
-void redistributeNode(octreenode* node);
-void moveObject(octreenode* from, octreenode* to, iRigidBody* rb);
-void extractObjectsNode(octreenode* node, std::vector<iRigidBody*>& hbodies);
-void computeInfos();
+void createChilds(octreenode* parent, uint8 pchilds);
+void getDeepest(RigidBody* rb, std::vector<octreenode*>& hnodes);
+
 };
 }
 #endif

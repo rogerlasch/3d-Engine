@@ -119,6 +119,63 @@ return dist*dist;
                        return vector3d::dotProduct(ac, ac) - e * e / f;
                  }
 
+void closestPointFromTriangle(const vector3d& p, const vector3d& a, const vector3d& b, const vector3d& c, vector3d& pt){
+      // Check if P in vertex region outside A
+      vector3d ab = b - a;
+      vector3d ac = c - a;
+      vector3d ap = p - a;
+      float d1 = vector3d::dotProduct(ab, ap);
+      float d2 = vector3d::dotProduct(ac, ap);
+      if (d1 <= 0.0f && d2 <= 0.0f){
+pt=a;
+return;
+}
+      // Check if P in vertex region outside B
+      vector3d bp = p - b;
+      float d3 = vector3d::dotProduct(ab, bp);
+      float d4 = vector3d::dotProduct(ac, bp);
+      if (d3 >= 0.0f && d4 <= d3){
+pt=b;
+return;
+}
+      // Check if P in edge region of AB, if so return projection of P onto AB
+      float vc = d1*d4 - d3*d2;
+      if (vc <= 0.0f && d1 >= 0.0f && d3 <= 0.0f) {
+            float v = d1 / (d1 - d3);
+pt=a + v * ab; // barycentric coordinates (1-v,v,0)
+return;
+      }
+
+      // Check if P in vertex region outside C
+      vector3d cp = p - c;
+      float d5 = vector3d::dotProduct(ab, cp);
+      float d6 = vector3d::dotProduct(ac, cp);
+      if (d6 >= 0.0f && d5 <= d6){
+pt=c;
+return;
+}
+
+          // Check if P in edge region of AC, if so return projection of P onto AC
+          float vb = d5*d2 - d1*d6;
+          if (vb <= 0.0f && d2 >= 0.0f && d6 <= 0.0f) {
+                float w = d2 / (d2 - d6);
+pt=a + w * ac; // barycentric coordinates (1-w,0,w)
+return;
+          }
+          // Check if P in edge region of BC, if so return projection of P onto BC
+          float va = d3*d6 - d5*d4;
+          if (va <= 0.0f && (d4 - d3) >= 0.0f && (d5 - d6) >= 0.0f) {
+                float w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
+pt=b + w * (c - b); // barycentric coordinates (0,1-w,w)
+return;
+          }
+          // P inside face region. Compute Q through its barycentric coordinates (u,v,w)
+          float denom = 1.0f / (va + vb + vc);
+          float v = vb * denom;
+          float w = vc * denom;
+pt=a + ab * v + ac * w; // = u*a + v*b + w*c, u = va * denom = 1.0f - v - w
+}
+
 void calculateBoundingBox(const std::vector<vector3d>& points, vector3d& min,
 vector3d& max)
 {
@@ -165,5 +222,113 @@ for(uint32 i=0; i<3; i++){
 if((p[i]<min[i])||(p[i]>max[i])) return false;
 }
 return true;
+}
+
+vector3d get_closest_point_from_aabb(const vector3d& pt, const vector3d& min, const vector3d& max)
+{
+vector3d closestPoint;
+                       for (int i = 0; i < 3; i++) {
+                             float v = pt[i];
+                             if (v < min[i]) v = min[i]; // v = max(v, min[i])
+                             if (v > max[i]) v = max[i]; // v = min(v, max[i])
+closestPoint[i] = v;
+                       }
+return closestPoint;
+}
+
+float get_distance_from_aabb(const vector3d& pt, const vector3d& min, const vector3d& max)
+{
+                       float sqDist = 0.0f;
+                       for (int i = 0; i < 3; i++) {
+                             // For each axis count any excess distance outside box extents
+                             float v = pt[i];
+                             if (v < min[i]) sqDist += (min[i] - v) * (min[i] - v);
+                             if (v > max[i]) sqDist += (v - max[i]) * (v - max[i]);
+                       }
+                       return sqDist;
+}
+
+bool point_in_aabb(const vector3d& pt, const vector3d& min, const vector3d& max)
+{
+for(uint32 i=0; i<3; i++)
+{
+if((pt[i]<min[i])||(pt[i]>max[i])) return false;
+}
+return true;
+}
+
+bool aabbOverlap(const vector3d& v1, float r1, const vector3d& v2, float r2) {
+    vector3d m1 = v1 - r1;
+    vector3d m2 = v1 + r1;
+    vector3d m3 = v2 - r2;
+    vector3d m4 = v2 + r2;
+
+    // Testa a interseção nas três dimensões
+    bool overlapX = (m1.x <= m4.x) && (m2.x >= m3.x);
+    bool overlapY = (m1.y <= m4.y) && (m2.y >= m3.y);
+    bool overlapZ = (m1.z <= m4.z) && (m2.z >= m3.z);
+
+    // Retorna verdadeiro se houver interseção em todas as dimensões
+    return overlapX && overlapY && overlapZ;
+}
+
+bool aabbOverlap(const vector3d& center, float r, const vector3d& min, const vector3d& max) {
+    vector3d m1 = center - r;
+    vector3d m2 = center + r;
+
+    // Testa a interseção nas três dimensões
+    bool overlapX = (m1.x <= max.x) && (m2.x >= min.x);
+    bool overlapY = (m1.y <= max.y) && (m2.y >= min.y);
+    bool overlapZ = (m1.z <= max.z) && (m2.z >= min.z);
+
+    // Retorna verdadeiro se houver interseção em todas as dimensões
+    return overlapX && overlapY && overlapZ;
+}
+
+bool aabbOverlap(const vector3d& v1, const vector3d& v2, const vector3d& v3, const vector3d& v4) {
+    // Testa a interseção nas três dimensões
+    bool overlapX = (v1.x <= v4.x) && (v2.x >= v3.x);
+    bool overlapY = (v1.y <= v4.y) && (v2.y >= v3.y);
+    bool overlapZ = (v1.z <= v4.z) && (v2.z >= v3.z);
+
+    // Retorna verdadeiro se houver interseção em todas as dimensões
+    return overlapX && overlapY && overlapZ;
+}
+
+bool aabbInsideAll(const vector3d& v1, float r1, const vector3d& v2, float r2) {
+    vector3d m1 = v1 - r1;
+    vector3d m2 = v1 + r1;
+    vector3d m3 = v2 - r2;
+    vector3d m4 = v2 + r2;
+
+    // Testa a contenção nas três dimensões
+    bool insideX = (m1.x >= m3.x) && (m2.x <= m4.x);
+    bool insideY = (m1.y >= m3.y) && (m2.y <= m4.y);
+    bool insideZ = (m1.z >= m3.z) && (m2.z <= m4.z);
+
+    // Retorna verdadeiro se a AABB da esfera está contida na AABB especificada em todas as dimensões
+    return insideX && insideY && insideZ;
+}
+
+bool aabbInsideAll(const vector3d& center, float r, const vector3d& min, const vector3d& max) {
+    vector3d m1 = center - r;
+    vector3d m2 = center + r;
+    // Testa a contenção nas três dimensões
+    bool insideX = (m1.x <= min.x) && (m2.x >= max.x);
+    bool insideY = (m1.y <= min.y) && (m2.y >= max.y);
+    bool insideZ = (m1.z <= min.z) && (m2.z >= max.z);
+
+    // Retorna verdadeiro se a AABB da esfera está contida na AABB especificada em todas as dimensões
+    return insideX && insideY && insideZ;
+}
+
+bool aabbInsideAll(const vector3d& v1, const vector3d& v2, const vector3d& v3, const vector3d& v4) {
+    // Testa a contenção nas três dimensões
+    bool insideX = (v1.x >= v3.x) && (v2.x <= v4.x);
+    bool insideY = (v1.y >= v3.y) && (v2.y <= v4.y);
+    bool insideZ = (v1.z >= v3.z) && (v2.z <= v4.z);
+
+    // Retorna verdadeiro se o primeiro AABB está contido no segundo AABB em todas as dimensões
+    return insideX && insideY && insideZ;
 }
 }

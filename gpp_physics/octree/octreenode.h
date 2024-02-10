@@ -9,12 +9,12 @@ namespace gpp
 class octreenode
 {
 public:
+uint8 pchilds;
 uint32 level;
+uint64 id;
 float radius;
 vector3d center;
-octreenode* parent;
-std::vector<octreenode*> childs;
-std::vector<iRigidBody*> bodies;
+std::vector<RigidBody*> bodies;
 octreenode();
 octreenode(const octreenode& oc)=delete;
 octreenode& operator=(const octreenode& oct)=delete;

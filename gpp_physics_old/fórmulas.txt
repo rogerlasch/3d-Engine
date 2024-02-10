@@ -1,0 +1,20 @@
+
+
+Arrasto do ar
+Fd = 1/2 * p * v^2 * A * Cd
+onde:
+p = é a densidade do ar
+A é área projetada da partícula
+Cd é coeficiente de resitência da esfera
+
+
+Fórmula da velocidade:
+v = ds/dt
+ds: distância deslocada.
+dt: tempo total.
+v=100/5=20m/s
+
+Impulso:
+|J| = - (vr • n) * (e + 1) / [1/m1 + 1/m2 + n • ((r1 × n)/I1) × r1 + n • ((r2 × n)/I2) × r2]
+
+|J| = - (vr • n) * (e + 1) / [1/m1 + 1/m2]

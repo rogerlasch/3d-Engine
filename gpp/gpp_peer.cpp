@@ -27,8 +27,8 @@ gpp_peer::gpp_peer()
 {
 peer_id=0;
 connection_time=0;
-hstate=PEER_DEFAULT;
-this->pflags.replace_flags(0);
+hState.setState(PEER_DEFAULT);
+hState.replaceFlags(0);
 this->hcon=hcon;
 onping.store(0);
 }
@@ -38,60 +38,6 @@ gpp_peer::~gpp_peer()
 hcon=NULL;
 }
 
-bool gpp_peer::isBot()const
-{
-return pflags.flag_contains(PEER_BOT);
-}
-
-bool gpp_peer::isRegularClient()const
-{
-return pflags.flag_contains(PEER_REGULAR_CLIENT);
-}
-
-bool gpp_peer::isOnClient()const
-{
-return pflags.flag_contains(PEER_CLIENT);
-}
-
-bool gpp_peer::isOnServer()const
-{
-return pflags.flag_contains(PEER_SERVER);
-}
-
-bool gpp_peer::isConnected()const
-{
-return hstate.load()==PEER_CONNECTED;
-}
-
-bool gpp_peer::isDisconnected()const
-{
-return hstate.load()==PEER_DISCONNECTED;
-}
-
-bool gpp_peer::isAlt()const
-{
-return hstate.load()==PEER_ALT;
-}
-
-uint32 gpp_peer::getPFlags()const
-{
-return pflags.get_flags();
-}
-
-void gpp_peer::setPFlags(uint32 pflags)
-{
-this->pflags.replace_flags(pflags);
-}
-
-string gpp_peer::getPeerName()const
-{
-return this->peer_name;
-}
-
-void gpp_peer::setPeerName(const string& peer_name)
-{
-this->peer_name=peer_name;
-}
 
 //Esta propriedade não deve ser alterada depois que a classe for instanciada e configurada.
 uint32  gpp_peer::getPeerId()const
@@ -106,15 +52,6 @@ unique_lock<shared_mutex> lck(mtx_con);
 this->peer_id=peer_id;
 }
 
-uint32  gpp_peer::getHState()const
-{
-return hstate.load();
-}
-
-void  gpp_peer::setHState(uint32 hstate)
-{
-this->hstate.store(hstate);
-}
 
 int64  gpp_peer::getConnectionTime()const
 {
@@ -152,7 +89,7 @@ if((hcon==NULL)||(peer_id==0))
 {
 return false;
 }
-uint32 x=hstate.load();
+uint32 x=hState.getState();
 switch(x)
 {
 case PEER_ALT:
@@ -177,7 +114,7 @@ if((hcon==NULL)||(peer_id==0))
 {
 return false;
 }
-uint32 x=hstate.load();
+uint32 x=hState.getState();
 switch(x)
 {
 case PEER_ALT:
@@ -269,7 +206,7 @@ case PEER_CONNECTED:
 {
 if(hcon->disconnectPeer(peer_id, GMODE_SOFTLY))
 {
-hstate.store(PEER_DISCONNECTING);
+hState.setState(PEER_DISCONNECTING);
 return true;
 }
 break;
@@ -296,7 +233,7 @@ case PEER_CONNECTED:
 {
 if(hcon->disconnectPeer(peer_id, GMODE_NOW))
 {
-hstate.store(PEER_DISCONNECTED);
+hState.setState(PEER_DISCONNECTED);
 return true;
 }
 break;

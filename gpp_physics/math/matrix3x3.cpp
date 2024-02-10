@@ -135,12 +135,12 @@ void matrix3x3::clear()
                             e31*e22*e13;
       }
 
-matrix3x3 matrix3x3::Transpose(void)
+matrix3x3 matrix3x3::transpose(void)
       {
              return matrix3x3(e11,e21,e31,e12,e22,e32,e13,e23,e33);
       }
 
-matrix3x3 matrix3x3::Inverse(void)
+matrix3x3 matrix3x3::inverse(void)
       {
              float d = e11*e22*e33 -
                                   e11*e32*e23 +
@@ -160,7 +160,7 @@ if (d == 0) d = 1;
                                      (e11*e22-e12*e21)/d );
 }
 
-void matrix3x3::Identity()
+void matrix3x3::identity()
 {
 this->clear();
 e11=1.0f;
@@ -184,9 +184,9 @@ string matrix3x3::toString()const
 {
 stringstream ss;
 ss<<fixed;
-ss<<e11<<","<<e12<<","<<e13<<endl;
-ss<<e21<<","<<e22<<","<<e23<<endl;
-ss<<e31<<","<<e32<<","<<e33<<endl;
+ss<<e11<<", "<<e12<<", "<<e13<<endl;
+ss<<e21<<", "<<e22<<", "<<e23<<endl;
+ss<<e31<<", "<<e32<<", "<<e33<<endl;
 return ss.str();
 }
 

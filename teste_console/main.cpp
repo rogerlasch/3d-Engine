@@ -3,111 +3,90 @@
 #include <gpp/gpp.h>
 #include <gpp_physics/gpp_physics.h>
 #include"g_start.h"
-#include"testes.h"
-#include"mRigidBody.h"
 
 using namespace gpp;
 using namespace std;
+#include"LinearOctree.h"
 
-#define _AIRDENCITY 1.223f
-#define _GRAVITY -9.81f
-#define _STEP 0.2f
-
-class particle{
+class Cylinder{
 public:
-float mass;
-float airDragCoefficient;
-float fspeed;
+vector<vector3d> topCap;
+vector<vector3d> botomCap;
 float radius;
-vector3d pos;
-vector3d vel;
-vector3d acceleration;
-vector3d forces;
-particle(){
-mass=1.0f;
-airDragCoefficient=0.84f;
-radius=2.5f;
-pos={0,0,0};
-vel={0,0,0};
-forces={0,0,0};
+Cylinder(){
+topCap.clear();
+botomCap.clear();
+radius=1.5f;
 }
-string toString(){
+void generate(uint32 numSides, float height, float radius){
+this->radius=radius;
+topCap.clear();
+botomCap.clear();
+    // Calcular o ângulo entre cada lado do cilindro
+    float angleIncrement = 2 * GPP_PI / numSides;
+    // Gerar vértices em torno da base do cilindro
+    for (int i = 0; i < numSides; ++i) {
+        float angle = i * angleIncrement;
+        vector3d vertex;
+        vertex.x = radius * cos(angle);
+        vertex.y = radius * sin(angle);
+        vertex.z = 0.0f;  // Altura da base
+botomCap.push_back(vertex);
+    }
+    // Gerar vértices em torno do topo do cilindro
+    for (int i = 0; i < numSides; ++i) {
+        float angle = i * angleIncrement;
+        vector3d vertex;
+        vertex.x = radius * cos(angle);
+        vertex.y = radius * sin(angle);
+        vertex.z = height;  // Altura do topo
+topCap.push_back(vertex);
+    }
+    // Adicionar vértices para as bases
+    vector3d baseCenter = {0.0f, 0.0f, 0.0f};
+    vector3d topCenter = {0.0f, 0.0f, height};
+botomCap.push_back(baseCenter);
+topCap.push_back(topCenter);
+}
+string toString()const{
 stringstream ss;
 ss<<fixed;
 ss.precision(2);
-ss<<"Mass: "<<mass<<endl;
-ss<<"airDragCoefficient: "<<airDragCoefficient<<endl;
 ss<<"Radius: "<<radius<<endl;
-ss<<"fspeed: "<<fspeed<<endl;
-ss<<"Pos: "<<pos<<endl;
-ss<<"Aceleração: "<<acceleration<<endl;
-ss<<"Vel: "<<vel<<endl;
-ss<<"Forces: "<<forces<<endl;
+for(auto& it : botomCap){
+ss<<it<<endl;
+}
+for(auto& it : topCap){
+ss<<it<<endl;
+}
 return ss.str();
 }
-void stop(){
-forces={0,0,0};
-vel={0,0,0};
-acceleration={0,0,0};
+bool isColliding(const vector3d& v){
+uint32 size=topCap.size();
+for(uint32 i=0; i<size; i++){
+uint32 j=(i+1)%size;
+uint32 k=(i+2)%size;
+vector3d n=vector3d::crossProduct(botomCap[j]-botomCap[i], botomCap[k]-botomCap[i]);
+n.normalize();
+_GINFO("Dot={}", n*v);
 }
-void calcLoads(){
-vector3d v;
-v+={0,0, mass*_GRAVITY};
-applyForce(v);
-    // Arrasto do ar
-    vector3d velocityDir =vector3d::normalize(vel);
-velocityDir .inverse();
-    float area = GPP_PI * radius * radius;  // Área de seção transversal para uma esfera
-    float dragMagnitude = 0.5 * _AIRDENCITY * area * vector3d::dotProduct(vel, vel) * airDragCoefficient;
-    vector3d dragForce = dragMagnitude * velocityDir;
-    applyForce(dragForce);
-
-}
-void applyForce(const vector3d& v){
-forces+=v;
-}
-void updateEulerSimpletic(float dt){
-acceleration=forces/mass;
-vel=vel+acceleration*dt;
-pos+=vel*dt;
-forces={0,0,0};
-fspeed=vel.length();
+vector3d n=topCap[size-1]-botomCap[size-1];
+n.normalize();
+_GINFO("\n{}", n);
+_GINFO("tsk {}", (v*n));
+return false;
 }
 };
 
 int main(){
 G_STARTER gst;
-particle pst;
-pst.mass=500.0f;
-pst.pos={0,0,100};
-uint32 impulseCount=0;
-bool aplying=false;
-vector3d force={0,0,1024};
-//pst.applyForce(vector3d(1024, 0, 0)*2048);
-for(uint32 i=0; i<2500; i++){
-pst.calcLoads();
-pst.updateEulerSimpletic(_STEP);
-_GINFO("{:.2f}:{:.2f}, v={:.2f}, t={:.2f}", pst.pos.x, pst.pos.z, pst.fspeed, (i*_STEP));
-if(!aplying){
-if(pst.pos.z<=pst.radius){
-_GINFO("Aplicando série de impulsos...");
-aplying=true;
-pst.stop();
-impulseCount=0;
-impulseCount+=1;
-force*=2;
-pst.applyForce(force);
-}
-}
-else{
-pst.applyForce(force);
-impulseCount++;
-if(impulseCount>10){
-_GINFO("Interrompendo impulsos...");
-aplying=false;
-impulseCount=0;
-}
-}
-}
+ln::OctreeNode2* node=new ln::OctreeNode2();
+node->center={100,100,100};
+node->radius=100.0f;
+ln::LinearOctree oct;
+oct.appendNode(node);
+oct.build(node);
+//_GINFO("{}", oct.toString());
+oct.traverse(node->id);
 return 0;
 }

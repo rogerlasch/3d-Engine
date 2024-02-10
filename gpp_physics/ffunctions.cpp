@@ -50,4 +50,32 @@ final=((dist/d)*restorativeForce);
 final+=(v1-v2)*damping;
 return final;
 }
+
+vector3d fCalculateStaticFriction(const vector3d& force, const vector3d& velocity, float staticFriction){
+    vector3d frictionForce =vector3d::inverse(velocity);
+    float frictionMagnitude = staticFriction * vector3d::dotProduct(frictionForce, force);
+    // Limitar a força de atrito estático para evitar que seja maior que a força normal
+    float forceMag= force.length();
+    if (frictionMagnitude > forceMag) {
+        frictionMagnitude =forceMag;
+    }
+    frictionForce.normalize();
+    frictionForce *= frictionMagnitude;
+    return frictionForce;
+/*
+float fLen=force.length();
+vector3d frictionForce=force*staticFriction;
+if(frictionForce.length()>fLen){
+frictionForce=vector3d::inverse(force);
+}
+return frictionForce;
+*/
+}
+
+vector3d fCalculateKineticFriction(const vector3d& force, const vector3d& velocity, float kineticFriction){
+    vector3d frictionForce =vector3d::inverse(velocity);
+    frictionForce.normalize();
+    frictionForce *= kineticFriction * vector3d::dotProduct(frictionForce, force);
+    return frictionForce;
+}
 }

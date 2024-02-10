@@ -1,3 +1,0 @@
-Info: se conectando em localhost... true
-Info: Conexão estabelecida
-Info: Conexão encerrada.

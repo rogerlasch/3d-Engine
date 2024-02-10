@@ -1,14 +1,25 @@
 
 #include<stack>
+#include<algorithm>
+#include<functional>
 #include<string.h>
 #include<sstream>
-#include"../gpp_physics.h"
+#include<libmorton/morton.h>
+#include<gpp/debug_system.h>
+#include"../types.h"
+#include"../math/math.h"
+#include"../RigidBody.h"
+#include"../CollisionInfo.h"
 #include"octree.h"
 
 using namespace std;
+using namespace libmorton;
 
 namespace gpp
 {
+
+#define _encodeMortonKey(VX) morton3D_64_encode(static_cast<uint32>(VX.x), static_cast<uint32>(VX.y), static_cast<uint32>(VX.z))
+
 octree::octree()
 {
 info.cleanup();
@@ -17,12 +28,13 @@ root=NULL;
 
 octree::~octree()
 {
-if(root)
-{
-delete root;
-}
-root=NULL;
 info.cleanup();
+root=NULL;
+for(auto& it : nodes){
+delete it.second;
+it.second=NULL;
+}
+nodes.clear();
 }
 
 string octree::toString()const
@@ -42,267 +54,73 @@ ss<<m1[i]<<":"<<m2[i]<<", ";
 return ss.str();
 }
 
-void octree::create(const vector3d& min, uint32 max_depth, uint32 blimit, float alph)
-{
-    _GASSERT(root == NULL);
+void octree::create(const vector3d& center, float radius){
 profiler_snap();
-info.blimit = blimit;
-info.max_depth = max_depth;
-this->root = new octreenode();
-alph = alph * 0.5f;
-root->center = min + alph;
-root->radius = alph;
-info.nodes+=1;
-vector<octreenode*> pstack;
-pstack.push_back(root);
-uint32 depth=6;
-while(pstack.size()>0)
-{
-octreenode* node=pstack.back();
-pstack.pop_back();
-if(node->level>=depth)continue;
-uint32 size=node->childs.size();
-if(size==0){
-splitNode(node);
-}
-for(uint32 i=0; i<8; i++)
-{
-if(node->childs[i]->level<depth)
-{
-pstack.push_back(node->childs[i]);
-}
-}
-}
+_GASSERT_MSG(root==NULL, "Já existe uma octree válida aqui. Limpe antes de chamar create novamente.");
+info.nbodies=64;
+octreenode* node=new octreenode;
+node->id=_encodeMortonKey(center);
+node->center=center;
+node->radius=radius;
+node->level=0;
+node->pchilds=0;
+root=node;
+nodes.insert(make_pair(node->id, node));
 }
 
-void octree::clear()
-{
+void octree::traverse(OCTREEVISITORCALLBACK hvisitor){
 profiler_snap();
-if(root){
-delete root;
-}
-root = NULL;
-info.cleanup();
-}
-
-void octree::insert(iRigidBody* rb){
-    _GASSERT(rb != NULL);
-    profiler_snap();
-    octreenode* node = getDeepest(rb);
-    _GASSERT(node != NULL);
-    if (node->bodies.size() >= info.blimit) {
-        splitAndRedistribute(node);
-        node = getDeepest(rb, node);
-        while (node != NULL) {
-            if (node->bodies.size() < info.blimit) {
-                moveObject(NULL, node, rb);
-                return;
-            }
-            else {
-                node = node->parent;
-            }
-        }
-        string msg = safe_format("A árvore está completamente cheia e não conseguiu encontrar um espaço para o objeto:\n\"{}\"", rb->toString());
-        _GINFO("{}", toString());
-        _GASSERT_MSG(node != NULL, msg);
-    }
-    else {
-        moveObject(NULL, node, rb);
-    }
-}
-
-void octree::remove(iRigidBody* rb)
-{
-    profiler_snap();
-    vector<octreenode*>  hstack;
-    hstack.push_back(root);
-    iRigidBody* b = NULL;
-    while (hstack.size() > 0) {
-        octreenode* hnode = hstack.back();
-        hstack.pop_back();
-        if (BinaryUtils::remove(hnode->bodies, rb->index, &b)) {
-            return;
-        }
-        for (uint32 i = 0; i < 8; i++) {
-            if (aabbInsideAll(hnode->childs[i]->center, hnode->childs[i]->radius, rb->aabb)) {
-                hstack.push_back(hnode->childs[i]);
-            }
-        }
-    }
-}
-
-void octree::BroadPhase(vector<iRigidBody*>& hbodies, CollisionCache* cache)
-{
-    profiler_snap();
-    uint32 size = hbodies.size();
-    for (uint32 i = 0; i < size; i++) {
-        broadPhaseBody(hbodies[i], cache);
-    }
-}
-
-void octree::broadPhaseBody(iRigidBody* rb, CollisionCache* cache) {
-    profiler_snap();
-stack<octreenode*> pstack;
-pstack.push(root);
-while(pstack.size()>0){
-octreenode* hnode=pstack.top();
+if((!hvisitor)||(nodes.size()==0)) return;
+stack<uint64> pstack;
+pstack.push(root->id);
+while(!pstack.empty()){
+uint64 id=pstack.top();
 pstack.pop();
-uint32 size = hnode->bodies.size();
-for (uint32 i = 0; i < size; i++) {
-uint64 hash=get_hash_from_index(rb->index, hnode->bodies[i]->index);
-bool contains=cache->contains(hash);
-if(!contains){
-    if (aabbOverlap(rb->aabb, hnode->bodies[i]->aabb)) {
-shared_collisioninfo info=make_shared<CollisionInfo>();
-info->id=hash;
-info->r1=rb;
-info->r2=hnode->bodies[i];
-cache->insert(info);
-    }
+auto it=nodes.find(id);
+_GASSERT(it!=nodes.end());
+if (!hvisitor(it->second)) continue;
+if(it->second->pchilds>0){
+for(uint32 i=0; i<8; i++){
+if((it->second->pchilds&(1<<i))){
+pstack.push((it->second->id<<3)+i);
 }
-}
-size=hnode->childs.size();
-for(uint32 i=0; i<size; i++)
-{
-if(aabbOverlap(hnode->childs[i]->center, hnode->childs[i]->radius, rb->aabb))
-{
-pstack.push(hnode->childs[i]);
 }
 }
 }
 }
 
-octreenode* octree::getDeepest(iRigidBody* rb, octreenode* node)
-{
-    profiler_snap();
-    octreenode* currentnode = ((node==NULL) ? root : node);
-    uint32 iterations=info.max_depth+1;
-    uint32 x = 0;
-    while (x<iterations) {
-        x++;
-        if (currentnode->childs.size() == 0) {
-            return currentnode;
-        }
-        uint32 size = currentnode->childs.size();
-        bool done = true;
-        for (uint32 i = 0; i < size; i++) {
-            if (aabbInsideAll(currentnode->childs[i]->center, currentnode->childs[i]->radius, rb->aabb)) {
-                currentnode = currentnode->childs[i];
-                done = false;
-                break;
-            }
-        }
-        if (done)break;
-    }
-    _GASSERT_MSG(x < iterations, "O número máximo de iterações foi atingido. Possível loop infinito.");
-    return currentnode;
-}
-
-void octree::splitAndRedistribute(octreenode* node) {
-    profiler_snap();
-    if (node->childs.size() == 0) {
-        splitNode(node);
-    }
-    redistributeNode(node);
-    computeInfos();
-}
-
-    void octree::splitNode(octreenode * node) {
-        _GASSERT_MSG(node->childs.size() == 0, "Tentando dividir um nó que já foi dividido...");
-        _GASSERT_MSG(node->level < info.max_depth, "A profundidade máxima neste ramo já foi atingida! Nível: {}, Max_depth:{}", node->level, info.max_depth);
-        float step = node->radius * 0.5f;
-        for (uint32 i = 0; i < 8; i++)
-        {
-            octreenode* sf = new octreenode();
-            sf->level = node->level + 1;
+void octree::createChilds(octreenode* parent, uint8 pchilds){
+profiler_snap();
+float step=parent->radius*0.5f;
+uint32 level=parent->level+1;
+for(uint32 i=0; i<8; i++){
+if((pchilds&(1<<i))==0) continue;
+if((parent->pchilds&(1<<i))==0){
+octreenode* sf = new octreenode();
             sf->center.x = ((i & 1) ? step : -step);
             sf->center.y = ((i & 2) ? step : -step);
             sf->center.z = ((i & 4) ? step : -step);
-            sf->center += node->center;
+            sf->center +=parent->center;
             sf->radius = step;
-            sf->parent = node;
-            node->childs.push_back(sf);
-        }
-        info.nodes += 8;
-        info.blevels[node->childs[0]->level] = 0;
-    }
+sf->id=(parent->id<<3)+i;
+sf->pchilds=0;
+sf->level=level;
+parent->pchilds|=1<<i;
+}
+}
+}
 
-    void octree::redistributeNode(octreenode * node) {
-        profiler_snap();
-        vector<iRigidBody*> hbodies;
-        extractObjectsNode(node, hbodies);
-        function<bool(iRigidBody*, iRigidBody*)> hsort = [](iRigidBody* r1, iRigidBody* r2)->bool {
-            return r1->aabb->getVolume() < r2->aabb->getVolume();
+void octree::getDeepest(RigidBody* rb, std::vector<octreenode*>& hnodes) {
+    vector3d m1, m2;
+    rb->getAabb(m1, m2);
+    hnodes.clear();
+    OCTREEVISITORCALLBACK hvisitor = [&](octreenode* hnode)->bool {
+        if (aabbInsideAll(hnode->center, hnode->radius, m1, m2) {
+            hnodes.push_back(hnode);
+            return true;
+        }
+        return false;
         };
-        std::sort(hbodies.begin(), hbodies.end(), hsort);
-        uint32 size = hbodies.size();
-        for (uint32 i = 0; i < size; i++) {
-            octreenode* hnode = getDeepest(hbodies[i], node);
-            if (hnode->childs.size() == 0) {
-                splitNode(hnode);
-                hnode = getDeepest(hbodies[i], hnode);
-            }
-            while (hnode != NULL) {
-                if (hnode->bodies.size() < info.blimit) {
-                    moveObject(NULL, hnode, hbodies[i]);
-                    break;
-                }
-                else {
-                    hnode = hnode->parent;
-                }
-            }
-            _GASSERT_MSG(hnode != NULL, "Nenhum espaço localizado para adicionar o objeto. Isto definitivamente não deveria ter acontecido.");
-        }
-    }
-
-void octree::moveObject(octreenode* from, octreenode* to, iRigidBody* rb){
-    _GASSERT(to != NULL);
-    _GASSERT(rb != NULL);
-    if (from == NULL)
-    {
-        BinaryUtils::insert(to->bodies, rb);
-        info.nbodies += 1;
-        info.blevels[to->level] += 1;
-    }
-    else {
-        iRigidBody* r = NULL;
-        BinaryUtils::remove(from->bodies, rb->index, &r);
-        BinaryUtils::insert(to->bodies, rb);
-        info.blevels[to->level] -= 1;
-        info.blevels[to->level] += 1;
-    }
-}
-
-void octree::extractObjectsNode(octreenode* node, vector<iRigidBody*>& hbodies) {
-    profiler_snap();
-    hbodies.clear();
-    function<void(octreenode*)> hfunc = [&](octreenode* hnode) {
-        if (hnode->bodies.size() > 0) {
-            hbodies.insert(hbodies.end(), hnode->bodies.begin(), hnode->bodies.end());
-            hnode->bodies.clear();
-        }
-        if (hnode->childs.size() > 0) {
-            for (uint32 i = 0; i < 8; i++) {
-                hfunc(hnode->childs[i]);
-            }
-        }
-    };
-    hfunc(node);
-}
-
-void octree::computeInfos() {
-    profiler_snap();
-    info.blevels.clear();
-    info.nbodies = 0;
-    function<void(octreenode*)> hfunc = [&](octreenode* node) {
-        info.blevels[node->level] += node->bodies.size();
-        info.nbodies += node->bodies.size();
-        if (node->childs.size() > 0){
-            for (uint32 i = 0; i < 8; i++) {
-                hfunc(node->childs[i]);
-            }
-        }
-    };
-    hfunc(root);
+    traverse(hvisitor);
 }
 }

@@ -103,12 +103,9 @@ bool vector3d::operator==(const float  dv[3])const
 return x==dv[0]&&y==dv[1]&&z==dv[2];
 }
 
-vector3d& vector3d::operator-()
+vector3d vector3d::operator-()
 {
-this->x=-x;
-this->y=-y;
-this->z=-z;
-return *this;
+return vector3d(-x, -y, -z);
 }
 
 vector3d& vector3d::operator+=(float escalar)
@@ -298,7 +295,7 @@ string vector3d::toString()const
 {
 stringstream ss;
 ss<<fixed;
-ss<<x<<":"<<y<<":"<<z;
+ss<<x<<", "<<y<<", "<<z;
 return ss.str();
 }
 
@@ -306,7 +303,7 @@ return ss.str();
 
 ostream& operator<<(ostream& os, const vector3d& dv)
 {
-os<<dv.x<<":"<<dv.y<<":"<<dv.z;
+os<<dv.x<<", "<<dv.y<<", "<<dv.z;
 return os;
 }
 

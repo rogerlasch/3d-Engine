@@ -8,7 +8,7 @@
 #define F_NAME "main.txt"
 
 namespace gpp{
-
+/*
 std::vector<std::shared_ptr<iRigidBody>> hbodies;
 
 std::shared_ptr<gpp_world> game;
@@ -18,7 +18,7 @@ RigidBody* createBox(const vector3d& min, const vector3d& mes);
 RigidBody* createCapsule(const vector3d& min, const vector3d& max, float radius);
 void displayInfos(RigidBody* rb);
 std::string getDirectionDescription(const vector3d& dir) ;
-
+*/
 struct G_STARTER{
 G_STARTER(){
 setlocale(LC_ALL, "Portuguese");
@@ -33,6 +33,7 @@ profiler_dump("main_profiler.txt");
 }
 };
 
+/*
 RigidBody* createRandomBody()
 {
 static uint32 x=0;
@@ -89,5 +90,6 @@ if(dir.z<0) ss<<"b";
 else if(dir.z>0) ss<<"c";
 return ss.str();
 }
+*/
 }
 #endif

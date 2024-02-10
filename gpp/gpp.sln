@@ -6,19 +6,32 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gpp", "gpp.vcxproj", "{45303AAF-FFF0-41AE-8711-A6EDCCCBEC74}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gpp_physics", "..\gpp_physics\gpp_physics.vcxproj", "{D33AB5D9-06BA-4F03-A370-BC7B2A9E4733}"
+	ProjectSection(ProjectDependencies) = postProject
+		{45303AAF-FFF0-41AE-8711-A6EDCCCBEC74} = {45303AAF-FFF0-41AE-8711-A6EDCCCBEC74}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{45303AAF-FFF0-41AE-8711-A6EDCCCBEC74}.Debug|x64.ActiveCfg = Debug|x64
+		{45303AAF-FFF0-41AE-8711-A6EDCCCBEC74}.Debug|x64.Build.0 = Debug|x64
 		{45303AAF-FFF0-41AE-8711-A6EDCCCBEC74}.Debug|x86.ActiveCfg = Debug|Win32
 		{45303AAF-FFF0-41AE-8711-A6EDCCCBEC74}.Debug|x86.Build.0 = Debug|Win32
+		{45303AAF-FFF0-41AE-8711-A6EDCCCBEC74}.Release|x64.ActiveCfg = Release|x64
+		{45303AAF-FFF0-41AE-8711-A6EDCCCBEC74}.Release|x64.Build.0 = Release|x64
 		{45303AAF-FFF0-41AE-8711-A6EDCCCBEC74}.Release|x86.ActiveCfg = Release|Win32
 		{45303AAF-FFF0-41AE-8711-A6EDCCCBEC74}.Release|x86.Build.0 = Release|Win32
+		{D33AB5D9-06BA-4F03-A370-BC7B2A9E4733}.Debug|x64.ActiveCfg = Debug|x64
+		{D33AB5D9-06BA-4F03-A370-BC7B2A9E4733}.Debug|x64.Build.0 = Debug|x64
 		{D33AB5D9-06BA-4F03-A370-BC7B2A9E4733}.Debug|x86.ActiveCfg = Debug|Win32
 		{D33AB5D9-06BA-4F03-A370-BC7B2A9E4733}.Debug|x86.Build.0 = Debug|Win32
+		{D33AB5D9-06BA-4F03-A370-BC7B2A9E4733}.Release|x64.ActiveCfg = Release|x64
+		{D33AB5D9-06BA-4F03-A370-BC7B2A9E4733}.Release|x64.Build.0 = Release|x64
 		{D33AB5D9-06BA-4F03-A370-BC7B2A9E4733}.Release|x86.ActiveCfg = Release|Win32
 		{D33AB5D9-06BA-4F03-A370-BC7B2A9E4733}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection

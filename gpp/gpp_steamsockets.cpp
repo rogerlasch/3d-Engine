@@ -191,7 +191,7 @@ break;
 }
 Event* ev=new Event();
 ev->type=GEVENT_CONNECTED;
-ev->peer_id=pinfo->m_hConn ;
+ev->v1=pinfo->m_hConn ;
 hcall(ev);
 break;
 }
@@ -203,7 +203,7 @@ case k_ESteamNetworkingConnectionState_None:
                                 {
 Event* ev=new Event();
 ev->type=GEVENT_DISCONNECTED;
-ev->peer_id=pinfo->m_hConn ;
+ev->v1=pinfo->m_hConn ;
 hcall(ev);
 hsteam->CloseConnection(pinfo->m_hConn, 0, NULL, false);
 }
@@ -211,7 +211,7 @@ else
 {
 Event* ev=new Event();
 ev->type=GEVENT_DISCONNECTED;
-ev->peer_id=pinfo->m_hConn ;
+ev->v1=pinfo->m_hConn ;
 hcall(ev);
 }
 break;
@@ -250,7 +250,7 @@ case k_ESteamNetworkingConnectionState_None:
                                 {
 Event* ev=new Event();
 ev->type=GEVENT_DISCONNECTED;
-ev->peer_id=pinfo->m_hConn ;
+ev->v1=pinfo->m_hConn ;
 hcall(ev);
 hsteam->CloseConnection(pinfo->m_hConn, 0, NULL, false);
 }
@@ -258,7 +258,7 @@ else
 {
 Event* ev=new Event();
 ev->type=GEVENT_DISCONNECTED;
-ev->peer_id=pinfo->m_hConn ;
+ev->v1=pinfo->m_hConn ;
 hcall(ev);
 }
 break;
@@ -267,7 +267,7 @@ case k_ESteamNetworkingConnectionState_Connected:
 {
 Event* ev=new Event();
 ev->type=GEVENT_CONNECTED;
-ev->peer_id=pinfo->m_hConn ;
+ev->v1=pinfo->m_hConn ;
 hcall(ev);
 break;
 }

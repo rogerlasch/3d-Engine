@@ -26,7 +26,7 @@ protected:
 uint32 listenport;
 uint32 listensock;
 uint32 max_players;
-std::atomic<uint32> hstate;
+StateManager hState;
 std::unordered_map<uint32, gpp_peer*> peers;
 gpp_networkinterface* hcon;
 public:
@@ -34,16 +34,19 @@ gpp_server();
 gpp_server(const gpp_server& gs)=delete;
 gpp_server& operator=(const gpp_server& gs)=delete;
 virtual ~gpp_server();
-uint16 getPort()const;
-uint32 getMaxPlayers()const;
-uint32 playerCount()const;
-uint32 getHState()const;
-void setHState(uint32 hstate);
-gpp_networkinterface* getHCon()const;
-void setHcon(gpp_networkinterface* hcon);
+
+inline uint16 getPort()const { return this->listenport; }
+inline uint32 playerCount()const { return peers.size(); }
+inline uint32 getMaxPlayers()const { return this->max_players; }
+inline uint32 getHState()const { return hState.getState(); }
+inline void setHState(uint32 hs) { this->hState.setState(hs); }
+inline gpp_networkinterface* getHCon()const { return this->hcon; }
+inline void setHcon(gpp_networkinterface* hcon) { this->hcon=hcon; }
+
 virtual bool start(uint16 port, uint32 max_players);
 virtual void shutdown();
 gpp_peer* getPeer(uint32 peer_id)const;
+virtual bool peerDisconnect(uint32 id);
 virtual void peerDisconnectAll();
 virtual void run();
 virtual void update();

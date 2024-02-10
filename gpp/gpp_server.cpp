@@ -29,52 +29,18 @@ namespace gpp
 gpp_server::gpp_server():
 EventQueue()
 {
-hstate.store(SERVER_DEFAULT);
+hState.setState(SERVER_DEFAULT);
 listensock=0;
+hcon=NULL;
 }
 
 gpp_server::~gpp_server()
 {
-if(hstate.load()==SERVER_RUNNING)
+if(hState.getState()==SERVER_RUNNING)
 {
 this->shutdown();
 }
 hcon=NULL;
-}
-
-uint16 gpp_server::getPort()const
-{
-return this->listenport;
-}
-
-uint32 gpp_server::playerCount()const
-{
-return peers.size();
-}
-
-uint32 gpp_server::getMaxPlayers()const
-{
-return this->max_players;
-}
-
-uint32 gpp_server::getHState()const
-{
-return hstate.load();
-}
-
-void gpp_server::setHState(uint32 hs)
-{
-this->hstate.store(hs);
-}
-
-gpp_networkinterface* gpp_server::getHCon()const
-{
-return this->hcon;
-}
-
-void gpp_server::setHcon(gpp_networkinterface* hcon)
-{
-this->hcon=hcon;
 }
 
 bool gpp_server::start(uint16 port, uint32 max_players)
@@ -84,7 +50,7 @@ if((port==0)||(max_players==0)||(max_players>GPP_SERVER_DEFAULT_MAX_PLAYERS))
 {
 return false;
 }
-switch(hstate.load())
+switch(hState.getState())
 {
 case SERVER_DEFAULT:
 {
@@ -95,10 +61,10 @@ if(listensock>0)
 {
 this->listenport=port;
 this->max_players=max_players;
-this->hstate.store(SERVER_RUNNING);
+this->hState.setState(SERVER_RUNNING);
 return true;
 }
-this->hstate.store(SERVER_DEFAULT);
+this->hState.setState(SERVER_DEFAULT);
 break;
 }
 }
@@ -107,17 +73,18 @@ return false;
 
 void gpp_server::shutdown()
 {
-switch(hstate.load())
+_GASSERT_MSG(hcon!=NULL, "Nenhuma interface de rede definida!");
+switch(hState.getState())
 {
 case SERVER_STARTING:
 case SERVER_RUNNING:
 {
-hstate.store(SERVER_SHUTING_DOWN);
+hState.setState(SERVER_SHUTING_DOWN);
 peerDisconnectAll();
 hcon->closeListenSocket(listensock);
 listensock=0;
 max_players=0;
-hstate.store(SERVER_FINISHED);
+hState.setState(SERVER_FINISHED);
 break;
 }
 }
@@ -129,9 +96,14 @@ auto it=peers.find(peer_id);
 return ((it==peers.end()) ? NULL : it->second);
 }
 
+bool gpp_server::peerDisconnect(uint32 id){
+gpp_peer* peer=getPeer(id);
+if(peer==NULL)return false;
+return peer->disconnect();
+}
+
 void gpp_server::peerDisconnectAll()
 {
-_GASSERT_MSG(hcon!=NULL, "Nenhuma interface de rede definida!");
 if(playerCount()==0)
 {
 return;
@@ -144,7 +116,7 @@ bool onforse=true;
 int64 start=get_timestamp_ms();
 while((get_timestamp_ms()-start)<2000)
 {
-wait_ms(25);
+this_thread::yield();
 pollNet();
 pollEvents();
 if(playerCount()==0)
@@ -157,10 +129,11 @@ break;
 
 void gpp_server::run()
 {
-_GASSERT_MSG(hstate.load()==SERVER_RUNNING, "O Servidor não está em um estado válido!");
-while(hstate.load()==SERVER_RUNNING)
+_GASSERT_MSG(hState.getState()==SERVER_RUNNING, "O Servidor não está em um estado válido!");
+while(hState.getState()==SERVER_RUNNING)
 {
-wait_ms(5);
+//wait_ms(5);
+this_thread::yield();
 this->update();
 }
 }
@@ -228,7 +201,7 @@ default:
 {
 Event* ev=new Event();
 ev->type=GEVENT_RECEIVE;
-ev->peer_id=peer->getPeerId();
+ev->v1=peer->getPeerId();
 ev->pack=pack;
 ev->data=msg;
 eventPost(ev);
@@ -244,22 +217,22 @@ switch(ev->type)
 {
 case GEVENT_CONNECTED:
 {
-_GINFO("O par com id {} se conectou.", ev->peer_id);
+_GINFO("O par com id {} se conectou.", ev->v1);
 gpp_peer* ch=new gpp_peer();
 ch->setHcon(hcon);
-ch->setPFlags(PEER_CLIENT|PEER_SERVER);
-ch->setPeerId(ev->peer_id);
+ch->setPeerFlags(PEER_CLIENT|PEER_SERVER);
+ch->setPeerId(ev->v1);
 ch->setHState(PEER_CONNECTED);
 ch->setConnectionTime(get_timestamp_ms());
-peers.insert(make_pair(ev->peer_id, ch));
+peers.insert(make_pair(ev->v1, ch));
 break;
 }
 case GEVENT_DISCONNECTED:
 {
-auto it=peers.find(ev->peer_id);
+auto it=peers.find(ev->v1);
 if(it!=peers.end())
 {
-_GINFO("O par com id {} se desconectou depois de {} ms...", ev->peer_id, it->second->getConnectionTime()-get_timestamp_ms());
+_GINFO("O par com id {} se desconectou depois de {} ms...", ev->v1, get_timestamp_ms()-it->second->getConnectionTime());
 delete it->second;
 peers.erase(it);
 }
@@ -271,7 +244,7 @@ break;
 }
 case GEVENT_RECEIVE:
 {
-gpp_peer* ch=peers.at(ev->peer_id);
+gpp_peer* ch=peers.at(ev->v1);
 break;
 }
 }

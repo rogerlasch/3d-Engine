@@ -1,5 +1,5 @@
 
-#define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
+//#define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 #include<codecvt>
 #include<string>
 #include"types.h"
@@ -275,7 +275,7 @@ uint32 string_split(const std::string& str, const std::string& delin, std::vecto
 return out.size();
 }
 
-uint32 sstring_split(const std::wstring& str, const std::wstring& delin, std::vector<std::wstring>& out) {
+uint32 wstring_split(const std::wstring& str, const std::wstring& delin, std::vector<std::wstring>& out) {
     out.clear();
     size_t start = 0;
     size_t end = str.find(delin);

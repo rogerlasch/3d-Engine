@@ -34,3 +34,6 @@ gpp/*.bgt
 gpp/*.txt
 gpp_physics/*.bgt
 gpp_physics/*.txt
+*.zip
+*.rar
+*.7z

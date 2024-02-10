@@ -4,7 +4,7 @@
 #ifndef OCTREEINFO_H
 #define OCTREEINFO_H
 
-
+#include<map>
 
 namespace gpp{
 
@@ -14,7 +14,6 @@ uint32 max_depth;
 uint32 blimit;
 uint32 nbodies;
 uint32 nodes;
-std::map<uint32, uint32> blevels;
 octreeinfo();
 octreeinfo(const octreeinfo& info);
 octreeinfo& operator=(const octreeinfo& info);

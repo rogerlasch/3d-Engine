@@ -13,6 +13,7 @@
 #include<unordered_map>
 #include"types.h"
 #include"gpp_value.h"
+#include"StateManager.h"
 #include"debug_system.h"
 #include"http/HttpManager.h"
 #include"SafeFlags.h"

@@ -21,9 +21,9 @@ vector3d torque;
 matrix3x3 inertia;
 matrix3x3 invInertia;
 
-    mRigidBody() {
-        mass = 0.0f;
-        invMass = 0.0f;
+    mRigidBody(float mass) {
+this->mass=mass;
+        invMass = 1/mass;
         pos = {0.0f, 0.0f, 0.0f};
         vel = {0.0f, 0.0f, 0.0f};
         forces = {0.0f, 0.0f, 0.0f};
@@ -61,38 +61,27 @@ std::string toString() const {
 }
 
 void update(float dt) {
-    // Etapa 1: Calcular a aceleração atual baseada nas forças
+    // Etapa 1: Calcular a aceleração linear atual baseada nas forças
     acceleration = forces * invMass;
 
-    // Etapa 2: Usar o integrador RK4 para atualizar a posição e velocidade
-    // Note que esta é uma versão simplificada, e não inclui orientação ou momento angular
-    // Você precisará expandi-la para incluir esses conceitos.
-    vector3d k1v = acceleration * dt;
-    vector3d k1x = vel * dt;
+    // Etapa 2: Atualizar a velocidade linear e a posição usando o método de Euler Simples
+    vel += acceleration * dt;
+    pos += vel * dt;
 
-    vector3d k2v = acceleration * dt;
-    vector3d k2x = (vel + k1v * 0.5f) * dt;
-
-    vector3d k3v = acceleration * dt;
-    vector3d k3x = (vel + k2v * 0.5f) * dt;
-
-    vector3d k4v = acceleration * dt;
-    vector3d k4x = (vel + k3v) * dt;
-
-    vel += (k1v + k2v * 2.0f + k3v * 2.0f + k4v) / 6.0f;
-    pos += (k1x + k2x * 2.0f + k3x * 2.0f + k4x) / 6.0f;
-
-    // Limpar as forças após a atualização
+    // Etapa 3: Limpar as forças lineares após a atualização
     forces = {0.0f, 0.0f, 0.0f};
 
-    angularMomentum += torque * dt;
+    // Etapa 4: Calcular a aceleração angular atual baseada nos torques
+    vector3d angularAcceleration = invInertia * torque;
 
-    angularVelocity = invInertia * angularMomentum;  // Use a matriz de inércia
-    quaternion dq = (angularVelocity * orientation) * (0.5f * dt);
-    orientation += dq;
-    orientation.normalize();  // Normalizar o quaternion
+_GINFO("vv: {}", angularAcceleration .toString());
+    // Etapa 5: Atualizar a velocidade angular, orientação e posição angular usando o método de Euler Simples
+    angularVelocity += angularAcceleration * dt;
+    orientation += quaternion(0.5f * dt, angularVelocity) * orientation;
+    orientation.normalize();
 
-torque={0,0,0};
+    // Etapa 6: Limpar os torques angulares após a atualização
+    torque = {0.0f, 0.0f, 0.0f};
 }
 };
 

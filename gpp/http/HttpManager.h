@@ -9,6 +9,7 @@
 #include<mutex>
 #include<thread>
 #include<condition_variable>
+#include"HttpRequestStatus.h"
 
 namespace gpp{
 
@@ -19,7 +20,7 @@ class HttpPool;
 class HttpManager{
 private:
 std::thread handle;
-std::atomic<uint32> run;
+StateManager hstate;
 HttpPool* hpool;
 std::unordered_map<uint32, HttpRequest*> handles;
 NOTIFICATION_HTTP_CALLBACK hnotify;
@@ -36,6 +37,8 @@ NOTIFICATION_HTTP_CALLBACK getNotificationCallback()const;
 void setName(uint32 id, const std::string& name);
 std::string getName(uint32 id)const;
 
+void start();
+void stop();
 uint32 count()const;
 uint32 createRequest(const std::string& method, const std::string& url, const std::string& postFields="", const std::vector<std::string>& headers={});
 uint32 getState(uint32 id)const;

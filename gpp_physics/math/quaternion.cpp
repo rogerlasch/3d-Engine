@@ -190,10 +190,36 @@ return vector3d(x/m, y/m, z/m);
 string quaternion::toString() const
 {
     stringstream result;
-result<<x<<":"<<y<<":"<<z<<":"<<w;
+result<<x<<", "<<y<<", "<<z<<":"<<w;
     return result.str();
 }
 
+matrix3x3 quaternion::toMatrix3x3()const {
+        float yy = y*y;
+        float zz = z*z;
+        float xy = x*y;
+        float zw = z*w;
+        float xz = x*z;
+        float yw = y*w;
+        float xx = x*x;
+        float yz = y*z;
+        float xw = x*w;
+
+matrix3x3 mat;
+
+        mat.e11 = 1 - 2 * yy - 2 * zz;
+        mat.e12 = 2 * xy + 2 * zw;
+        mat.e13 = 2 * xz - 2 * yw;
+
+        mat.e21 = 2 * xy - 2 * zw;
+        mat.e22 = 1 - 2 * xx - 2 * zz;
+        mat.e23 = 2 * yz + 2 * xw;
+
+        mat.e31 = 2 * xz + 2 * yw;
+        mat.e32 = 2 * yz - 2 * xw;
+        mat.e33 = 1 - 2 * xx - 2 * yy;
+return mat;
+}
 
 //Overloads
 
@@ -289,13 +315,13 @@ return quaternion(x, y, z, w);
 
 quaternion quaternion_rotate(const quaternion& q1, const quaternion& q2)
 {
-return q1*q2*(~q1);
+return (q1*q2*(~q1));
 }
 
 vector3d quaternion_vector_rotate(const quaternion& q, const vector3d& v)
 {
 quaternion t;
-t=(q*v)*~q;
+t=((q*v)*~q);
 return vector3d(t.x, t.y, t.z);
 }
 
@@ -365,32 +391,4 @@ u.z = radians_to_degrees((float) atan2(r21, r11)); // yaw
 
 return u;
 }
-
-matrix3x3 quaternion_extract_matrix(const quaternion& q)
-{
-    // Extrai os valores do quaternion
-    float x = q.x;
-    float y = q.y;
-    float z = q.z;
-    float w = q.w;
-
-    // Calcula os elementos da matriz
-    float xx = x * x;
-    float yy = y * y;
-    float zz = z * z;
-    float xy = x * y;
-    float xz = x * z;
-    float yz = y * z;
-    float wx = w * x;
-    float wy = w * y;
-    float wz = w * z;
-
-    // Cria a matriz 3x3 a partir dos elementos calculados
-    return matrix3x3(
-        1 - 2 * (yy + zz), 2 * (xy - wz), 2 * (xz + wy),
-        2 * (xy + wz), 1 - 2 * (xx + zz), 2 * (yz - wx),
-        2 * (xz - wy), 2 * (yz + wx), 1 - 2 * (xx + yy)
-    );
-}
-
 }

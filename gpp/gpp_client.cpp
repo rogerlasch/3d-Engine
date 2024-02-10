@@ -43,16 +43,6 @@ delete it->second.second;
 answers.clear();
 }
 
-uint16 gpp_client::getPort()const
-{
-return this->port;
-}
-
-string gpp_client::getIpAddress()const
-{
-return this->ipaddress;
-}
-
 /**
 *Se conecta ao servidor e faz a altenticação.
 *Caso a altenticação falhe, a conexão também falhará.
@@ -73,7 +63,7 @@ if(sock>0)
 this->port=port;
 this->ipaddress=address;
 this->setPeerId(sock);
-hstate.store(PEER_CONNECTED);
+hState.setState(PEER_CONNECTED);
 return true;
 }
 this->setHState(PEER_DEFAULT);
@@ -258,7 +248,7 @@ default:
 {
 Event* ev=new Event();
 ev->type=GEVENT_RECEIVE;
-ev->peer_id=peer_id;
+ev->v1=peer_id;
 ev->pack=pack;
 eventPost(ev);
 break;
