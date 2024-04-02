@@ -9,7 +9,7 @@ using namespace std;
 namespace gpp
 {
 
-quaternion::quaternion(float x, float y, float z, float w)
+quaternion::quaternion(decimal x, decimal y, decimal z, decimal w)
 {
 this->x=x;
 this->y=y;
@@ -17,7 +17,7 @@ this->z=z;
 this->w=w;
 }
 
-quaternion::quaternion(float w, const vector3d& v)
+quaternion::quaternion(decimal w, const vector3d& v)
 {
 this->x=v.x;
 this->y=v.y;
@@ -44,7 +44,7 @@ bool quaternion::operator==(const quaternion& q)
 return this->w==q.w&&this->x==q.x&&this->y==q.y&&this->z==q.z;
 }
 
-quaternion& quaternion::operator+=(float s)
+quaternion& quaternion::operator+=(decimal s)
 {
 this->x+=s;
 this->y+=s;
@@ -53,7 +53,7 @@ this->w+=s;
 return *this;
 }
 
-quaternion& quaternion::operator-=(float s)
+quaternion& quaternion::operator-=(decimal s)
 {
 this->x-=s;
 this->y-=s;
@@ -62,7 +62,7 @@ this->w-=s;
 return *this;
 }
 
-quaternion& quaternion::operator*=(float s)
+quaternion& quaternion::operator*=(decimal s)
 {
 this->x*=s;
 this->y*=s;
@@ -71,7 +71,7 @@ this->w*=s;
 return *this;
 }
 
-quaternion& quaternion::operator/=(float s)
+quaternion& quaternion::operator/=(decimal s)
 {
 if(s==0) s=1;
 this->x/=s;
@@ -104,47 +104,47 @@ quaternion quaternion::operator~()const
 return quaternion(-x, -y, -z, w);
 }
 
-void quaternion::setX(float x)
+void quaternion::setX(decimal x)
 {
 this->x=x;
 }
 
-float quaternion::getX()const
+decimal quaternion::getX()const
 {
 return this->x;
 }
 
-void quaternion::setY(float y)
+void quaternion::setY(decimal y)
 {
 this->y=y;
 }
 
-float quaternion::getY()const
+decimal quaternion::getY()const
 {
 return this->y;
 }
 
-void quaternion::setZ(float z)
+void quaternion::setZ(decimal z)
 {
 this->z=z;
 }
 
-float quaternion::getZ()const
+decimal quaternion::getZ()const
 {
 return this->z;
 }
 
-void quaternion::setW(float w)
+void quaternion::setW(decimal w)
 {
 this->w=w;
 }
 
-float quaternion::getW()const
+decimal quaternion::getW()const
 {
 return this->w;
 }
 
-float quaternion::length()const
+decimal quaternion::length()const
 {
 return sqrt(((x*x)+(y*y)+(z*z)+(w*w)));
 }
@@ -156,8 +156,8 @@ return quaternion(-x, -y, -z, w);
 
 quaternion& quaternion::normalize()
 {
-    float len=this->length();
-    if (len > 0) {
+    decimal len=this->length();
+    if (len > 1.0f) {
 x/=len;
 y/=len;
 z/=len;
@@ -175,16 +175,19 @@ w=1.0f;
 return *this;
 }
 
-float quaternion::getAngle()const
+decimal quaternion::getAngle()const
 {
-return (float)2*acos(w);
+return (decimal)2*acos(w);
 }
 
 vector3d quaternion::getAxis()const
 {
-float m=vector3d(x, y, z).length();
-if(m<=GPP_EPSILON) return vector3d(0,0,0);
-return vector3d(x/m, y/m, z/m);
+decimal m=sqrt((x*x)+(y*y)+(z*z));
+vector3d v={x, y, z};
+if(m>1.0f){
+v/=m;
+}
+return v+numeric_limits<decimal>::epsilon();
 }
 
 string quaternion::toString() const
@@ -195,15 +198,15 @@ result<<x<<", "<<y<<", "<<z<<":"<<w;
 }
 
 matrix3x3 quaternion::toMatrix3x3()const {
-        float yy = y*y;
-        float zz = z*z;
-        float xy = x*y;
-        float zw = z*w;
-        float xz = x*z;
-        float yw = y*w;
-        float xx = x*x;
-        float yz = y*z;
-        float xw = x*w;
+        decimal yy = y*y;
+        decimal zz = z*z;
+        decimal xy = x*y;
+        decimal zw = z*w;
+        decimal xz = x*z;
+        decimal yw = y*w;
+        decimal xx = x*x;
+        decimal yz = y*z;
+        decimal xw = x*w;
 
 matrix3x3 mat;
 
@@ -229,43 +232,43 @@ return os<<q.toString();
 return os;
 }
 
-quaternion operator+(const quaternion& q, float s)
+quaternion operator+(const quaternion& q, decimal s)
 {
 return quaternion(q.x+s, q.y+s, q.z+s, q.w+s);
 }
 
-quaternion operator+(float s, const quaternion& q)
+quaternion operator+(decimal s, const quaternion& q)
 {
 return quaternion(q.x+s, q.y+s, q.z+s, q.w+s);
 }
 
-quaternion operator-(const quaternion& q, float s)
+quaternion operator-(const quaternion& q, decimal s)
 {
 return quaternion(q.x-s, q.y-s, q.z-s, q.w-s);
 }
 
-quaternion operator-(float s, const quaternion& q)
+quaternion operator-(decimal s, const quaternion& q)
 {
 return quaternion(q.x-s, q.y-s, q.z-s, q.w-s);
 }
 
-quaternion operator*(const quaternion& q, float s)
+quaternion operator*(const quaternion& q, decimal s)
 {
 return quaternion(q.x*s, q.y*s, q.z*s, q.w*s);
 }
 
-quaternion operator*(float s, const quaternion& q)
+quaternion operator*(decimal s, const quaternion& q)
 {
 return quaternion(q.x*s, q.y*s, q.z*s, q.w*s);
 }
 
-quaternion operator/(const quaternion& q, float s)
+quaternion operator/(const quaternion& q, decimal s)
 {
 if(s==0) s=1.0f;
 return quaternion(q.x/s, q.y/s, q.z/s, q.w/s);
 }
 
-quaternion operator/(float s, const quaternion& q)
+quaternion operator/(decimal s, const quaternion& q)
 {
 if(s==0) s=0.0f;
 return quaternion(q.x/s, q.y/s, q.z/s, q.w/s);
@@ -283,10 +286,10 @@ return quaternion(q1.x-q2.x, q1.y-q2.y, q1.z-q2.z, q1.w-q2.w);
 
 quaternion operator*(const quaternion& q1, const quaternion& q2)
 {
-  float w = q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z;
-  float x = q1.w * q2.x + q1.x * q2.w + q1.y * q2.z - q1.z * q2.y;
-  float y = q1.w * q2.y - q1.x * q2.z + q1.y * q2.w + q1.z * q2.x;
-  float z = q1.w * q2.z + q1.x * q2.y - q1.y * q2.x + q1.z * q2.w;
+  decimal w = q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z;
+  decimal x = q1.w * q2.x + q1.x * q2.w + q1.y * q2.z - q1.z * q2.y;
+  decimal y = q1.w * q2.y - q1.x * q2.z + q1.y * q2.w + q1.z * q2.x;
+  decimal z = q1.w * q2.z + q1.x * q2.y - q1.y * q2.x + q1.z * q2.w;
   return quaternion(x, y, z, w);
 }
 
@@ -297,19 +300,19 @@ return quaternion(q1.x/q2.y, q1.y/q2.y, q1.z/q2.z, q1.w/q2.w);
 
 quaternion operator*(const quaternion& q, const vector3d& v)
 {
-float x=q.w*v.x + q.y*v.z - q.z*v.y;
-float y= q.w*v.y + q.z*v.x - q.x*v.z;
-float z= q.w*v.z + q.x*v.y - q.y*v.x;
-float w=-(q.x*v.x + q.y*v.y + q.z*v.z);
+decimal x=q.w*v.x + q.y*v.z - q.z*v.y;
+decimal y= q.w*v.y + q.z*v.x - q.x*v.z;
+decimal z= q.w*v.z + q.x*v.y - q.y*v.x;
+decimal w=-(q.x*v.x + q.y*v.y + q.z*v.z);
 return quaternion(x, y, z, w);
 }
 
 quaternion operator*(const vector3d& v, quaternion& q)
 {
-float x=q.w*v.x + q.y*v.z - q.z*v.y;
-float y=q.w*v.y + q.z*v.x - q.x*v.z;
-float z= q.w*v.z + q.x*v.y - q.y*v.x;
-float w=-(q.x*v.x + q.y*v.y + q.z*v.z);
+decimal x=q.w*v.x + q.y*v.z - q.z*v.y;
+decimal y=q.w*v.y + q.z*v.x - q.x*v.z;
+decimal z= q.w*v.z + q.x*v.y - q.y*v.x;
+decimal w=-(q.x*v.x + q.y*v.y + q.z*v.z);
 return quaternion(x, y, z, w);
 }
 
@@ -325,7 +328,7 @@ t=((q*v)*~q);
 return vector3d(t.x, t.y, t.z);
 }
 
-quaternion quaternion_from_euler_angles(float x, float y, float z)
+quaternion quaternion_from_euler_angles(decimal x, decimal y, decimal z)
 {
              double roll = degrees_to_radians(x);
              double pitch = degrees_to_radians(y);
@@ -345,10 +348,10 @@ syawspitch = syaw*spitch;
 cyawspitch = cyaw*spitch;
 syawcpitch = syaw*cpitch;
 
-float qx = (float) (cyawcpitch * sroll - syawspitch * croll);
-float qy = (float) (cyawspitch * croll + syawcpitch * sroll);
-float qz = (float) (syawcpitch * croll - cyawspitch * sroll);
-float qw = (float) (cyawcpitch * croll + syawspitch * sroll);
+decimal qx = (decimal) (cyawcpitch * sroll - syawspitch * croll);
+decimal qy = (decimal) (cyawspitch * croll + syawcpitch * sroll);
+decimal qz = (decimal) (syawcpitch * croll - cyawspitch * sroll);
+decimal qw = (decimal) (cyawcpitch * croll + syawspitch * sroll);
              return quaternion(qx, qy, qz, qw);
 }
 
@@ -378,17 +381,45 @@ if(tmp > 0.999999)
        r13 = 2 * (q.x*q.z + q.w*q.y);
 
        u.x = radians_to_degrees(0.0f); //roll
-       u.y = radians_to_degrees((float) (-(GPP_PI/2) * r31/tmp)); // pitch
-       u.z = radians_to_degrees((float) atan2(-r12, -r31*r13)); // yaw
+       u.y = radians_to_degrees((decimal) (-(GPP_PI/2) * r31/tmp)); // pitch
+       u.z = radians_to_degrees((decimal) atan2(-r12, -r31*r13)); // yaw
        return u;
 }
 
-u.x = radians_to_degrees((float) atan2(r32, r33)); // roll
+u.x = radians_to_degrees((decimal) atan2(r32, r33)); // roll
 
-u.y = radians_to_degrees((float) asin(-r31));  // pitch
+u.y = radians_to_degrees((decimal) asin(-r31));  // pitch
 
-u.z = radians_to_degrees((float) atan2(r21, r11)); // yaw
+u.z = radians_to_degrees((decimal) atan2(r21, r11)); // yaw
 
 return u;
+}
+
+quaternion quaternion_align_axis(const vector3d& v1, const vector3d& v2){
+decimal eps=numeric_limits<decimal>::epsilon();
+vector3d start=vector3d::normalize(v1);
+vector3d dest=vector3d::normalize(v2);
+
+decimal costheta=vector3d::dot(start, dest);
+
+vector3d axis;
+
+if(costheta<-1+0.001f){
+axis=vector3d::cross({0.0f, 0.0f, 1.0f}, start);
+if(vector3d::dot(axis, axis)<0.01){
+axis=vector3d::cross({1.0f, 0.0f, 0.0f}, start);
+}
+axis.normalize();
+return quaternion(degrees_to_radians(180.0f), axis)+eps;
+}
+
+axis=vector3d::cross(start, dest);
+
+decimal s=sqrt((1+costheta)*2.0f);
+decimal invs=1/s;
+
+axis*=invs;
+
+return quaternion(s*0.5f, axis)+eps;
 }
 }

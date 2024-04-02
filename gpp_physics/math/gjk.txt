@@ -1,0 +1,181 @@
+bool rayCapsule(const Ray& ray, const Capsule& capsule, vec3f& p1, vec3f& p2, vec3f& n1, vec3f& n2)
+{
+        // http://pastebin.com/2XrrNcxb
+        // Substituting equ. (1) - (6) to equ. (I) and solving for t' gives:
+        //
+        // t' = (t * dot(AB, d) + dot(AB, AO)) / dot(AB, AB); (7) or
+        // t' = t * m + n where
+        // m = dot(AB, d) / dot(AB, AB) and
+        // n = dot(AB, AO) / dot(AB, AB)
+        //
+
+vector3d m_a=c_center-(axis*length*0.5f);
+vector3d m_b=c_center+(axis*length*0.5f);
+        vec3f AB = capsule.m_B - capsule.m_A;
+        vec3f AO = ray.m_Origin - capsule.m_A;
+        float AB_dot_d = AB.Dot(ray.m_Direction);
+        float AB_dot_AO = AB.Dot(AO);
+        float AB_dot_AB = AB.Dot(AB);
+        float m = AB_dot_d / AB_dot_AB;
+        float n = AB_dot_AO / AB_dot_AB;
+        // Substituting (7) into (II) and solving for t gives:
+        //
+        // dot(Q, Q)*t^2 + 2*dot(Q, R)*t + (dot(R, R) - r^2) = 0
+        // where
+        // Q = d - AB * m
+        // R = AO - AB * n
+        vec3f Q = ray.m_Direction - (AB * m);
+        vec3f R = AO - (AB * n);
+        float a = Q.Dot(Q);
+        float b = 2.0f * Q.Dot(R);
+        float c = R.Dot(R) - (capsule.m_Radius * capsule.m_Radius);
+        if(a == 0.0f)
+        {
+                // Special case: AB and ray direction are parallel. If there is an intersection it will be on the end spheres...
+                // NOTE: Why is that?
+                // Q = d - AB * m =>
+                // Q = d - AB * (|AB|*|d|*cos(AB,d) / |AB|^2) => |d| == 1.0
+                // Q = d - AB * (|AB|*cos(AB,d)/|AB|^2) =>
+                // Q = d - AB * cos(AB, d) / |AB| =>
+                // Q = d - unit(AB) * cos(AB, d)
+                //
+                // |Q| == 0 means Q = (0, 0, 0) or d = unit(AB) * cos(AB,d)
+                // both d and unit(AB) are unit vectors, so cos(AB, d) = 1 => AB and d are parallel.
+                // 
+                Sphere sphereA, sphereB;
+                sphereA.m_Center = capsule.m_A;
+                sphereA.m_Radius = capsule.m_Radius;
+                sphereB.m_Center = capsule.m_B;
+                sphereB.m_Radius = capsule.m_Radius;
+                float atmin, atmax, btmin, btmax;
+                if(        !IntersectRaySphere(ray, sphereA, atmin, atmax) ||
+                        !IntersectRaySphere(ray, sphereB, btmin, btmax))
+                {
+                        // No intersection with one of the spheres means no intersection at all...
+                        return false;
+                }
+                if(atmin < btmin)
+                {
+                        p1 = ray.m_Origin + (ray.m_Direction * atmin);
+                        n1 = p1 - capsule.m_A;
+                        n1.Normalize();
+                }
+                else
+                {
+                        p1 = ray.m_Origin + (ray.m_Direction * btmin);
+                        n1 = p1 - capsule.m_B;
+                        n1.Normalize();
+                }
+                if(atmax > btmax)
+                {
+                        p2 = ray.m_Origin + (ray.m_Direction * atmax);
+                        n2 = p2 - capsule.m_A;
+                        n2.Normalize();
+                }
+                else
+                {
+                        p2 = ray.m_Origin + (ray.m_Direction * btmax);
+                        n2 = p2 - capsule.m_B;
+                        n2.Normalize();
+                }
+                return true;
+        }
+        float discriminant = b * b - 4.0f * a * c;
+        if(discriminant < 0.0f)
+        {
+                // The ray doesn't hit the infinite cylinder defined by (A, B).
+                // No intersection.
+                return false;
+        }
+        float tmin = (-b - sqrtf(discriminant)) / (2.0f * a);
+        float tmax = (-b + sqrtf(discriminant)) / (2.0f * a);
+        if(tmin > tmax)
+        {
+                float temp = tmin;
+                tmin = tmax;
+                tmax = temp;
+        }
+        // Now check to see if K1 and K2 are inside the line segment defined by A,B
+        float t_k1 = tmin * m + n;
+        if(t_k1 < 0.0f)
+        {
+                // On sphere (A, r)...
+                Sphere s;
+                s.m_Center = capsule.m_A;
+                s.m_Radius = capsule.m_Radius;
+                float stmin, stmax;
+                if(IntersectRaySphere(ray, s, stmin, stmax))
+                {
+                        p1 = ray.m_Origin + (ray.m_Direction * stmin);
+                        n1 = p1 - capsule.m_A;
+                        n1.Normalize();
+                }
+                else 
+                        return false;
+        }
+        else if(t_k1 > 1.0f)
+        {
+                // On sphere (B, r)...
+                Sphere s;
+                s.m_Center = capsule.m_B;
+                s.m_Radius = capsule.m_Radius;
+                float stmin, stmax;
+                if(IntersectRaySphere(ray, s, stmin, stmax))
+                {
+                        p1 = ray.m_Origin + (ray.m_Direction * stmin);
+                        n1 = p1 - capsule.m_B;
+                        n1.Normalize();
+                }
+                else 
+                        return false;
+        }
+        else
+        {
+                // On the cylinder...
+                p1 = ray.m_Origin + (ray.m_Direction * tmin);
+                vec3f k1 = capsule.m_A + AB * t_k1;
+                n1 = p1 - k1;
+                n1.Normalize();
+        }
+        float t_k2 = tmax * m + n;
+        if(t_k2 < 0.0f)
+        {
+                // On sphere (A, r)...
+                Sphere s;
+                s.m_Center = capsule.m_A;
+                s.m_Radius = capsule.m_Radius;
+                float stmin, stmax;
+                if(IntersectRaySphere(ray, s, stmin, stmax))
+                {
+                        p2 = ray.m_Origin + (ray.m_Direction * stmax);
+                        n2 = p2 - capsule.m_A;
+                        n2.Normalize();
+                }
+                else 
+                        return false;
+        }
+        else if(t_k2 > 1.0f)
+        {
+                // On sphere (B, r)...
+                Sphere s;
+                s.m_Center = capsule.m_B;
+                s.m_Radius = capsule.m_Radius;
+                float stmin, stmax;
+                if(IntersectRaySphere(ray, s, stmin, stmax))
+                {
+                        p2 = ray.m_Origin + (ray.m_Direction * stmax);
+                        n2 = p2 - capsule.m_B;
+                        n2.Normalize();
+                }
+                else 
+                        return false;
+        }
+        else
+        {
+                p2 = ray.m_Origin + (ray.m_Direction * tmax);
+                vec3f k2 = capsule.m_A + AB * t_k2;
+                n2 = p2 - k2;
+                n2.Normalize();
+        }
+        return true;
+}

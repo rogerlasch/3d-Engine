@@ -3,6 +3,7 @@
 #include<sstream>
 #include"../types.h"
 #include"FunctionInfo.h"
+#include"profiler.h"
 
 using namespace std;
 
@@ -10,24 +11,27 @@ namespace gpp
 {
 FunctionInfo::FunctionInfo()
 {
-func_name="";
-total_executions.store(0);
-total_time.store(0);
+name="";
+executions=0;
+total_time=0;
+lowTime=0;
+highTime=0;
 }
 
-string FunctionInfo::toString()
-{
-stringstream ss;
-ss<<fixed;
-ss.precision(3);
-float ftime=static_cast<float>(total_time.load())/1000000;
-float average_time=(ftime/(float)total_executions.load());
-ss<<func_name<<": Tempo total: "<<ftime<<" ms, Total de execuções: "<<total_executions.load();
-if(average_time!=0.0f)
-{
-ss<<", Duração média: "<<average_time<<" ms"<<endl;
+FunctionInfo::~FunctionInfo(){
 }
-ss<<endl;
-return ss.str();
+
+string FunctionInfo::dump(uint32 tType)const{
+        std::stringstream ss;
+        ss << std::fixed;
+        ss.precision(2);
+
+ss<<name<<", ";
+ss<<profiler_format_time(total_time/executions, tType)<<", ";
+ss<<executions<<", ";
+ss<<lowTime<<", ";
+ss<<highTime<<", ";
+ss<<profiler_get_time_desk(tType)<<endl;
+        return ss.str();
 }
 }

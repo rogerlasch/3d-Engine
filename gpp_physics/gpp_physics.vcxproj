@@ -19,46 +19,61 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Box3d.h" />
-    <ClInclude Include="Capsule3d.h" />
-    <ClInclude Include="ClockGame.h" />
-    <ClInclude Include="collision3d.h" />
-    <ClInclude Include="CollisionInfo.h" />
-    <ClInclude Include="common.h" />
-    <ClInclude Include="ffunctions.h" />
-    <ClInclude Include="gpp_world.h" />
+    <ClInclude Include="collision\collision.h" />
+    <ClInclude Include="collision\collisionBoxSphere.h" />
+    <ClInclude Include="collision\collisionCapsuleCapsule.h" />
+    <ClInclude Include="collision\CollisionDispatcher.h" />
+    <ClInclude Include="collision\CollisionInfo.h" />
+    <ClInclude Include="collision\collisionSphereCapsule.h" />
+    <ClInclude Include="collision\collisionSphereSphere.h" />
+    <ClInclude Include="collision\MurmurHash3.h" />
+    <ClInclude Include="geometry\Box3d.h" />
+    <ClInclude Include="geometry\GeometricShape.h" />
+    <ClInclude Include="geometry\geometry.h" />
+    <ClInclude Include="geometry\Sphere3d.h" />
     <ClInclude Include="math\math.h" />
-    <ClInclude Include="math\MathCollision.h" />
     <ClInclude Include="math\matrix3x3.h" />
+    <ClInclude Include="math\matrix4x4.h" />
     <ClInclude Include="math\quaternion.h" />
     <ClInclude Include="math\ray.h" />
+    <ClInclude Include="math\RayInfo.h" />
     <ClInclude Include="math\vector3d.h" />
     <ClInclude Include="octree\octree.h" />
     <ClInclude Include="octree\octreeinfo.h" />
     <ClInclude Include="octree\octreenode.h" />
-    <ClInclude Include="RigidBody.h" />
-    <ClInclude Include="Sphere3d.h" />
     <ClInclude Include="types.h" />
+    <ClInclude Include="world\BodyHandler.h" />
+    <ClInclude Include="world\BodyHelper.h" />
+    <ClInclude Include="world\DefaultBodyHandler.h" />
+    <ClInclude Include="world\gpp_world.h" />
+    <ClInclude Include="world\RigidBody.h" />
+    <ClInclude Include="world\WorldProperties.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Box3d.cpp" />
-    <ClCompile Include="Capsule3d.cpp" />
-    <ClCompile Include="ClockGame.cpp" />
-    <ClCompile Include="collision3d.cpp" />
-    <ClCompile Include="CollisionInfo.cpp" />
-    <ClCompile Include="ffunctions.cpp" />
-    <ClCompile Include="gpp_world.cpp" />
+    <ClCompile Include="collision\collisionBoxSphere.cpp" />
+    <ClCompile Include="collision\collisionCapsuleCapsule.cpp" />
+    <ClCompile Include="collision\CollisionDispatcher.cpp" />
+    <ClCompile Include="collision\CollisionInfo.cpp" />
+    <ClCompile Include="collision\collisionSphereCapsule.cpp" />
+    <ClCompile Include="collision\collisionSphereSphere.cpp" />
+    <ClCompile Include="collision\MurmurHash3.cpp" />
+    <ClCompile Include="geometry\Box3d.cpp" />
+    <ClCompile Include="geometry\Sphere3d.cpp" />
     <ClCompile Include="math\math.cpp" />
-    <ClCompile Include="math\MathCollision.cpp" />
     <ClCompile Include="math\matrix3x3.cpp" />
+    <ClCompile Include="math\matrix4x4.cpp" />
     <ClCompile Include="math\quaternion.cpp" />
     <ClCompile Include="math\ray.cpp" />
+    <ClCompile Include="math\RayInfo.cpp" />
     <ClCompile Include="math\vector3d.cpp" />
     <ClCompile Include="octree\octree.cpp" />
     <ClCompile Include="octree\octreeinfo.cpp" />
     <ClCompile Include="octree\octreenode.cpp" />
-    <ClCompile Include="RigidBody.cpp" />
-    <ClCompile Include="Sphere3d.cpp" />
+    <ClCompile Include="world\BodyHandler.cpp" />
+    <ClCompile Include="world\DefaultBodyHandler.cpp" />
+    <ClCompile Include="world\gpp_world.cpp" />
+    <ClCompile Include="world\RigidBody.cpp" />
+    <ClCompile Include="world\WorldProperties.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -205,7 +220,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;WIN32_LEAN_AND_MEAN;VC_EXTRALEAN;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_GPP_USE_DEBUG;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;WIN32_LEAN_AND_MEAN;VC_EXTRALEAN;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -214,6 +229,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <UseFullPaths>false</UseFullPaths>
+      <DisableSpecificWarnings>4244;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>

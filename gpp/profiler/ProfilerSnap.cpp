@@ -10,13 +10,13 @@ namespace gpp
 ProfilerSnap::ProfilerSnap(const string& func_name)
 {
 this->func_name=func_name;
-start_time=get_timestamp_ns();
+this->start_time = chrono::high_resolution_clock::now();
 }
 
 ProfilerSnap::~ProfilerSnap()
 {
-int64 end_time=get_timestamp_ns();
-int64 final_time=(end_time-start_time);
-profiler_log_snap(func_name, final_time);
+chrono::high_resolution_clock::time_point end_time=chrono::high_resolution_clock::now();
+auto final_time=chrono::duration_cast<chrono::nanoseconds>(end_time-start_time);
+profiler_log_snap(func_name, final_time.count());
 }
 }

@@ -1,56 +1,2853 @@
- Procurando 16518656
- Mostrando filho 16518656
-Id=16518656, pchilds=0
-x: 0.00, 100.00
-y: 0.00, 100.00
-z: 0.00, 100.00
+ Criando mundo: true
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 26ms
+ sobrou 28ms
+ sobrou 26ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 26ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 26ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 26ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 28ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 26ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 26ms
+ sobrou 28ms
+ sobrou 26ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 26ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 26ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 28ms
+ sobrou 26ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 28ms
+ sobrou 28ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 25ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 25ms
+ sobrou 27ms
+ sobrou 25ms
+ sobrou 25ms
+ sobrou 25ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 25ms
+ sobrou 27ms
+ sobrou 25ms
+ sobrou 25ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 25ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 25ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 25ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 25ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 25ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 25ms
+ sobrou 25ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 25ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 25ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 25ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 25ms
+ sobrou 25ms
+ sobrou 24ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 25ms
+ sobrou 25ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 25ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 24ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 25ms
+ sobrou 24ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 24ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 24ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 25ms
+ sobrou 27ms
+ sobrou 24ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 24ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 24ms
+ sobrou 24ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 25ms
+ sobrou 24ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 24ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 24ms
+ sobrou 27ms
+ sobrou 24ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 23ms
+ sobrou 23ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 24ms
+ sobrou 24ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 24ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 23ms
+ sobrou 23ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 23ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 25ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 23ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 23ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 25ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 25ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 27ms
+ sobrou 22ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 22ms
+ sobrou 24ms
+ sobrou 22ms
+ sobrou 23ms
+ sobrou 22ms
+ sobrou 22ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 22ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 23ms
+ sobrou 27ms
+ sobrou 22ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 21ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 23ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 27ms
+ sobrou 22ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 22ms
+ sobrou 25ms
+ sobrou 22ms
+ sobrou 22ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 25ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 27ms
+ sobrou 23ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 21ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 27ms
+ sobrou 21ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 21ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 21ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 21ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 27ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 23ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 23ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 18ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 22ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 21ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 19ms
+ sobrou 20ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 23ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 24ms
+ sobrou 25ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 25ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 25ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 25ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 25ms
+ sobrou 21ms
+ sobrou 25ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 22ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 25ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 21ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 21ms
+ sobrou 19ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 24ms
+ sobrou 21ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 25ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 21ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 25ms
+ sobrou 22ms
+ sobrou 25ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 23ms
+ sobrou 22ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 23ms
+ sobrou 25ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 25ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 23ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 20ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 25ms
+ sobrou 21ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 24ms
+ sobrou 22ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 20ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 24ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 21ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 24ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 20ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 21ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 20ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 21ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 21ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 21ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 22ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 20ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 19ms
+ sobrou 20ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 18ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 18ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 20ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 21ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 20ms
+ sobrou 20ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 20ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 21ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 19ms
+ sobrou 20ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 25ms
+ sobrou 24ms
+ sobrou 25ms
+ sobrou 21ms
+ sobrou 26ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 20ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 23ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 24ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 20ms
+ sobrou 20ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 24ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 25ms
+ sobrou 22ms
+ sobrou 19ms
+ sobrou 20ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 24ms
+ sobrou 20ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 25ms
+ sobrou 22ms
+ sobrou 26ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 25ms
+ sobrou 26ms
+ sobrou 20ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 22ms
+ sobrou 19ms
+ sobrou 26ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 19ms
+ sobrou 19ms
+ Fim da simulação
+ Tempo total da simulação: 57.66
+Frame atual: 2018
+FPS: 35
+FrameTime: 28
+timeStep: 0.03
+Linear Damping: 0.30
+Angular Damping: 0.20
+Radius: 1048576.00
+Gravity: 0.00, 0.00, -9.81
+Center: 0.00, 0.00, 0.00
 
- Procurando 16518657
- Mostrando filho 16518657
-Id=16518657, pchilds=0
-x: 100.00, 200.00
-y: 0.00, 100.00
-z: 0.00, 100.00
+Total de objetos no mundo: 51
+Tamanho em bites: 136
 
- Procurando 16518658
- Mostrando filho 16518658
-Id=16518658, pchilds=0
-x: 0.00, 100.00
-y: 100.00, 200.00
-z: 0.00, 100.00
+ Exibindo objeto 1
+Id: 1, Restitution: 0.00
+Mass: 0.00, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, 0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=2(Caixa), ALF=1048576.00, 1048576.00, 50.00
+Position=0.00, 0.00, -50.00
+Axis={
+X
+Y
+Z
+}
+min=-1048576.00, -1048576.00, -100.00
+max=1048576.00, 1048576.00, 0.00
 
- Procurando 16518659
- Mostrando filho 16518659
-Id=16518659, pchilds=0
-x: 100.00, 200.00
-y: 100.00, 200.00
-z: 0.00, 100.00
 
- Procurando 16518660
- Mostrando filho 16518660
-Id=16518660, pchilds=0
-x: 0.00, 100.00
-y: 0.00, 100.00
-z: 100.00, 200.00
+ Exibindo objeto 2
+Id: 2, Restitution: 0.00
+Mass: 451.88, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=13.65
+Position=1311.96, 1561.67, 13.65
+AABB={
+X=1298.31, 1325.61
+Y=1548.02, 1575.32
+Z=0.00, 27.30
+}
 
- Procurando 16518661
- Mostrando filho 16518661
-Id=16518661, pchilds=0
-x: 100.00, 200.00
-y: 0.00, 100.00
-z: 100.00, 200.00
+ Exibindo objeto 3
+Id: 3, Restitution: 0.00
+Mass: 515.77, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=39.59
+Position=48.31, 1582.48, 39.59
+AABB={
+X=8.72, 87.89
+Y=1542.90, 1622.07
+Z=0.00, 79.17
+}
 
- Procurando 16518662
- Mostrando filho 16518662
-Id=16518662, pchilds=0
-x: 0.00, 100.00
-y: 100.00, 200.00
-z: 100.00, 200.00
+ Exibindo objeto 4
+Id: 4, Restitution: 0.00
+Mass: 1513.49, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=14.38
+Position=2106.10, 2499.62, 14.38
+AABB={
+X=2091.72, 2120.48
+Y=2485.24, 2514.01
+Z=0.00, 28.76
+}
 
- Procurando 16518663
- Mostrando filho 16518663
-Id=16518663, pchilds=0
-x: 100.00, 200.00
-y: 100.00, 200.00
-z: 100.00, 200.00
+ Exibindo objeto 5
+Id: 5, Restitution: 0.00
+Mass: 60.94, InvMass: 0.02
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=29.23
+Position=1912.61, 1926.98, 29.23
+AABB={
+X=1883.38, 1941.84
+Y=1897.75, 1956.21
+Z=0.00, 58.46
+}
+
+ Exibindo objeto 6
+Id: 6, Restitution: 0.00
+Mass: 44.05, InvMass: 0.02
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=5.87
+Position=1439.30, 2323.42, 5.87
+AABB={
+X=1433.44, 1445.17
+Y=2317.55, 2329.29
+Z=0.00, 11.73
+}
+
+ Exibindo objeto 7
+Id: 7, Restitution: 0.00
+Mass: 13.07, InvMass: 0.08
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=44.80
+Position=566.04, 14.55, 44.80
+AABB={
+X=521.23, 610.84
+Y=-30.25, 59.36
+Z=0.00, 89.61
+}
+
+ Exibindo objeto 8
+Id: 8, Restitution: 0.00
+Mass: 1379.46, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=15.52
+Position=720.10, 1064.97, 15.52
+AABB={
+X=704.59, 735.62
+Y=1049.46, 1080.49
+Z=0.00, 31.03
+}
+
+ Exibindo objeto 9
+Id: 9, Restitution: 0.00
+Mass: 89.77, InvMass: 0.01
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=18.74
+Position=450.09, 1565.46, 18.74
+AABB={
+X=431.35, 468.83
+Y=1546.72, 1584.20
+Z=0.00, 37.48
+}
+
+ Exibindo objeto 10
+Id: 10, Restitution: 0.00
+Mass: 209.22, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=24.11
+Position=942.05, 780.82, 24.11
+AABB={
+X=917.94, 966.16
+Y=756.71, 804.93
+Z=0.00, 48.22
+}
+
+ Exibindo objeto 11
+Id: 11, Restitution: 0.00
+Mass: 1072.51, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=37.92
+Position=2436.40, 1729.55, 37.92
+AABB={
+X=2398.48, 2474.32
+Y=1691.62, 1767.47
+Z=0.00, 75.85
+}
+
+ Exibindo objeto 12
+Id: 12, Restitution: 0.00
+Mass: 1600.16, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.01, 4.48, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=30.47
+Position=2095.01, 1887.44, 30.47
+AABB={
+X=2064.53, 2125.48
+Y=1856.96, 1917.91
+Z=0.00, 60.95
+}
+
+ Exibindo objeto 13
+Id: 13, Restitution: 0.00
+Mass: 796.23, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: -4.57, 4.80, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=30.48
+Position=1929.01, 1835.77, 30.48
+AABB={
+X=1898.53, 1959.49
+Y=1805.29, 1866.25
+Z=0.00, 60.96
+}
+
+ Exibindo objeto 14
+Id: 14, Restitution: 0.00
+Mass: 800.65, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=49.64
+Position=921.49, 306.79, 49.64
+AABB={
+X=871.84, 971.13
+Y=257.15, 356.43
+Z=0.00, 99.28
+}
+
+ Exibindo objeto 15
+Id: 15, Restitution: 0.00
+Mass: 794.22, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=54.93
+Position=209.06, 497.43, 54.93
+AABB={
+X=154.14, 263.99
+Y=442.50, 552.36
+Z=0.00, 109.85
+}
+
+ Exibindo objeto 16
+Id: 16, Restitution: 0.00
+Mass: 1677.69, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=20.32
+Position=476.75, 2187.40, 20.32
+AABB={
+X=456.43, 497.07
+Y=2167.08, 2207.72
+Z=0.00, 40.64
+}
+
+ Exibindo objeto 17
+Id: 17, Restitution: 0.00
+Mass: 948.26, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=12.69
+Position=931.71, 152.58, 12.69
+AABB={
+X=919.02, 944.41
+Y=139.88, 165.27
+Z=0.00, 25.39
+}
+
+ Exibindo objeto 18
+Id: 18, Restitution: 0.00
+Mass: 1592.30, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=5.34
+Position=611.95, 2187.92, 5.34
+AABB={
+X=606.61, 617.29
+Y=2182.58, 2193.26
+Z=0.00, 10.69
+}
+
+ Exibindo objeto 19
+Id: 19, Restitution: 0.00
+Mass: 859.59, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=3.34
+Position=568.36, 410.18, 3.34
+AABB={
+X=565.01, 571.70
+Y=406.84, 413.53
+Z=0.00, 6.69
+}
+
+ Exibindo objeto 20
+Id: 20, Restitution: 0.00
+Mass: 957.05, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=43.31
+Position=1204.75, 302.76, 43.31
+AABB={
+X=1161.44, 1248.06
+Y=259.45, 346.07
+Z=0.00, 86.62
+}
+
+ Exibindo objeto 21
+Id: 21, Restitution: 0.00
+Mass: 1499.32, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=11.61
+Position=1425.84, 874.29, 11.61
+AABB={
+X=1414.24, 1437.45
+Y=862.69, 885.90
+Z=0.00, 23.21
+}
+
+ Exibindo objeto 22
+Id: 22, Restitution: 0.00
+Mass: 1299.66, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=37.06
+Position=2178.44, 596.68, 37.06
+AABB={
+X=2141.38, 2215.51
+Y=559.62, 633.75
+Z=0.00, 74.13
+}
+
+ Exibindo objeto 23
+Id: 23, Restitution: 0.00
+Mass: 708.01, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=36.63
+Position=2112.85, 839.16, 36.63
+AABB={
+X=2076.23, 2149.48
+Y=802.53, 875.79
+Z=0.00, 73.25
+}
+
+ Exibindo objeto 24
+Id: 24, Restitution: 0.00
+Mass: 271.68, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=28.25
+Position=1974.92, 766.74, 28.25
+AABB={
+X=1946.67, 2003.16
+Y=738.49, 794.99
+Z=0.00, 56.49
+}
+
+ Exibindo objeto 25
+Id: 25, Restitution: 0.00
+Mass: 1030.59, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=16.62
+Position=1807.23, 931.92, 16.62
+AABB={
+X=1790.62, 1823.85
+Y=915.30, 948.53
+Z=0.00, 33.24
+}
+
+ Exibindo objeto 26
+Id: 26, Restitution: 0.00
+Mass: 216.50, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 15.86, -52.20, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=11.27
+Position=2715.72, -389.34, 11.27
+AABB={
+X=2704.45, 2726.99
+Y=-400.61, -378.07
+Z=0.00, 22.54
+}
+
+ Exibindo objeto 27
+Id: 27, Restitution: 0.00
+Mass: 1816.53, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=9.48
+Position=535.60, 2138.15, 9.48
+AABB={
+X=526.12, 545.07
+Y=2128.67, 2147.63
+Z=0.00, 18.95
+}
+
+ Exibindo objeto 28
+Id: 28, Restitution: 0.00
+Mass: 927.10, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=48.79
+Position=445.47, 1682.08, 48.79
+AABB={
+X=396.68, 494.25
+Y=1633.30, 1730.87
+Z=0.00, 97.57
+}
+
+ Exibindo objeto 29
+Id: 29, Restitution: 0.00
+Mass: 1239.96, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=15.44
+Position=1335.07, 1232.40, 15.44
+AABB={
+X=1319.63, 1350.50
+Y=1216.96, 1247.83
+Z=0.00, 30.87
+}
+
+ Exibindo objeto 30
+Id: 30, Restitution: 0.00
+Mass: 1096.86, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=13.68
+Position=1238.18, 1157.02, 13.68
+AABB={
+X=1224.50, 1251.85
+Y=1143.35, 1170.70
+Z=0.00, 27.35
+}
+
+ Exibindo objeto 31
+Id: 31, Restitution: 0.00
+Mass: 312.35, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=37.63
+Position=1825.87, 390.35, 37.63
+AABB={
+X=1788.24, 1863.50
+Y=352.73, 427.98
+Z=0.00, 75.26
+}
+
+ Exibindo objeto 32
+Id: 32, Restitution: 0.00
+Mass: 191.52, InvMass: 0.01
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=41.29
+Position=2024.02, 2251.10, 41.29
+AABB={
+X=1982.72, 2065.31
+Y=2209.81, 2292.40
+Z=0.00, 82.59
+}
+
+ Exibindo objeto 33
+Id: 33, Restitution: 0.00
+Mass: 871.02, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=41.36
+Position=1261.57, 224.36, 41.36
+AABB={
+X=1220.21, 1302.92
+Y=183.00, 265.72
+Z=0.00, 82.72
+}
+
+ Exibindo objeto 34
+Id: 34, Restitution: 0.00
+Mass: 1124.84, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=21.28
+Position=632.17, 397.93, 21.28
+AABB={
+X=610.89, 653.45
+Y=376.65, 419.21
+Z=0.00, 42.56
+}
+
+ Exibindo objeto 35
+Id: 35, Restitution: 0.00
+Mass: 1476.53, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=50.96
+Position=1291.56, 1402.54, 50.96
+AABB={
+X=1240.59, 1342.52
+Y=1351.58, 1453.50
+Z=0.00, 101.93
+}
+
+ Exibindo objeto 36
+Id: 36, Restitution: 0.00
+Mass: 451.91, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=39.16
+Position=2494.15, 2427.31, 39.16
+AABB={
+X=2454.99, 2533.32
+Y=2388.15, 2466.47
+Z=0.00, 78.33
+}
+
+ Exibindo objeto 37
+Id: 37, Restitution: 0.00
+Mass: 728.79, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=16.09
+Position=761.02, 1969.96, 16.09
+AABB={
+X=744.93, 777.11
+Y=1953.87, 1986.05
+Z=0.00, 32.18
+}
+
+ Exibindo objeto 38
+Id: 38, Restitution: 0.00
+Mass: 94.70, InvMass: 0.01
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 2.03, 3.19, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=34.13
+Position=2178.20, 1910.37, 34.13
+AABB={
+X=2144.07, 2212.32
+Y=1876.24, 1944.50
+Z=0.00, 68.25
+}
+
+ Exibindo objeto 39
+Id: 39, Restitution: 0.00
+Mass: 1132.67, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=17.82
+Position=1293.16, 1483.02, 17.82
+AABB={
+X=1275.34, 1310.99
+Y=1465.19, 1500.84
+Z=0.00, 35.65
+}
+
+ Exibindo objeto 40
+Id: 40, Restitution: 0.00
+Mass: 1896.48, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=3.04
+Position=2409.26, 398.30, 3.04
+AABB={
+X=2406.22, 2412.30
+Y=395.27, 401.34
+Z=0.00, 6.08
+}
+
+ Exibindo objeto 41
+Id: 41, Restitution: 0.00
+Mass: 1393.50, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=49.24
+Position=581.71, 2123.32, 49.24
+AABB={
+X=532.47, 630.95
+Y=2074.08, 2172.56
+Z=0.00, 98.48
+}
+
+ Exibindo objeto 42
+Id: 42, Restitution: 0.00
+Mass: 1827.67, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=31.46
+Position=1163.55, 1362.29, 31.46
+AABB={
+X=1132.09, 1195.01
+Y=1330.82, 1393.75
+Z=0.00, 62.93
+}
+
+ Exibindo objeto 43
+Id: 43, Restitution: 0.00
+Mass: 1525.06, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=9.69
+Position=98.29, 2466.44, 9.69
+AABB={
+X=88.60, 107.98
+Y=2456.75, 2476.13
+Z=0.00, 19.38
+}
+
+ Exibindo objeto 44
+Id: 44, Restitution: 0.00
+Mass: 1585.42, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=52.34
+Position=557.28, 1448.94, 52.34
+AABB={
+X=504.95, 609.62
+Y=1396.60, 1501.28
+Z=0.00, 104.68
+}
+
+ Exibindo objeto 45
+Id: 45, Restitution: 0.00
+Mass: 1207.00, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=32.39
+Position=1439.85, 1385.19, 32.39
+AABB={
+X=1407.46, 1472.23
+Y=1352.81, 1417.58
+Z=0.00, 64.77
+}
+
+ Exibindo objeto 46
+Id: 46, Restitution: 0.00
+Mass: 312.71, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=41.04
+Position=976.68, 1441.82, 41.04
+AABB={
+X=935.64, 1017.71
+Y=1400.78, 1482.85
+Z=0.00, 82.08
+}
+
+ Exibindo objeto 47
+Id: 47, Restitution: 0.00
+Mass: 1574.10, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=23.39
+Position=861.29, 1833.66, 23.39
+AABB={
+X=837.89, 884.68
+Y=1810.27, 1857.06
+Z=0.00, 46.79
+}
+
+ Exibindo objeto 48
+Id: 48, Restitution: 0.00
+Mass: 1437.73, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=20.38
+Position=1356.37, 2203.10, 20.38
+AABB={
+X=1335.99, 1376.75
+Y=2182.72, 2223.48
+Z=0.00, 40.76
+}
+
+ Exibindo objeto 49
+Id: 49, Restitution: 0.00
+Mass: 121.43, InvMass: 0.01
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=15.59
+Position=2307.85, 546.23, 15.59
+AABB={
+X=2292.25, 2323.44
+Y=530.63, 561.82
+Z=0.00, 31.19
+}
+
+ Exibindo objeto 50
+Id: 50, Restitution: 0.00
+Mass: 1877.24, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=6.02
+Position=1331.92, 2052.93, 6.02
+AABB={
+X=1325.90, 1337.94
+Y=2046.91, 2058.95
+Z=0.00, 12.04
+}
+
+ Exibindo objeto 51
+Id: 51, Restitution: 0.00
+Mass: 1792.81, InvMass: 0.00
+staticFriction: 0.00, dynamicFriction0.00
+Velocity: 0.00, 0.00, -0.00
+Angular velocity: 0.00, 0.00, 0.00
+Forces: 0.00, 0.00, 0.00
+Torque: 0.00, 0.00, 0.00
+Type=1(Esfera), Raio=15.60
+Position=139.00, 1309.00, 15.60
+AABB={
+X=123.40, 154.61
+Y=1293.40, 1324.60
+Z=0.00, 31.21
+}
 

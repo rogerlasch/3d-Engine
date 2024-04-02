@@ -60,9 +60,6 @@
     <ClCompile Include="profiler\ProfilerSnap.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
-    <ClCompile Include="profiler\ProfilerTable.cpp">
-      <Filter>Arquivos de Origem</Filter>
-    </ClCompile>
     <ClCompile Include="gpp_calendar.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
@@ -144,9 +141,6 @@
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
     <ClInclude Include="profiler\ProfilerSnap.h">
-      <Filter>Arquivos de Cabeçalho</Filter>
-    </ClInclude>
-    <ClInclude Include="profiler\ProfilerTable.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
     <ClInclude Include="gpp_calendar.h">

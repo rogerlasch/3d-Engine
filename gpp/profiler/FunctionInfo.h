@@ -14,15 +14,19 @@ namespace gpp
 class FunctionInfo
 {
 public:
-std::atomic<int64> total_time;
-std::atomic<int64> total_executions;
-std::string func_name;
+int64 total_time;
+int64 lowTime;
+int64 highTime;
+int64 executions;
+std::string name;
 FunctionInfo();
 FunctionInfo(const FunctionInfo& f)=delete;
 FunctionInfo& operator=(const FunctionInfo& f)=delete;
-std::string toString();
+~FunctionInfo();
+
+std::string dump(uint32 tType)const;
+
 };
-typedef std::shared_ptr<FunctionInfo> functioninfo_ptr;
 
 }
 #endif

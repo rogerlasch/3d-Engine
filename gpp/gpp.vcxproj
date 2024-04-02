@@ -39,7 +39,6 @@
     <ClCompile Include="profiler\FunctionInfo.cpp" />
     <ClCompile Include="profiler\profiler.cpp" />
     <ClCompile Include="profiler\ProfilerSnap.cpp" />
-    <ClCompile Include="profiler\ProfilerTable.cpp" />
     <ClCompile Include="StateManager.cpp" />
     <ClCompile Include="string_utils.cpp" />
     <ClCompile Include="time.cpp" />
@@ -70,7 +69,6 @@
     <ClInclude Include="profiler\FunctionInfo.h" />
     <ClInclude Include="profiler\profiler.h" />
     <ClInclude Include="profiler\ProfilerSnap.h" />
-    <ClInclude Include="profiler\ProfilerTable.h" />
     <ClInclude Include="safeFlags.h" />
     <ClInclude Include="StateManager.h" />
     <ClInclude Include="string_utils.h" />
@@ -98,7 +96,7 @@
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>PGOptimize</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <EnableUnitySupport>true</EnableUnitySupport>
+    <EnableUnitySupport>false</EnableUnitySupport>
     <EnableASAN>false</EnableASAN>
     <EnableFuzzer>false</EnableFuzzer>
   </PropertyGroup>
@@ -134,7 +132,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(ProjectDir)..\dependencies\libs\</OutDir>
+    <OutDir>$(ProjectDir)..\dependencies\libs\x86\</OutDir>
     <IncludePath>$(ProjectDir)..\dependencies;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>$(ProjectDir)..\dependencies\libs;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
     <TargetName>gpp</TargetName>
@@ -156,6 +154,12 @@
     <OutDir>$(ProjectDir)..\dependencies\libs\</OutDir>
     <IncludePath>$(ProjectDir)..\dependencies;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>$(ProjectDir)..\dependencies\libs;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <VcpkgUseStatic>true</VcpkgUseStatic>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <VcpkgUseStatic>true</VcpkgUseStatic>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -253,7 +257,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;WIN32_LEAN_AND_MEAN;VC_EXTRALEAN;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;WIN32_LEAN_AND_MEAN;VC_EXTRALEAN;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -263,6 +267,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <StructMemberAlignment>16Bytes</StructMemberAlignment>
       <UseFullPaths>false</UseFullPaths>
+      <DisableSpecificWarnings>4267;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>

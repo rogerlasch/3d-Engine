@@ -7,6 +7,7 @@
 
 #include"types.h"
 #ifndef GPP_DEBUG_SYSTEM_H
-#include<gpp/debug_system.h>
+//#include<gpp/debug_system.h>
+#include"../gpp/debug_system.h"
 #endif
 #endif

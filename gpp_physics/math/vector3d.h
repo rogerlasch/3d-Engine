@@ -27,52 +27,41 @@ gpp_northwest=315
 class vector3d
 {
 public:
-float x;
-float y;
-float z;
-vector3d(float x=0.0f, float y=0.0f, float z=0.0f);
+decimal x;
+decimal y;
+decimal z;
+
+vector3d(decimal x=0.0f, decimal y=0.0f, decimal z=0.0f);
 vector3d(const vector3d& dv);
 vector3d& operator=(const vector3d& dv);
-vector3d& operator=(const float  points[3]);
-float& operator[](unsigned int index);
-float operator[](unsigned int index)const;
+vector3d& operator=(const decimal  points[3]);
+decimal& operator[](unsigned int index);
+decimal operator[](unsigned int index)const;
 bool operator==(const vector3d& dv)const;
-bool operator==(const float dv[3])const;
+bool operator==(const decimal dv[3])const;
 vector3d operator-();
-vector3d& operator+=(float escalar);
-vector3d& operator-=(float escalar);
-vector3d& operator*=(float escalar);
-vector3d& operator/=(float escalar);
+vector3d& operator+=(decimal escalar);
+vector3d& operator-=(decimal escalar);
+vector3d& operator*=(decimal escalar);
+vector3d& operator/=(decimal escalar);
 vector3d& operator-=(const vector3d& dv);
 vector3d& operator+=(const vector3d& dv);
 vector3d& operator*=(const vector3d& dv);
 vector3d& operator/=(const vector3d& v);
-bool isNull()const;
-//Calcula o comprimento, ou maguinitude do vetor...
-float length()const;
-//Normaliza o vetor...
+void zero();
+decimal length()const;
 vector3d& normalize();
-//Inverte as propriedades do vetor...
 vector3d& inverse();
+
 //Métodos estáticos
 //Usado para operações com mais de um vetor.
 //Operações como produto escalar, produto cruzado e triplo produto escalar.
-//Retorna um novo vetor normalizado, mantendo as propriedades originais intactas.
+
 static vector3d normalize(const vector3d& v);
-//Retorna o vetor inverso mantendo as propriedades originais.
 static vector3d inverse(const vector3d& v);
-//Calcula o produto escalar de 2 vetores...
-static float dotProduct(const vector3d& v1, const vector3d& v2);
-//Calcula o produto vetorial, ou o produto cruzado de 2 vetores...
-static vector3d crossProduct(const vector3d& v1, const vector3d& v2);
-//Calcula o produto triplo escalar de 3 vetores...
-static float tripleProduct(const vector3d& v1, const vector3d& v2, const vector3d& v3);
-//Calcula o ângulo entre 2 vetores...
-static float angle_from(const vector3d& v1, const vector3d& v2);
-//Calcula a distância entre 2 vetores.
-static float get_distance(const vector3d& v1, const vector3d& v2);
-//Retorna a distância ao quadrado entre 2 vetores.
-static float get_squared_distance(const vector3d& v1, const vector3d& v2);
+static decimal dot(const vector3d& v1, const vector3d& v2);
+static vector3d cross(const vector3d& v1, const vector3d& v2);
+static decimal triple(const vector3d& v1, const vector3d& v2, const vector3d& v3);
 std::string toString()const;
 };
 
@@ -80,20 +69,21 @@ std::string toString()const;
 //As sobrecargas aqui são de multiplicação, divisão, soma e subtração.
 //Também o operator<< é sobrecarregado para uso fácil com ostreams...
 std::ostream& operator<<(std::ostream& os, const vector3d& dv);
-vector3d operator+(const vector3d& v, float s);
-vector3d operator+(float s, const vector3d& v);
-vector3d operator-(const vector3d& v, float s);
-vector3d operator-(float s, const vector3d& v);
-vector3d operator*(const vector3d& v, float s);
-vector3d operator*(float s, const vector3d& v);
-vector3d operator/(const vector3d& v, float s);
-vector3d operator/(float s, const vector3d& v);
+vector3d operator+(const vector3d& v, decimal s);
+vector3d operator+(decimal s, const vector3d& v);
+vector3d operator-(const vector3d& v, decimal s);
+vector3d operator-(decimal s, const vector3d& v);
+vector3d operator*(const vector3d& v, decimal s);
+vector3d operator*(decimal s, const vector3d& v);
+vector3d operator/(const vector3d& v, decimal s);
+vector3d operator/(decimal s, const vector3d& v);
 
 vector3d operator+(const vector3d& v1, const vector3d& v2);
 vector3d operator-(const vector3d& v1, const vector3d& v2);
-float operator*(const vector3d& v1, const vector3d& v2);
+decimal operator*(const vector3d& v1, const vector3d& v2);
 vector3d multiVec(const vector3d& v1, const vector3d& v2);
 vector3d operator/(const vector3d& v1, const vector3d& v2);
 vector3d operator^(const vector3d& v1, const vector3d& v2);
+bool vector3dIsEqual(const vector3d& v1, const vector3d& v2, decimal tol=0.1f);
 }
 #endif

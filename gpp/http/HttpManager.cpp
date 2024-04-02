@@ -197,4 +197,31 @@ hnotify(it);
 }
 }
 }
+
+std::string url_encode(const std::string& s) {
+    CURL* curl = curl_easy_init();
+    if (curl) {
+        char* output = curl_easy_escape(curl, s.c_str(), s.length());
+        std::string encoded(output);
+        curl_free(output);
+        curl_easy_cleanup(curl);
+        return encoded;
+    }
+    return "";
+}
+
+// Função para decodificar uma string codificada de URL
+std::string url_decode(const std::string& encoded) {
+    CURL* curl = curl_easy_init();
+    if (curl) {
+        int out_length = 0;
+        char* output = curl_easy_unescape(curl, encoded.c_str(), encoded.length(), &out_length);
+        std::string decoded(output, out_length);
+        curl_free(output);
+        curl_easy_cleanup(curl);
+        return decoded;
+    }
+    return "";
+}
+
 }

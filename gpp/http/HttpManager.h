@@ -47,5 +47,8 @@ uint32 wait(uint32 id, std::string& response);
 private:
 void onLoop();
 };
+
+std::string url_encode(const std::string& s);
+std::string url_decode(const std::string& encoded);
 }
 #endif

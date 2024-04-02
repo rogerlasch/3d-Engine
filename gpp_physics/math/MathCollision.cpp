@@ -6,11 +6,11 @@ using namespace std;
 
 namespace gpp{
 
-bool computeSphereSphereCollision(const vector3d& c1, float r1, const vector3d& c2, float r2, vector3d& point, vector3d& normal, float& depth)
+bool computeSphereSphereCollision(const vector3d& c1, decimal r1, const vector3d& c2, decimal r2, vector3d& point, vector3d& normal, decimal& depth)
 {
 vector3d dt=c1-c2;
-float sqDist=(dt*dt);
-float rdSun=r1+r2;
+decimal sqDist=(dt*dt);
+decimal rdSun=r1+r2;
 //Se distância^2 maior que soma dos raios^2 não a colisão
 if(sqDist>(rdSun*rdSun)){
 return false;
@@ -24,13 +24,13 @@ normal+=GPP_EPSILON;
     return true;
 }
 
-bool computeSphereBoxCollision(const vector3d& lp, const vector3d& closestPoint, const vector3d& center, float radius, const vector3d& min, const vector3d& max, vector3d& point, vector3d& normal, float& depth)
+bool computeSphereBoxCollision(const vector3d& lp, const vector3d& closestPoint, const vector3d& center, decimal radius, const vector3d& min, const vector3d& max, vector3d& point, vector3d& normal, decimal& depth)
 {
 //Calcular a distância ao quadrado do ponto e o centro da esfera
 //Depois, verificar se a distância é menor ou igual ao raio ao quadrado da esfera...
 vector3d vdir=center-closestPoint;
-float sqDist=vdir*vdir;
-float sqRadius=radius*radius;
+decimal sqDist=vdir*vdir;
+decimal sqRadius=radius*radius;
 //Se a distância for maior, não à colisão...
 if(sqDist>sqRadius){
 return false;
@@ -68,13 +68,13 @@ normal+=GPP_EPSILON;
 return true;
 }
 
-bool computeBoxSphereCollision(const vector3d& lp, const vector3d& closestPoint, const vector3d& min, const vector3d& max, const vector3d& center, float radius, vector3d& point, vector3d& normal, float& depth)
+bool computeBoxSphereCollision(const vector3d& lp, const vector3d& closestPoint, const vector3d& min, const vector3d& max, const vector3d& center, decimal radius, vector3d& point, vector3d& normal, decimal& depth)
 {
 //Calcular a distância ao quadrado do ponto e o centro da esfera
 //Depois, verificar se a distância é menor ou igual ao raio ao quadrado da esfera...
 vector3d vdir=closestPoint-center;
-float sqDist=vdir*vdir;
-float sqRadius=radius*radius;
+decimal sqDist=vdir*vdir;
+decimal sqRadius=radius*radius;
 //Se a distância for maior, não à colisão...
 if(sqDist>sqRadius) {
 return false;

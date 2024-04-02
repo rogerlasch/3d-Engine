@@ -64,6 +64,8 @@ return L"";
 return final;
 }
 
+
+#if defined(_DEBUG)||defined(_GPP_USE_DEBUG)
 #define _GDEBUG(str, ...) log_write("", LG_DEBUG, safe_format(str, __VA_ARGS__))
 #define _GBACKTRACE(str, ...) log_write("", LG_BACKTRACE, safe_format(str, __VA_ARGS__))
 #define _GERROR(str, ...) log_write("", LG_ERROR, safe_format(str, __VA_ARGS__))
@@ -86,5 +88,19 @@ log_write("", LG_CRITICAL, safe_format("Assertion error in file: {}, Line: {}, E
 std::terminate();\
 }
 //End macro...
+#else
+#define _GDEBUG(str, ...)
+#define _GBACKTRACE(str, ...)
+#define _GERROR(str, ...)
+#define _GWARNING(str, ...)
+#define _GINFO(str, ...)
+#define _GCRITICAL(str, ...)
+
+#undef _GASSERT
+#undef _GASSERT_MSG
+
+#define _GASSERT(expr)
+#define _GASSERT_MSG(expr, str, ...)
+#endif
 }
 #endif

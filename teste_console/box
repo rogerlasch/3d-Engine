@@ -1,0 +1,35 @@
+#include <iostream>
+#include <gpp/gpp.h>
+#include <gpp_physics/gpp_physics.h>
+#include "g_start.h"
+
+using namespace gpp;
+using namespace std;
+
+bool isColliding(const vector3d& v1, const vector3d& v2, float tol){
+vector3d v={fabs(v1.x-v2.x), fabs(v1.y-v2.y), fabs(v1.z-v2.z)};
+return v.x<=tol&&v.y<=tol&&v.z<=tol;
+}
+
+int main() {
+    G_STARTER gst;
+
+/*
+Box3d b({15,0,10}, {2,2,2}, quaternion_from_euler_angles(0,0,0));
+Sphere3d s({15,0,-2.5f}, 5.0f, quaternion_from_euler_angles(0,0,0));
+_GINFO("box={}", b.toString());
+_GINFO("sphere={}", s.toString());
+for(uint32 i=0; i<250; i++){
+b.translate({0,0,-1});
+CollisionInfo info;
+if(CollisionDispatcher::dispatch(&s, &b, &info)){
+b.translate(info.normal*info.depth);
+}
+_GINFO("{}", b.position);
+}
+*/
+vector3d v1={-5.2, -5.3, -5.4};
+vector3d v2={-5.3, -5.4, -5.5};
+cout<<boolalpha<<isColliding(v1, v2, 0.2f)<<endl;
+return 0;
+}

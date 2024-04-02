@@ -4,9 +4,6 @@
 #include<sstream>
 #include<map>
 #include"../types.h"
-#include"../math/math.h"
-#include"../RigidBody.h"
-#include"../CollisionInfo.h"
 #include"octreeinfo.h"
 
 using namespace std;

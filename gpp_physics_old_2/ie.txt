@@ -1,0 +1,36 @@
+decimal totalMass= r1->inverseMass+ r2->inverseMass;
+// Separate them out using projection
+vector3d ts1=- ( info-> normal * info-> depth *( r1->inverseMass / totalMass ));
+vector3d ts2=( info-> normal * info-> depth *( r2->inverseMass / totalMass ));
+
+vector3d pt1= info->point + r1->position;
+vector3d pt2= info->point - r2->position;
+
+vector3d angVelocityA= vector3d :: crossProduct( r1->angularVelocity , pt1 );
+vector3d angVelocityB= vector3d::crossProduct( r2->angularVelocity , pt2 );
+
+ vector3d fullVelocityA= r1->velocity + angVelocityA;
+ vector3d fullVelocityB= r2-> velocity + angVelocityB;
+
+vector3d vr=fullVelocityB - fullVelocityA;
+
+ decimal impulseForce= vector3d::dotProduct ( vr , info-> normal );
+ // now to work out the effect of inertia ....
+
+ vector3d inertiaA= vector3d::crossProduct(r1->invInertia *  vector3d::crossProduct( pt1 , info-> normal ) , pt1 )+numeric_limits<decimal>::epsilon();
+
+ vector3d inertiaB= vector3d::crossProduct(r2->invInertia *  vector3d::crossProduct( pt2 , info-> normal ) , pt2 )+numeric_limits<decimal>::epsilon();
+
+ decimal angularEffect= vector3d::dotProduct ( inertiaA + inertiaB , info-> normal );
+
+ decimal cRestitution=( r1->restitution+r2->restitution)*0.5f;
+
+
+ decimal j=(-(1.0f+cRestitution)*impulseForce)/(totalMass+angularEffect);
+
+ vector3d fullImpulse= info-> normal * j;
+
+r1->translate(-ts1);
+r2->translate(ts2);
+r1->applyLinearImpulse(vector3d::inverse(fullImpulse));
+    r2->applyLinearImpulse( fullImpulse);

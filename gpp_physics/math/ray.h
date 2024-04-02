@@ -6,9 +6,11 @@
 
 namespace gpp{
 
-bool raySphere(const vector3d& origin, const vector3d& dir, const vector3d& center, float radius, vector3d& in, vector3d& out);
-bool rayBox(const vector3d& origin, const vector3d& dir, const vector3d& min, const vector3d& max, vector3d& in, vector3d& out);
-bool rayCylinder(const vector3d& origin, const vector3d& dir, const vector3d& min, const vector3d& max, float radius, vector3d& in, vector3d& out);
-bool rayCapsule(const vector3d& origin, const vector3d& dir, const vector3d& min, const vector3d& max, float radius, vector3d& in, vector3d& out);
+bool raySphereAUX(const vector3d& origin, const vector3d& dir, const vector3d& center, float radius, float& tMin, float& tMax);
+bool raySphere(const vector3d& origin, const vector3d& dir, const vector3d& center, decimal radius, RayInfo* info);
+bool rayBox(const vector3d& origin, const vector3d& dir, const vector3d& min, const vector3d& max, RayInfo* info);
+bool rayCylinder(const vector3d& origin, const vector3d& dir, const vector3d& min, const vector3d& max, decimal radius, RayInfo* info);
+bool rayCapsule(const vector3d& origin, const vector3d& dir, const vector3d& cPos, const vector3d& axis, float length, float radius, RayInfo* info);
+    bool rayOBB(const vector3d& origin, const vector3d& dir, const vector3d& center, const vector3d& alf, const std::array<vector3d, 3>& axis, RayInfo* info);
 }
 #endif

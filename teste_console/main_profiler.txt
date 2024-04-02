@@ -1,5 +1,0 @@
-Tempo de execução total: 2 ms
-
-Imprimindo funções monitoradas:
-Total de funções monitoradas: 0
-

@@ -1,92 +1,85 @@
+
+#define _GPP_USE_DEBUG
 #include <iostream>
-#include<sstream>
+#include<array>
+#include<chrono>
 #include <gpp/gpp.h>
 #include <gpp_physics/gpp_physics.h>
-#include"g_start.h"
+#include "g_start.h"
+#include <windows.h>
 
 using namespace gpp;
 using namespace std;
-#include"LinearOctree.h"
 
-class Cylinder{
-public:
-vector<vector3d> topCap;
-vector<vector3d> botomCap;
-float radius;
-Cylinder(){
-topCap.clear();
-botomCap.clear();
-radius=1.5f;
-}
-void generate(uint32 numSides, float height, float radius){
-this->radius=radius;
-topCap.clear();
-botomCap.clear();
-    // Calcular o ângulo entre cada lado do cilindro
-    float angleIncrement = 2 * GPP_PI / numSides;
-    // Gerar vértices em torno da base do cilindro
-    for (int i = 0; i < numSides; ++i) {
-        float angle = i * angleIncrement;
-        vector3d vertex;
-        vertex.x = radius * cos(angle);
-        vertex.y = radius * sin(angle);
-        vertex.z = 0.0f;  // Altura da base
-botomCap.push_back(vertex);
-    }
-    // Gerar vértices em torno do topo do cilindro
-    for (int i = 0; i < numSides; ++i) {
-        float angle = i * angleIncrement;
-        vector3d vertex;
-        vertex.x = radius * cos(angle);
-        vertex.y = radius * sin(angle);
-        vertex.z = height;  // Altura do topo
-topCap.push_back(vertex);
-    }
-    // Adicionar vértices para as bases
-    vector3d baseCenter = {0.0f, 0.0f, 0.0f};
-    vector3d topCenter = {0.0f, 0.0f, height};
-botomCap.push_back(baseCenter);
-topCap.push_back(topCenter);
-}
-string toString()const{
-stringstream ss;
-ss<<fixed;
-ss.precision(2);
-ss<<"Radius: "<<radius<<endl;
-for(auto& it : botomCap){
-ss<<it<<endl;
-}
-for(auto& it : topCap){
-ss<<it<<endl;
-}
-return ss.str();
-}
-bool isColliding(const vector3d& v){
-uint32 size=topCap.size();
-for(uint32 i=0; i<size; i++){
-uint32 j=(i+1)%size;
-uint32 k=(i+2)%size;
-vector3d n=vector3d::crossProduct(botomCap[j]-botomCap[i], botomCap[k]-botomCap[i]);
-n.normalize();
-_GINFO("Dot={}", n*v);
-}
-vector3d n=topCap[size-1]-botomCap[size-1];
-n.normalize();
-_GINFO("\n{}", n);
-_GINFO("tsk {}", (v*n));
-return false;
-}
-};
+vector<RigidBody*> hbodies;
 
-int main(){
-G_STARTER gst;
-ln::OctreeNode2* node=new ln::OctreeNode2();
-node->center={100,100,100};
-node->radius=100.0f;
-ln::LinearOctree oct;
-oct.appendNode(node);
-oct.build(node);
-//_GINFO("{}", oct.toString());
-oct.traverse(node->id);
+WorldProperties props;
+void fillWorld(gpp_world* game, int32 n);
+void run_to(gpp_world* game, int64 ms);
+int main() {
+    G_STARTER gst;
+
+props.toDefault();
+props.center={0,0,0};
+props.radius=1024.0f*1024.0f;
+gpp_world game;
+_GINFO("Criando mundo: {}", game.create(props));
+
+RigidBody* rb2=createBodyBox<RigidBody>(1, {0,0, -50}, {1024*1024,1024*1024,50});
+rb2->setMass(0.0f);
+hbodies.push_back(rb2);
+game.addBody(rb2);
+fillWorld(&game, 50);
+
+run_to(&game, 60000);
+profiler_dump("main_profiler.txt", PFD_NANOSECONDS);
+_GINFO("Fim da simulação");
+
+_GINFO("{}", game.toString());
+for(auto& it : hbodies){
+_GINFO("{}", it->toString());
+delete it;
+}
 return 0;
+}
+
+void fillWorld(gpp_world* game, int32 n){
+vector3d m1={0,0,0};
+vector3d m2={2500,2500,2500};
+decimal r1=1.5f, r2=55.0f;
+decimal minMass=1.0f, maxMass=2000.0f;
+
+for(int32 i=0; i<n; i++){
+vector3d position;
+decimal mass, radius;
+for(uint32 i1=0; i1<3; i1++){
+position[i1]=random_float(m1[i1], m2[i1]);
+}
+radius=random_float(r1, r2);
+mass=random_float(minMass, maxMass);
+RigidBody* rb=createBodySphere<RigidBody>(i+2, position, radius);
+rb->setMass(mass);
+hbodies.push_back(rb);
+game->addBody(rb);
+}
+}
+
+void run_to(gpp_world* game, int64 ms){
+using mClock=chrono::high_resolution_clock;
+
+int64 frameTime=1000000000/35;
+props.timeStep=1.0f/(35.0f);
+mClock::time_point tps;
+int64 tstart=get_timestamp_ms();
+while((get_timestamp_ms()-tstart)<ms){
+tps=mClock::now();
+game->update(1/35.0f);
+mClock::time_point tend=mClock::now();
+int64 x=chrono::duration_cast<chrono::nanoseconds>(tend-tps).count();
+x=frameTime-x;
+_GINFO("sobrou {}ms", x/1000000);
+if(x>0){
+this_thread::sleep_for(chrono::microseconds(x/1000));
+}
+}
 }
