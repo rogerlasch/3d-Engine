@@ -1,0 +1,67 @@
+//Tentar adicionar o objeto no nó mais profundo...
+octreenode* sf=hnodes.back();
+
+if(sf->hbodies.size()<info.blimit){
+insertBodyAtNode(sf, rb);
+return;
+}
+
+//Caso não possa adicionar no nó mais profundo, e não seja mais possível criar nós filhos...
+//Então percorre os nós do mais profundo para o mais raso tentando encaixar.
+if(sf->pchilds>0){
+bool inserted=false;
+if(hnodes.size()==1){
+insertBodyAtNode(hnodes[0], rb);
+return;
+}
+
+for(uint64 i=hnodes.size(); i>0; i--){
+if(hnodes[i-1]->hbodies.size()<info.blimit){
+insertBodyAtNode(hnodes[i-1], rb);
+inserted=true;
+break;
+}
+}
+
+//Percorreu os nós e não pode adicionar em nenhum... Então lança uma exception.
+if(!inserted){
+throw runtime_error("Erro ao adicionar objeto na árvore... Ela está cheia!");
+}
+else{
+return;
+}
+}
+
+//Ok, medidas drásticas precisam ser tomadas aqui...
+//Caso seja possível criar um nível novo a partir deste nó, então devemos criar e redistribuir os objetos para os nós criados.
+//Caso não seja possível, então lançamos uma exception...
+if(sf->level>=info.max_depth){
+_GINFO("Exibindo octree");
+_GINFO("{}", this->toString());
+throw runtime_error("Erro ao adicionar o objeto na octree. A árvore não é capaz de crescer mais neste ramo!");
+}
+
+uint64 hsize=sf->hbodies.size();
+
+sf->createChilds();
+redistributeObjects(sf);
+
+//Se nada mudou...
+if(sf->hbodies.size()==hsize){
+throw runtime_error("Erro ao adicionar o objeto na octree. A redistribuição não foi capaz de abrir espaço!");
+}
+
+//Vamos recuperar novamente o nó mais profundo e tentar adicionar de novo.
+hnodes.clear();
+getDeepest(rb, hnodes, 0);
+if(sf==hnodes.back()){
+insertBodyAtNode(sf, rb);
+}
+else{
+if(hnodes.back()->hbodies.size()<info.blimit){
+insertBodyAtNode(hnodes.back(), rb);
+}
+else{
+insertBodyAtNode(sf, rb);
+}
+}

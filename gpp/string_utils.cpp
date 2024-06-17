@@ -220,6 +220,7 @@ return L"";
 
 string wstring_to_string(const wstring& str)
 {
+try{
 locale loc;
 const auto& _Facet=use_facet<codecvt<char, wchar_t, mbstate_t>>(loc);
 string final="";
@@ -236,6 +237,9 @@ if(Result==codecvt_base::ok)
 {
 final.resize(static_cast<size_t>(onext-ostart));
 return final;
+}
+}catch(const exception& e){
+return "Impossível converter de wstring para string.";
 }
 return "";
 }

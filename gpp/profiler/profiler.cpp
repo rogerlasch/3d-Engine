@@ -1,5 +1,6 @@
 
 
+#include<map>
 #include<sstream>
 #include<fstream>
 #include<string>
@@ -14,7 +15,7 @@ namespace gpp
 {
 
 int64 start_time=0;
-unordered_map<string, FunctionInfo*> fn_table;
+map<string, FunctionInfo*> fn_table;
 
 
 void profiler_start()
@@ -38,7 +39,8 @@ return;
 }
 string fname=((filename.size()==0) ? "gpp_profiler.txt" : filename);
 //ss<<"Tempo de execução total: "<<profiler_format_time(get_timestamp_ms()-start_time, htype)<<endl;
-ss<<"Nome, Tempo médio, Execuções, Menor Tempo, Maior Tempo, Unidade"<<endl;
+//ss<<"Nome, Tempo médio, Tempo Total, Execuções, Menor Tempo, Maior Tempo, Unidade"<<endl;
+ss<<"Nome, Tempo Total, Execuções, Unidade"<<endl;
 for(auto it=fn_table.begin(); it!=fn_table.end(); ++it)
 {
 ss<<it->second->dump(tType);

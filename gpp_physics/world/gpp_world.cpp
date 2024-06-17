@@ -26,10 +26,15 @@ hgeo=NULL;
 
 gpp_world::~gpp_world() {
     stop();
+for(auto& it : collisions){
+delete it.second;
+it.second=NULL;
+}
 if(hprops) delete hprops;
 if(hgeo) delete hgeo;
 hprops=NULL;
 hgeo=NULL;
+bodies.clear();
 }
 
 string gpp_world::toString()const{
@@ -47,7 +52,7 @@ bool gpp_world::create(const WorldProperties& props) {
         return false; // O world já foi criado
     }
 
-    hprops = new WorldProperties(props);
+    this->hprops = new WorldProperties(props);
 hgeo=new octree();
 hgeo->create(hprops->center, hprops->radius);
 
@@ -63,7 +68,9 @@ bool gpp_world::addBody(RigidBody* rb) {
         return false; // O mundo não está ativo
     }
 auto it=find_if(bodies.begin(), bodies.end(), [&](RigidBody* r)->bool{return r->id==rb->id;});
-if(it!=bodies.end())return false;
+if(it!=bodies.end()){
+return false;
+}
     bodies.push_back(rb);
 hgeo->insert(rb);
     return true;
@@ -117,7 +124,9 @@ return true;
 void gpp_world::stop() {
 if(hstate.load()==GWF_STOPPING) return;
 hstate.store(GWF_STOPPING);
+if(handle.joinable()){
 handle.join();
+}
 hstate.store(GWF_ACTIVE);
 }
 

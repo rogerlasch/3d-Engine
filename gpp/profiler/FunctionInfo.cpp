@@ -27,10 +27,11 @@ string FunctionInfo::dump(uint32 tType)const{
         ss.precision(2);
 
 ss<<name<<", ";
-ss<<profiler_format_time(total_time/executions, tType)<<", ";
+//ss<<profiler_format_time(total_time/executions, tType)<<", ";
+ss<<profiler_format_time(total_time, tType)<<", ";
 ss<<executions<<", ";
-ss<<lowTime<<", ";
-ss<<highTime<<", ";
+//ss<<lowTime<<", ";
+//ss<<highTime<<", ";
 ss<<profiler_get_time_desk(tType)<<endl;
         return ss.str();
 }
