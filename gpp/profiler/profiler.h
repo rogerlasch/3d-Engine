@@ -3,33 +3,17 @@
 #ifndef GPP_PROFILER_H
 #define GPP_PROFILER_H
 
-#include<string>
-#ifndef GPP_H
-#include"../types.h"
-#include"../time.h"
-#include"../gpp_value.h"
-#endif
-#include"ProfilerSnap.h"
+#include"ProfilerManager.h"
+namespace gpp{
 
-namespace gpp
-{
+void profiler_start(uint32 resolution, const std::string& filename);
+std::string profiler_dump_string();
+void profiler_dump_to_file();
+std::shared_ptr<ProfilerObject> profiler_create_object(const std::string& filename);
 
-enum PROFILER_DUMP_TIME{
-PFD_NANOSECONDS=0,
-PFD_MICROSECONDS,
-PFD_MILLISECONDS
-};
+#define _PROFILER_SNAP() auto _QLZ=profiler_create_object(__FUNCTION__);\
+_QLZ->start()
 
-void profiler_start();
-void profiler_dump(const std::string& filename, uint32 tType=PFD_MILLISECONDS);
-void profiler_log_snap(const std::string& func_name, int64 execution_time_ns);
-decimal profiler_format_time(int64 ns, uint32 tType);
-std::string profiler_get_time_desk(uint32 tType);
-
-#if defined(_DEBUG)||defined(_GPP_USE_DEBUG)
-#define profiler_snap() ProfilerSnap PROFILER_SNAP_INFO_DATA(__FUNCTION__)
-#else
-#define profiler_snap()
-#endif
 }
 #endif
+

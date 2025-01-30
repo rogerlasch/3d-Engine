@@ -102,14 +102,14 @@ flags.store(f);
 }
 
 void StateManager::waitForState(STATEMANAGERCALLBACK hcall){
-_GASSERT(hcall!=NULL);
+assert(hcall!=NULL);
 while(hcall(currentState.load())){
 this_thread::yield();
 }
 }
 
 void StateManager::waitForStage(STATEMANAGERCALLBACK hcall){
-_GASSERT(hcall!=NULL);
+assert(hcall!=NULL);
 while(hcall(stage.load())){
 this_thread::yield();
 }

@@ -34,6 +34,10 @@ bool Sphere3d::collidingPoint(const vector3d& pt) {
     return sqDist <= (radius * radius);
 }
 
+vector3d Sphere3d::getSupportPoint(const vector3d& dir)const{
+return position+(dir*radius);
+}
+
 vector3d Sphere3d::getClosestPoint(const vector3d& pt) {
     vector3d v = position - pt;
     v.normalize();

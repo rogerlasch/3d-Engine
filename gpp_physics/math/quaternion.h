@@ -24,7 +24,7 @@ decimal y;
 decimal z;
 decimal w;
 quaternion(decimal x=0.0f, decimal y=0.0f, decimal z=0.0f, decimal w=0.0f);
-quaternion(decimal w, const vector3d& v);
+quaternion(const vector3d& axis, decimal w);
 quaternion(const quaternion& q);
 quaternion& operator=(const quaternion& q);
 bool operator==(const quaternion& q);
@@ -55,6 +55,9 @@ decimal getAngle()const;
 vector3d getAxis()const;
 std::string toString()const;
 matrix3x3 toMatrix3x3()const;
+
+static quaternion fromAxis(const vector3d& axis, decimal w);
+static quaternion fromEuler(decimal x, decimal y, decimal z);
 };
 
 //Sobrecarga dos operadores do quatérnion...

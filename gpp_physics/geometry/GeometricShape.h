@@ -46,6 +46,7 @@ inline quaternion getOrientation()const{return this->orientation;}
 
 inline     virtual bool collidingPoint(const vector3d& pt) { return false; }
 
+inline virtual vector3d getSupportPoint(const vector3d& dir)const{return position;}
 inline     virtual vector3d getClosestPoint(const vector3d& pt) { return position; }
 
 inline     virtual void rotate(const quaternion& q) {}
@@ -54,6 +55,13 @@ inline     virtual void rotate(const vector3d& origin, const quaternion& q) {}
 
 inline     virtual void translate(const vector3d& ts) {}
 inline virtual void getAABB(vector3d& tMin, vector3d& tMax)const {tMin=position; tMax=position;}
+
+inline virtual void updateOrientation(const quaternion& q){
+this->orientation=q*orientation;
+if(orientation.length()>1.0f){
+orientation.normalize();
+}
+}
 };
 }
 #endif

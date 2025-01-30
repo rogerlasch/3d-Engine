@@ -6,14 +6,14 @@ using namespace std;
 
 namespace gpp{
 
-bool raySphereAUX(const vector3d& origin, const vector3d& dir, const vector3d& center, float radius, float& tMin, float& tMax){
+bool raySphereAUX(const vector3d& origin, const vector3d& dir, const vector3d& center, decimal radius, decimal& tMin, decimal& tMax){
         vector3d CO = origin - center;
 
-        float a = vector3d::dot(dir, dir);
-        float b = 2.0f * vector3d::dot(CO, dir);
-        float c = vector3d::dot(CO, CO) - (radius * radius);
+        decimal a = vector3d::dot(dir, dir);
+        decimal b = 2.0f * vector3d::dot(CO, dir);
+        decimal c = vector3d::dot(CO, CO) - (radius * radius);
 
-        float discriminant = b * b - 4.0f * a * c;
+        decimal discriminant = b * b - 4.0f * a * c;
         if(discriminant < 0.0f)
                 return false;
 
@@ -141,7 +141,7 @@ info->oPoint=origin+(dir*dout);
     return hit;
 }
 
-bool rayCapsule(const vector3d& origin, const vector3d& dir, const vector3d& cPos, const vector3d& axis, float length, float radius, RayInfo* info){
+bool rayCapsule(const vector3d& origin, const vector3d& dir, const vector3d& cPos, const vector3d& axis, decimal length, decimal radius, RayInfo* info){
 //https://gist.github.com/jdryg/ecde24d34aa0ce2d4d87
         // http://pastebin.com/2XrrNcxb
         // Substituting equ. (1) - (6) to equ. (I) and solving for t' gives:
@@ -151,18 +151,18 @@ bool rayCapsule(const vector3d& origin, const vector3d& dir, const vector3d& cPo
         // m = dot(AB, d) / dot(AB, AB) and
         // n = dot(AB, AO) / dot(AB, AB)
         //
-float alf=length*0.5f;
-float eDist, oDist;
+decimal alf=length*0.5f;
+decimal eDist, oDist;
 vector3d p1, p2;
 vector3d cMA=cPos-(axis*alf);
 vector3d cMB=cPos+(axis*alf);
         vector3d AB = cMB - cMA;
         vector3d AO = origin - cMA;
-        float AB_dot_d = vector3d::dot(AB,dir);
-        float AB_dot_AO = vector3d::dot(AB,AO);
-        float AB_dot_AB = vector3d::dot(AB,AB);
-        float m = AB_dot_d / AB_dot_AB;
-        float n = AB_dot_AO / AB_dot_AB;
+        decimal AB_dot_d = vector3d::dot(AB,dir);
+        decimal AB_dot_AO = vector3d::dot(AB,AO);
+        decimal AB_dot_AB = vector3d::dot(AB,AB);
+        decimal m = AB_dot_d / AB_dot_AB;
+        decimal n = AB_dot_AO / AB_dot_AB;
         // Substituting (7) into (II) and solving for t gives:
         //
         // dot(Q, Q)*t^2 + 2*dot(Q, R)*t + (dot(R, R) - r^2) = 0
@@ -171,9 +171,9 @@ vector3d cMB=cPos+(axis*alf);
         // R = AO - AB * n
         vector3d Q = dir - (AB * m);
         vector3d R = AO - (AB * n);
-        float a = vector3d::dot(Q,Q);
-        float b = 2.0f * vector3d::dot(Q,R);
-        float c = vector3d::dot(R,R) - (radius * radius);
+        decimal a = vector3d::dot(Q,Q);
+        decimal b = 2.0f * vector3d::dot(Q,R);
+        decimal c = vector3d::dot(R,R) - (radius * radius);
         if(a == 0.0f)
         {
                 // Special case: AB and ray direction are parallel. If there is an intersection it will be on the end spheres...
@@ -186,7 +186,7 @@ vector3d cMB=cPos+(axis*alf);
                 //
                 // |Q| == 0 means Q = (0, 0, 0) or d = unit(AB) * cos(AB,d)
                 // both d and unit(AB) are unit vectors, so cos(AB, d) = 1 => AB and d are parallel.
-                float atmin, atmax, btmin, btmax;
+                decimal atmin, atmax, btmin, btmax;
                 if(        !raySphereAUX(origin, dir, cMA, radius, atmin, atmax) ||
                         !raySphereAUX(origin, dir, cMB, radius, btmin, btmax))
                 {
@@ -223,25 +223,25 @@ info->oPoint=p2;
                 return true;
         }
 
-        float discriminant = b * b - 4.0f * a * c;
+        decimal discriminant = b * b - 4.0f * a * c;
         if(discriminant < 0.0f)
         {
                 // The ray doesn't hit the infinite cylinder defined by (A, B).
                 // No intersection.
                 return false;
         }
-        float tmin = (-b - sqrtf(discriminant)) / (2.0f * a);
-        float tmax = (-b + sqrtf(discriminant)) / (2.0f * a);
+        decimal tmin = (-b - sqrtf(discriminant)) / (2.0f * a);
+        decimal tmax = (-b + sqrtf(discriminant)) / (2.0f * a);
         if(tmin > tmax)
         {
 swap(tmin, tmax);
         }
         // Now check to see if K1 and K2 are inside the line segment defined by A,B
-        float t_k1 = tmin * m + n;
+        decimal t_k1 = tmin * m + n;
         if(t_k1 < 0.0f)
         {
                 // On sphere (A, r)...
-                float stmin, stmax;
+                decimal stmin, stmax;
                 if(raySphereAUX(origin, dir, cMA, radius, stmin, stmax))
                 {
 eDist=stmin;
@@ -253,7 +253,7 @@ eDist=stmin;
         else if(t_k1 > 1.0f)
         {
                 // On sphere (B, r)...
-                float stmin, stmax;
+                decimal stmin, stmax;
                 if(raySphereAUX(origin, dir, cMB, radius, stmin, stmax))
                 {
 eDist=stmin;
@@ -269,11 +269,11 @@ eDist=tmin;
                 p1 = origin + (dir * tmin);
 //                vector3d k1 = cMA + AB * t_k1;
         }
-        float t_k2 = tmax * m + n;
+        decimal t_k2 = tmax * m + n;
         if(t_k2 < 0.0f)
         {
                 // On sphere (A, r)...
-                float stmin, stmax;
+                decimal stmin, stmax;
                 if(raySphereAUX(origin, dir, cMA, radius, stmin, stmax))
                 {
 oDist=stmax;
@@ -285,7 +285,7 @@ oDist=stmax;
         else if(t_k2 > 1.0f)
         {
                 // On sphere (B, r)...
-                float stmin, stmax;
+                decimal stmin, stmax;
                 if(raySphereAUX(origin, dir, cMB, radius, stmin, stmax))
                 {
 oDist=stmax;

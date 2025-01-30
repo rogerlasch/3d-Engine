@@ -1,0 +1,9 @@
+Total de colisões: 2
+TargetId=0, eDist=0.00, oDist=1000.00
+ePoint=0.00, 0.00, 0.00, oPoint=1000.00, 1000.00, 1000.00
+
+
+TargetId=0, eDist=900.00, oDist=1000.00
+ePoint=900.00, 900.00, 900.00, oPoint=1000.00, 1000.00, 1000.00
+
+

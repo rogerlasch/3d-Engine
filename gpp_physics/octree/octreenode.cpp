@@ -67,7 +67,7 @@ return this->oct;
 }
 
 void octreenode::createChilds(){
-float step=radius*0.5f;
+decimal step=radius*0.5f;
 if(pchilds==255)return;
 for(uint64 i=0; i<8; i++){
 if((this->pchilds&(1<<i))==0){

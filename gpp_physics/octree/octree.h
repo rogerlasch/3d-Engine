@@ -31,7 +31,7 @@ virtual ~octree();
 std::string toString()const;
 octreeinfo getInfo()const;
 
-void create(const vector3d& center, float radius);
+void create(const vector3d& center, decimal radius);
 void traverse(OCTREEVISITORCALLBACK hvisitor, uint64 start_id=0)const;
 
 void insert(RigidBody* rb);

@@ -22,11 +22,5 @@ typedef float decimal;
 #else
 typedef double decimal;
 #endif
-
-//classes definitions...
-
-class gpp_EventHandler;
-class gpp_PacketHandler;
-
 }
 #endif

@@ -9,6 +9,8 @@ using namespace std;
 
 namespace gpp
 {
+
+const vector3d vector3d::ORIGIN=vector3d(0.0f, 0.0f, 0.0f);
 vector3d::vector3d(decimal x, decimal y, decimal z)
 {
 this->x=x;
@@ -190,6 +192,18 @@ this->z=0.0f;
 decimal vector3d::length()const
 {
 return sqrt(x*x+y*y+z*z);
+}
+
+decimal vector3d::lengthSquared()const{
+return ((x*x)+(y*y)+(z*z));
+}
+
+decimal vector3d::dot(const vector3d& v)const{
+return vector3d::dot(*this, v);
+}
+
+vector3d vector3d::cross(const vector3d& v)const{
+return vector3d::cross(*this, v);
 }
 
 vector3d& vector3d::normalize()

@@ -28,6 +28,7 @@
     <ClInclude Include="collision\collisionSphereSphere.h" />
     <ClInclude Include="collision\MurmurHash3.h" />
     <ClInclude Include="geometry\Box3d.h" />
+    <ClInclude Include="geometry\Capsule3d.h" />
     <ClInclude Include="geometry\GeometricShape.h" />
     <ClInclude Include="geometry\geometry.h" />
     <ClInclude Include="geometry\Sphere3d.h" />
@@ -42,12 +43,11 @@
     <ClInclude Include="octree\octreeinfo.h" />
     <ClInclude Include="octree\octreenode.h" />
     <ClInclude Include="types.h" />
-    <ClInclude Include="world\BodyHandler.h" />
-    <ClInclude Include="world\BodyHelper.h" />
-    <ClInclude Include="world\DefaultBodyHandler.h" />
+    <ClInclude Include="world\ClockFrame.h" />
+    <ClInclude Include="world\EventFrame.h" />
     <ClInclude Include="world\gpp_world.h" />
     <ClInclude Include="world\RigidBody.h" />
-    <ClInclude Include="world\WorldProperties.h" />
+    <ClInclude Include="world\WorldInfo.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="collision\collisionBoxSphere.cpp" />
@@ -58,6 +58,7 @@
     <ClCompile Include="collision\collisionSphereSphere.cpp" />
     <ClCompile Include="collision\MurmurHash3.cpp" />
     <ClCompile Include="geometry\Box3d.cpp" />
+    <ClCompile Include="geometry\Capsule3d.cpp" />
     <ClCompile Include="geometry\Sphere3d.cpp" />
     <ClCompile Include="math\math.cpp" />
     <ClCompile Include="math\matrix3x3.cpp" />
@@ -69,11 +70,11 @@
     <ClCompile Include="octree\octree.cpp" />
     <ClCompile Include="octree\octreeinfo.cpp" />
     <ClCompile Include="octree\octreenode.cpp" />
-    <ClCompile Include="world\BodyHandler.cpp" />
-    <ClCompile Include="world\DefaultBodyHandler.cpp" />
+    <ClCompile Include="world\ClockFrame.cpp" />
+    <ClCompile Include="world\EventFrame.cpp" />
     <ClCompile Include="world\gpp_world.cpp" />
     <ClCompile Include="world\RigidBody.cpp" />
-    <ClCompile Include="world\WorldProperties.cpp" />
+    <ClCompile Include="world\WorldInfo.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -220,16 +221,17 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_GPP_USE_DEBUG;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;WIN32_LEAN_AND_MEAN;VC_EXTRALEAN;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GPP_DOUBLE_PRECISION;_GPP_USE_DEBUG;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;WIN32_LEAN_AND_MEAN;VC_EXTRALEAN;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <UseFullPaths>false</UseFullPaths>
-      <DisableSpecificWarnings>4244;</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4244;4267;</DisableSpecificWarnings>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>

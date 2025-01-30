@@ -1,0 +1,6 @@
+Servidor escutando na porta 2500
+O servidor foi solicitado a encerrar.
+Desconexão de todos pares solicitada...
+State=3, clientCount=0
+Esperando a base finalizar.
+Base finalizada!

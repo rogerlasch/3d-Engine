@@ -20,58 +20,72 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cmd_parser.cpp" />
-    <ClCompile Include="command.cpp" />
-    <ClCompile Include="event.cpp" />
-    <ClCompile Include="EventQueue.cpp" />
+    <ClCompile Include="event\Event.cpp" />
+    <ClCompile Include="event\EventQueue.cpp" />
     <ClCompile Include="gpp_calendar.cpp" />
-    <ClCompile Include="gpp_client.cpp" />
-    <ClCompile Include="gpp_peer.cpp" />
-    <ClCompile Include="gpp_server.cpp" />
-    <ClCompile Include="gpp_steamsockets.cpp" />
     <ClCompile Include="gpp_value.cpp" />
-    <ClCompile Include="http\HttpManager.cpp" />
-    <ClCompile Include="http\HttpPool.cpp" />
+    <ClCompile Include="http\CurlHandler.cpp" />
     <ClCompile Include="http\HttpRequest.cpp" />
+    <ClCompile Include="http\HttpService.cpp" />
     <ClCompile Include="logger\gpp_exception.cpp" />
-    <ClCompile Include="logger\log.cpp" />
+    <ClCompile Include="logger\LogBase.cpp" />
+    <ClCompile Include="logger\LogFile.cpp" />
     <ClCompile Include="logger\logger.cpp" />
-    <ClCompile Include="packet.cpp" />
-    <ClCompile Include="profiler\FunctionInfo.cpp" />
+    <ClCompile Include="net\ClientController.cpp" />
+    <ClCompile Include="net\enet\EnetBase.cpp" />
+    <ClCompile Include="net\enet\EnetClient.cpp" />
+    <ClCompile Include="net\enet\EnetServer.cpp" />
+    <ClCompile Include="net\NetBase.cpp" />
+    <ClCompile Include="net\NetDrivers.cpp" />
+    <ClCompile Include="net\NetEvent.cpp" />
+    <ClCompile Include="net\Packet.cpp" />
+    <ClCompile Include="net\ServerController.cpp" />
     <ClCompile Include="profiler\profiler.cpp" />
-    <ClCompile Include="profiler\ProfilerSnap.cpp" />
+    <ClCompile Include="profiler\ProfilerData.cpp" />
+    <ClCompile Include="profiler\ProfilerManager.cpp" />
+    <ClCompile Include="profiler\ProfilerObject.cpp" />
     <ClCompile Include="StateManager.cpp" />
     <ClCompile Include="string_utils.cpp" />
+    <ClCompile Include="task\TaskManager.cpp" />
     <ClCompile Include="time.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cmd_parser.h" />
-    <ClInclude Include="command.h" />
     <ClInclude Include="debug_system.h" />
-    <ClInclude Include="event.h" />
-    <ClInclude Include="EventQueue.h" />
+    <ClInclude Include="event\Event.h" />
+    <ClInclude Include="event\EventQueue.h" />
     <ClInclude Include="gpp.h" />
     <ClInclude Include="gpp_calendar.h" />
-    <ClInclude Include="gpp_client.h" />
-    <ClInclude Include="gpp_networkinterface.h" />
-    <ClInclude Include="gpp_peer.h" />
-    <ClInclude Include="gpp_server.h" />
-    <ClInclude Include="gpp_steamsockets.h" />
     <ClInclude Include="gpp_value.h" />
+    <ClInclude Include="http\CurlData.h" />
     <ClInclude Include="http\CurlHandler.h" />
-    <ClInclude Include="http\HttpManager.h" />
-    <ClInclude Include="http\HttpPool.h" />
     <ClInclude Include="http\HttpRequest.h" />
-    <ClInclude Include="http\HttpRequestStatus.h" />
+    <ClInclude Include="http\HttpService.h" />
     <ClInclude Include="logger\gpp_exception.h" />
-    <ClInclude Include="logger\log.h" />
+    <ClInclude Include="logger\LogBase.h" />
+    <ClInclude Include="logger\LogFile.h" />
     <ClInclude Include="logger\logger.h" />
-    <ClInclude Include="packet.h" />
-    <ClInclude Include="profiler\FunctionInfo.h" />
+    <ClInclude Include="logger\LogItem.h" />
+    <ClInclude Include="net\ClientController.h" />
+    <ClInclude Include="net\enet\EnetBase.h" />
+    <ClInclude Include="net\enet\EnetClient.h" />
+    <ClInclude Include="net\enet\EnetServer.h" />
+    <ClInclude Include="net\net.h" />
+    <ClInclude Include="net\NetBase.h" />
+    <ClInclude Include="net\NetDrivers.h" />
+    <ClInclude Include="net\NetEvent.h" />
+    <ClInclude Include="net\NetObject.h" />
+    <ClInclude Include="net\Packet.h" />
+    <ClInclude Include="net\PeerInfo.h" />
+    <ClInclude Include="net\ServerController.h" />
     <ClInclude Include="profiler\profiler.h" />
-    <ClInclude Include="profiler\ProfilerSnap.h" />
-    <ClInclude Include="safeFlags.h" />
+    <ClInclude Include="profiler\ProfilerData.h" />
+    <ClInclude Include="profiler\ProfilerManager.h" />
+    <ClInclude Include="profiler\ProfilerObject.h" />
     <ClInclude Include="StateManager.h" />
     <ClInclude Include="string_utils.h" />
+    <ClInclude Include="task\iTask.h" />
+    <ClInclude Include="task\TaskManager.h" />
     <ClInclude Include="time.h" />
     <ClInclude Include="types.h" />
   </ItemGroup>
@@ -132,7 +146,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(ProjectDir)..\dependencies\libs\x86\</OutDir>
+    <OutDir>D:\github\RenovaMusic\RenovaMusic\dependencies\libs\x86\</OutDir>
     <IncludePath>$(ProjectDir)..\dependencies;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>$(ProjectDir)..\dependencies\libs;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
     <TargetName>gpp</TargetName>
@@ -156,7 +170,7 @@
     <LibraryPath>$(ProjectDir)..\dependencies\libs;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <VcpkgUseStatic>true</VcpkgUseStatic>
+    <VcpkgUseStatic>false</VcpkgUseStatic>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <VcpkgUseStatic>true</VcpkgUseStatic>
@@ -199,12 +213,12 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;WIN32_LEAN_AND_MEAN;VC_EXTRALEAN;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;WIN32_LEAN_AND_MEAN;VC_EXTRALEAN;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FloatingPointModel>Precise</FloatingPointModel>
@@ -235,7 +249,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_GPP_USE_DEBUG;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;WIN32_LEAN_AND_MEAN;VC_EXTRALEAN;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_GPP_USE_DEBUG;_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;WIN32_LEAN_AND_MEAN;VC_EXTRALEAN;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>

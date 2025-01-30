@@ -43,6 +43,6 @@ void backup();
 void update(CollisionInfo* info);
 };
 
-uint64 getCollisionId(uint32 id1, uint32 id2);
+uint64 getCollisionId(uint64 id1, uint64 id2);
 }
 #endif

@@ -63,8 +63,8 @@ return true;
 return ss.str();
 }
 
-void octree::create(const vector3d& center, float radius){
-profiler_snap();
+void octree::create(const vector3d& center, decimal radius){
+
 _GASSERT_MSG(root==NULL, "Já existe uma octree válida aqui. Limpe antes de chamar create novamente.");
 vector3d hpoint;
 if(center.length()<=0.0001f){
@@ -95,7 +95,7 @@ node->createChilds();//Cria apenas o nível 1... Ela inicia com 9 nós...
 *start_node pode ser especificado para começar em um nó específico. Se 0 for passado, o nó raíz será usado.
 **/
 void octree::traverse(OCTREEVISITORCALLBACK hvisitor, uint64 start_id)const{
-profiler_snap();
+
 if((!hvisitor)||(nodes.size()==0)) return;
 stack<octreenode*> pstack;
 if((start_id==0)||(start_id==root->id)){
@@ -138,74 +138,51 @@ pnodes.push_back(hnode);
 }
 
 void octree::insert(RigidBody* rb){
-profiler_snap();
-vector<octreenode*> hnodes;
-getDeepest(rb, hnodes, 0);
-//Tentar adicionar o objeto no nó mais profundo...
-octreenode* sf=hnodes.back();
+    
 
-if(sf->hbodies.size()<info.blimit){
-insertBodyAtNode(sf, rb);
-return;
-}
+    // Passo 1: Buscar o nó mais profundo onde o objeto pode ser adicionado
+    vector<octreenode*> hnodes;
+    getDeepest(rb, hnodes, root->id);
+    if (hnodes.empty()) {
+        return; // Não encontrou um nó adequado para adicionar o objeto
+    }
 
-//Caso não possa adicionar no nó mais profundo, e não seja mais possível criar nós filhos...
-//Então percorre os nós do mais profundo para o mais raso tentando encaixar.
-if(sf->pchilds>0){
-bool inserted=false;
-if(hnodes.size()==1){
-insertBodyAtNode(hnodes[0], rb);
-return;
-}
+    octreenode* targetNode = hnodes.back();
 
-for(uint64 i=hnodes.size(); i>0; i--){
-if(hnodes[i-1]->hbodies.size()<info.blimit){
-insertBodyAtNode(hnodes[i-1], rb);
-inserted=true;
-break;
-}
-}
+    // Passo 2: Verificar se o nó está cheio
+    if (targetNode->hbodies.size() < info.blimit) {
+        // Se não estiver cheio, adicionar o objeto ao nó
+        insertBodyAtNode(targetNode, rb);
+        return;
+    }
 
-//Percorreu os nós e não pode adicionar em nenhum... Então lança uma exception.
-if(!inserted){
-throw runtime_error("Erro ao adicionar objeto na árvore... Ela está cheia!");
-}
-else{
-return;
-}
-}
+    // Se o nó estiver cheio
+    if (targetNode->level < info.max_depth) {
+        // Se o nó não for o nível mais profundo, criar filhos e redistribuir os objetos
+        targetNode->createChilds();
+        redistributeObjects(targetNode);
 
-//Ok, medidas drásticas precisam ser tomadas aqui...
-//Caso seja possível criar um nível novo a partir deste nó, então devemos criar e redistribuir os objetos para os nós criados.
-//Caso não seja possível, então lançamos uma exception...
-if(sf->level>=info.max_depth){
-throw runtime_error("Erro ao adicionar o objeto na octree. A árvore não é capaz de crescer mais neste ramo!");
-}
-
-uint64 hsize=sf->hbodies.size();
-
-sf->createChilds();
-redistributeObjects(sf);
-
-//Se nada mudou...
-if(sf->hbodies.size()==hsize){
-throw runtime_error("Erro ao adicionar o objeto na octree. A redistribuição não foi capaz de abrir espaço!");
-}
-
-//Vamos recuperar novamente o nó mais profundo e tentar adicionar de novo.
 hnodes.clear();
-getDeepest(rb, hnodes, 0);
-if(sf==hnodes.back()){
-insertBodyAtNode(sf, rb);
-}
-else{
-if(hnodes.back()->hbodies.size()<info.blimit){
-insertBodyAtNode(hnodes.back(), rb);
-}
-else{
-insertBodyAtNode(sf, rb);
+    getDeepest(rb, hnodes, root->id);
+
+for(uint32 i=hnodes.size(); i>0; i--){
+if(hnodes[i-1]->hbodies.size()<info.blimit){
+        insertBodyAtNode(hnodes[i-1], rb);
+return;
 }
 }
+
+        insertBodyAtNode(root, rb);
+    } else {
+        // Se o nó for o nível mais profundo, tentar subir pelos níveis
+for(uint32 i=hnodes.size(); i>0; i--){
+if(hnodes[i-1]->hbodies.size()<info.blimit){
+        insertBodyAtNode(hnodes[i-1], rb);
+return;
+}
+}
+        insertBodyAtNode(root, rb);
+    }
 }
 
 void octree::remove(RigidBody* rb){
@@ -259,7 +236,7 @@ rb->setOctreeNode(sf);
 }
 
 void octree::broadPhase(vector<CollisionInfo*>& collisions){
-profiler_snap();
+
 collisions.clear();
 
 OCTREEVISITORCALLBACK hvisitor=[&](octreenode* node)->bool{
@@ -273,7 +250,7 @@ traverse(hvisitor);
 }
 
 void octree::broadPhaseAuxiliary(const std::unordered_map<uint64, RigidBody*>::iterator& begin_loop, uint64 start_node, vector<CollisionInfo*>& collisions){
-profiler_snap();
+
 stack<octreenode*> pstack;
 pstack.push(nodes.at(start_node));
 vector3d m1, m2, m3, m4;
@@ -320,10 +297,10 @@ pstack.push(node);
 }
 
 void octree::rayCast(const vector3d& origin, const vector3d& dir, vector<RayInfo>& infos){
-profiler_snap();
+
 RayInfo info;
     OCTREEVISITORCALLBACK hvisitor = [&](octreenode* hnode)->bool {
-profiler_snap();
+
 if(rayBox(origin, dir, hnode->center-hnode->radius, hnode->center+hnode->radius, NULL)){
 for(auto it=hnode->hbodies.begin(); it!=hnode->hbodies.end(); ++it){
 if(CollisionDispatcher::rayCast(origin, dir, it->second->hbody, &info)){

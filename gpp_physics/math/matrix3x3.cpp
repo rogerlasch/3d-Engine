@@ -144,6 +144,21 @@ decimal result = arr[0] * arr[4] * arr[8] +
 return result;
 }
 
+matrix3x3 matrix3x3::rotation(float angleX, float angleY, float angleZ) {
+        matrix3x3 rotX = {
+            {{1, 0, 0}, {0, std::cos(angleX), -std::sin(angleX)}, {0, std::sin(angleX), std::cos(angleX)}}
+        };
+
+        matrix3x3 rotY = {
+            {{std::cos(angleY), 0, std::sin(angleY)}, {0, 1, 0}, {-std::sin(angleY), 0, std::cos(angleY)}}
+        };
+
+        matrix3x3 rotZ = {
+            {{std::cos(angleZ), -std::sin(angleZ), 0}, {std::sin(angleZ), std::cos(angleZ), 0}, {0, 0, 1}}
+        };
+        return rotZ*rotY*rotX; // Combinação das rotações
+    }
+
 matrix3x3 matrix3x3::negate(const matrix3x3& mt) {
     matrix3x3 result(mt);
     return result.negate();

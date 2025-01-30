@@ -8,18 +8,15 @@ using namespace std;
 namespace gpp{
 decimal degrees_to_radians(decimal f)
 {
-profiler_snap();
 return (f*GPP_PI)/180.0f;
 }
 
 decimal radians_to_degrees(decimal r)
 {
-profiler_snap();
 return (r*180)/GPP_PI;
 }
 
 decimal gpp_clamp(decimal n, decimal min, decimal max) {
-profiler_snap();
       if (n < min) return min;
       if (n > max) return max;
       return n;
@@ -30,7 +27,6 @@ profiler_snap();
 // distance between between S1(s) and S2(t)
 decimal ClosestPtSegmentSegment(const vector3d& p1, const vector3d& q1, const vector3d& p2, const vector3d& q2,                                              decimal &s, decimal &t, vector3d& c1, vector3d& c2)
 {
-profiler_snap();
       vector3d d1 = q1 - p1; // Direction vector of segment S1
       vector3d d2 = q2 - p2; // Direction vector of segment S2
       vector3d r = p1 - p2;
@@ -87,7 +83,6 @@ profiler_snap();
 
 decimal ClosestPtPointSegment(const vector3d& c, const vector3d& a, const vector3d& b, decimal &t, vector3d &d)
 {
-profiler_snap();
       vector3d ab = b - a;
       // Project c onto ab, but deferring divide by vector3d::dot(ab, ab)
       t = vector3d::dot(c - a, ab);
@@ -115,7 +110,6 @@ return dist*dist;
 
                  decimal SqDistPointSegment(const vector3d& a, const vector3d& b, const vector3d& c)
                  {
-profiler_snap();
                        vector3d ab = b - a, ac = c - a, bc = c - b;
                        decimal e = vector3d::dot(ac, ab);
                        // Handle cases where c projects outside ab
@@ -184,7 +178,6 @@ pt=a + ab * v + ac * w; // = u*a + v*b + w*c, u = va * denom = 1.0f - v - w
 }
 
 void calculateBoundingBox(const std::vector<vector3d>& points, vector3d& min, vector3d& max) {
-profiler_snap();
 vector3d m1, m2;
 if(points.size()==0)
 {
@@ -224,7 +217,7 @@ max=m2;
 }
 
 bool point_in_box(const vector3d& p, const vector3d& min, const vector3d& max){
-profiler_snap();
+
 for(uint32 i=0; i<3; i++){
 if((p[i]<min[i])||(p[i]>max[i])) return false;
 }
@@ -232,7 +225,7 @@ return true;
 }
 
 vector3d get_closest_point_from_aabb(const vector3d& pt, const vector3d& min, const vector3d& max) {
-profiler_snap();
+
 vector3d closestPoint;
                        for (int i = 0; i < 3; i++) {
                              decimal v = pt[i];
@@ -244,7 +237,7 @@ return closestPoint;
 }
 
 decimal get_distance_from_aabb(const vector3d& pt, const vector3d& min, const vector3d& max) {
-profiler_snap();
+
                        decimal sqDist = 0.0f;
                        for (int i = 0; i < 3; i++) {
                              // For each axis count any excess distance outside box extents
@@ -256,7 +249,7 @@ profiler_snap();
 }
 
 bool point_in_aabb(const vector3d& pt, const vector3d& min, const vector3d& max) {
-profiler_snap();
+
 for(uint32 i=0; i<3; i++)
 {
 if((pt[i]<min[i])||(pt[i]>max[i])) return false;
@@ -265,7 +258,7 @@ return true;
 }
 
 bool aabbOverlap(const vector3d& v1, decimal r1, const vector3d& v2, decimal r2) {
-profiler_snap();
+
     vector3d m1 = v1 - r1;
     vector3d m2 = v1 + r1;
     vector3d m3 = v2 - r2;
@@ -281,7 +274,7 @@ profiler_snap();
 }
 
 bool aabbOverlap(const vector3d& center, decimal r, const vector3d& min, const vector3d& max) {
-profiler_snap();
+
     vector3d m1 = center - r;
     vector3d m2 = center + r;
 
@@ -295,7 +288,7 @@ profiler_snap();
 }
 
 bool aabbOverlap(const vector3d& v1, const vector3d& v2, const vector3d& v3, const vector3d& v4) {
-profiler_snap();
+
     // Testa a interseção nas três dimensões
     bool overlapX = (v1.x <= v4.x) && (v2.x >= v3.x);
     bool overlapY = (v1.y <= v4.y) && (v2.y >= v3.y);
@@ -306,7 +299,7 @@ profiler_snap();
 }
 
 bool aabbInsideAll(const vector3d& v1, decimal r1, const vector3d& v2, decimal r2) {
-profiler_snap();
+
     vector3d m1 = v1 - r1;
     vector3d m2 = v1 + r1;
     vector3d m3 = v2 - r2;
@@ -322,7 +315,7 @@ profiler_snap();
 }
 
 bool aabbInsideAll(const vector3d& center, decimal r, const vector3d& min, const vector3d& max) {
-profiler_snap();
+
     vector3d m1 = center - r;
     vector3d m2 = center + r;
     // Testa a contenção nas três dimensões
@@ -335,7 +328,7 @@ profiler_snap();
 }
 
 bool aabbInsideAll(const vector3d& v1, const vector3d& v2, const vector3d& v3, const vector3d& v4) {
-profiler_snap();
+
     // Testa a contenção nas três dimensões
     bool insideX = (v1.x >= v3.x) && (v2.x <= v4.x);
     bool insideY = (v1.y >= v3.y) && (v2.y <= v4.y);

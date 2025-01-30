@@ -7,7 +7,6 @@ using namespace std;
 namespace gpp{
 
 bool collisionSphereSphere(Sphere3d* s1, Sphere3d* s2, CollisionInfo* info){
-profiler_snap();
 vector3d dir=s1->position-s2->position;
 decimal sqdist=dir*dir;
 decimal radius=s1->radius+s2->radius;

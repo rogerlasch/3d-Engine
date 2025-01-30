@@ -52,7 +52,7 @@ static matrix3x3 negate(const matrix3x3& mt);
 static matrix3x3 inverse(const matrix3x3& mt);
 static matrix3x3 transpose(const matrix3x3& mt);
 static decimal determinant(const matrix3x3& mt);
-
+static matrix3x3 rotation(float angleX, float angleY, float angleZ);
 friend     std::ostream& operator<<(std::ostream& os, const matrix3x3& mt);
 friend matrix3x3 operator*(const matrix3x3& mt1, const matrix3x3& mt2);
 friend vector3d operator*(const matrix3x3* m, const vector3d& v);

@@ -13,6 +13,7 @@ Capsule3d(const vector3d& p1={0.0f, 0.0f, 0.0f}, const vector3d& p2={0.0f, 0.0f,
     virtual ~Capsule3d();
 virtual std::string toString() const;
 virtual bool collidingPoint(const vector3d& pt);
+virtual vector3d getSupportPoint(const vector3d& dir)const;
 virtual vector3d getClosestPoint(const vector3d& pt);
     virtual void rotate(const quaternion& q) ;
     virtual void rotate(const vector3d& origin, const quaternion& q) ;

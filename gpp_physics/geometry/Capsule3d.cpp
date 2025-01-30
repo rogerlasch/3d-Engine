@@ -43,6 +43,21 @@ t=vector3d::dot(v, v);
 return t<=(radius*radius);
 }
 
+vector3d Capsule3d::getSupportPoint(const vector3d& dir)const{
+vector3d a=position-(axis*length*0.5f);
+vector3d b=position+(axis*length*0.5f);
+vector3d ab=b-a;
+
+decimal d=dir*ab;
+
+if(d>0.0){
+return b+(dir*radius);
+} else if(d<0.0f){
+return a+(dir*radius);
+}
+return position+(dir*radius);
+}
+
 vector3d Capsule3d::getClosestPoint(const vector3d& pt) {
 vector3d closestPoint, p1, p2, vdir;
 decimal t=0.0f;

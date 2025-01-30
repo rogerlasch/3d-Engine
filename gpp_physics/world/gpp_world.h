@@ -5,10 +5,10 @@
 
 #include<vector>
 #include<thread>
-#include"WorldProperties.h"
-#include"BodyHandler.h"
+#include"WorldInfo.h"
+#include"EventFrame.h"
+#include"ClockFrame.h"
 #include"RigidBody.h"
-#include"BodyHelper.h"
 
 namespace gpp{
 
@@ -24,46 +24,33 @@ class octree;
 class gpp_world{
 private:
 std::atomic<uint32> hstate;
-WorldProperties* hprops;
+WorldInfo* hprops;
+ClockFrame* hclock;
 std::vector<RigidBody*> bodies;
 octree* hgeo;
-std::unordered_map<uint64, CollisionInfo*> collisions;
-std::thread handle;
 
 public:
 gpp_world();
-gpp_world(const WorldProperties& pw);
+gpp_world(const WorldInfo& pw);
 gpp_world(const gpp_world& gw)=delete;
 gpp_world& operator=(const gpp_world& pw)=delete;
 virtual ~gpp_world();
 
 inline uint32 getState()const{return hstate.load();}
 std::string toString()const;
-bool create(const WorldProperties& hprops);
-inline WorldProperties getProperties()const{return *this->hprops;}
+bool create(const WorldInfo& hprops);
+inline WorldInfo getProperties()const{return *this->hprops;}
 
-bool addBody(RigidBody* rb);
+bool pushBody(RigidBody* rb);
 bool removeBody(uint32 id);
 bool removeBody(RigidBody* rb);
 RigidBody* getBody(uint32 id)const;
-inline CollisionInfo* getCollision(uint64 id)const{ auto it=collisions.find(id); return ((it==collisions.end()) ? NULL : it->second);}
 void rayCast(const vector3d& origin, const vector3d& dir, std::vector<RayInfo>& infos);
-
-bool start();
-void stop();
+uint32 pushEventClock(uint32 hframes, EVENTFRAMECALLBACK hcall, void* userData=NULL, void* v1=NULL, void* v2=NULL);
+uint32 pushEventClock(EventFrame * ev);
+bool removeEventClock(uint32 id);
 
 void update(decimal dt);
-
-private:
-void gameLoop();
-void internalUpdate(decimal dt);
-void selectAndPrepareBodies(std::vector<RigidBody*>& bodies);
-void integrateBodies(std::vector<RigidBody*>& bodies);
-void broadPhase(std::vector<CollisionInfo*>& collisions);
-void narrowPhase(std::vector<CollisionInfo*>& hcollisions);
-void solveCollisions();
-void solvePair(CollisionInfo* info);
-void dispatchCollisions();
 };
 }
 #endif

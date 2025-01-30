@@ -5,6 +5,7 @@
 #include"collisionSphereCapsule.h"
 #include"collisionSphereSphere.h"
 #include"collisionCapsuleCapsule.h"
+#include"GJK.h"
 
 using namespace std;
 

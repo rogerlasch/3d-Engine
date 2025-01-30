@@ -1,0 +1,135 @@
+
+#define GPP_DOUBLE_PRECISION
+#include <iostream>
+#include <iomanip>
+#include <gpp/gpp.h>
+#include <gpp_physics/gpp_physics.h>
+
+using namespace gpp;
+using namespace std;
+#include"thx.h"
+
+Transform htransform;
+
+// Função para formatar a saída do vetor
+string formatVector(const vector3d& vec) {
+    if (vec.length() < 0.001f) {
+        return "None";
+    }
+    ostringstream oss;
+    oss << std::fixed << std::setprecision(3);
+    oss << "[x: " << vec.x << ", y: " << vec.y << ", z: " << vec.z << "]";
+    return oss.str();
+}
+
+// Função de teste
+void test(const string& name, const Box& shape0, const Box& shape1) {
+    // Verifica se shape0 e shape1 se intersectam
+    vector3d push = shape_intersects_shape(shape0, shape1);
+    bool res = false;
+
+    // Se houver interseção (push for significativo)
+    if (push.length() > 0.001f) {
+        // Cria uma nova caixa empurrada
+        Box b3(htransform + push);
+
+        // Verifica se a nova caixa também se intersecta com shape0
+        vector3d push2 = shape_intersects_shape(shape0, b3);
+
+        // Define 'res' como true se a segunda interseção ocorrer
+        res = (push2.length() > 0.001f);
+    }
+
+    // Imprime o resultado do teste
+    cout << name << ": " << (res ? "Failed" : "Passed")
+         << " (pushed: " << formatVector(push) << ")" << endl;
+}
+
+int main() {
+    // Criação das caixas de teste
+    vector3d translation;
+    quaternion rotation = quaternion::fromAxis({0.0f, 0.0f, 1.0f}, 45.0f);
+    vector3d scale(1.0f, 1.0f, 1.0f);
+    Transform transform = Transform::fromComponents(translation, rotation, scale);
+
+    // Caixa inicial
+    Box box0(transform);
+    test("Same box", box0, box0);
+
+    // Teste de caixas intersectadas
+    translation = {0.5, 1.5, 0.0};
+    transform = Transform::fromComponents(translation, rotation, scale);
+    Box box1(transform);
+    test("Intersecting boxes", box0, box1);
+
+    // Teste de caixas separadas
+    translation = {0.0, 3.0, 0.0};
+    transform = Transform::fromComponents(translation, rotation, scale);
+    Box box2(transform);
+    test("Separate boxes", box0, box2);
+
+    // Teste de caixas formando uma estrela
+    rotation = quaternion::fromAxis({1.0f, 0.0f, 0.0f}, 45.0f) * quaternion::fromAxis({1.0f, 0.0f, 0.0f}, 45.0f);
+    transform = Transform::fromComponents(translation, rotation, scale);
+    Box box3(transform);
+    test("Intersecting boxes forming a star", box0, box3);
+
+    // Teste de caixas com faces tocando
+    translation = {0.0, 2.0, 0.0};
+    rotation = quaternion::fromAxis({0.0f, 0.0f, 1.0f}, 45.0f);
+    transform = Transform::fromComponents(translation, rotation, scale);
+    Box box4(transform);
+    test("Boxes with faces touching", box0, box4);
+
+    // Teste de caixas altas e largas formando uma cruz
+    scale = {1.0f, 4.0f, 1.0f};
+    transform = Transform::fromComponents(translation, rotation, scale);
+    Box box5(transform);
+    translation = {0.0, 2.0, 0.0};
+    scale = {3.0f, 1.0f, 1.0f};
+    transform = Transform::fromComponents(translation, rotation, scale);
+    Box box6(transform);
+    test("Tall and wide boxes forming a cross", box5, box6);
+
+    // Teste de caixas altas formando um X
+    translation = {0.0, 0.0, 0.0};
+    scale = {1.0f, 4.0f, 1.0f};
+    rotation = quaternion::fromAxis({0.0f, 0.0f, 1.0f}, 30.0f);
+    transform = Transform::fromComponents(translation, rotation, scale);
+    Box box7(transform);
+    rotation = quaternion::fromAxis({0.0f, 0.0f, 1.0f}, -30.0f);
+    transform = Transform::fromComponents(translation, rotation, scale);
+    Box box8(transform);
+    test("Tall boxes forming an X", box7, box8);
+
+    // Teste de caixas inclinadas
+    translation = {0.0, 0.0, 3.0};
+    transform = Transform::fromComponents(translation, rotation, scale);
+    Box box9(transform);
+    test("Skew tall boxes", box7, box9);
+
+    // Teste de caixas formando um V
+    translation = {-5.0, 0.0, 0.0};
+    rotation = quaternion::fromAxis({0.0f, 0.0f, 1.0f}, 45.0f);
+    scale = {1.0f, 4.0f, 1.0f};
+    transform = Transform::fromComponents(translation, rotation, scale);
+    Box box10(transform);
+    translation = {5.0, 0.0, 0.0};
+    rotation = quaternion::fromAxis({0.0f, 0.0f, 1.0f}, -45.0f);
+    transform = Transform::fromComponents(translation, rotation, scale);
+    Box box11(transform);
+    test("Boxes forming a V with only edges touching", box10, box11);
+
+    // Teste de caixa dentro de outra caixa
+    scale = {4.0f, 4.0f, 4.0f};
+    rotation = quaternion::fromAxis({0.0f, 0.0f, 1.0f}, 45.0f);
+    transform = Transform::fromComponents(translation, rotation, scale);
+    Box box12(transform);
+    translation = {0.5, 1.0, 0.0};
+    scale = {1.0f, 1.0f, 1.0f};
+    transform = Transform::fromComponents(translation, rotation, scale);
+    Box box13(transform);
+    test("Container and contained boxes", box12, box13);
+
+    return 0;
+}

@@ -17,11 +17,11 @@ this->z=z;
 this->w=w;
 }
 
-quaternion::quaternion(decimal w, const vector3d& v)
+quaternion::quaternion(const vector3d& axis, decimal w)
 {
-this->x=v.x;
-this->y=v.y;
-this->z=v.z;
+this->x=axis.x;
+this->y=axis.y;
+this->z=axis.z;
 this->w=w;
 }
 
@@ -193,6 +193,8 @@ return v+numeric_limits<decimal>::epsilon();
 string quaternion::toString() const
 {
     stringstream result;
+result<<fixed;
+result.precision(2);
 result<<x<<", "<<y<<", "<<z<<":"<<w;
     return result.str();
 }
@@ -224,11 +226,43 @@ matrix3x3 mat;
 return mat;
 }
 
+ quaternion quaternion::fromAxis(const vector3d& axis, decimal w){
+decimal       s = std::sin(w / 360.0f * GPP_PI);
+vector3d v=vector3d::normalize(axis);
+return quaternion(v*s, sqrt(1.0f - s * s));
+}
+
+ quaternion quaternion::fromEuler(decimal x, decimal y, decimal z){
+             decimal roll = degrees_to_radians(x);
+             decimal pitch = degrees_to_radians(y);
+             decimal yaw = degrees_to_radians(z);
+decimal            cyaw, cpitch, croll, syaw, spitch, sroll;
+decimal            cyawcpitch, syawspitch, cyawspitch, syawcpitch;
+
+cyaw = cos(0.5f * yaw);
+cpitch = cos(0.5f * pitch);
+croll = cos(0.5f * roll);
+syaw = sin(0.5f * yaw);
+spitch = sin(0.5f * pitch);
+sroll = sin(0.5f * roll);
+
+cyawcpitch = cyaw*cpitch;
+syawspitch = syaw*spitch;
+cyawspitch = cyaw*spitch;
+syawcpitch = syaw*cpitch;
+
+decimal qx = (decimal) (cyawcpitch * sroll - syawspitch * croll);
+decimal qy = (decimal) (cyawspitch * croll + syawcpitch * sroll);
+decimal qz = (decimal) (syawcpitch * croll - cyawspitch * sroll);
+decimal qw = (decimal) (cyawcpitch * croll + syawspitch * sroll);
+             return quaternion(qx, qy, qz, qw);
+}
+
 //Overloads
 
 ostream& operator<<(ostream& os, const quaternion& q)
 {
-return os<<q.toString();
+return os<<q.x<<", "<<q.y<<", "<<q.z<<", "<<q.w;
 return os;
 }
 
@@ -410,7 +444,7 @@ if(vector3d::dot(axis, axis)<0.01){
 axis=vector3d::cross({1.0f, 0.0f, 0.0f}, start);
 }
 axis.normalize();
-return quaternion(degrees_to_radians(180.0f), axis)+eps;
+return quaternion(axis, degrees_to_radians(180.0f))+eps;
 }
 
 axis=vector3d::cross(start, dest);
@@ -420,6 +454,6 @@ decimal invs=1/s;
 
 axis*=invs;
 
-return quaternion(s*0.5f, axis)+eps;
+return quaternion(axis, s*0.5f)+eps;
 }
 }

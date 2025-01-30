@@ -46,8 +46,8 @@ return *this;
 }
 
 bool CollisionInfo::operator<(const CollisionInfo& info)const{
-uint64 a1=(uint64)r1+(uint64)r2;
-uint64 a2=(uint64)info.r1+(uint64)info.r2;
+uint64 a1=getCollisionId((uint64)r1, (uint64)r2);
+uint64 a2=getCollisionId((uint64)info.r1, (uint64)info.r2);
 return a1 < a2;
 }
 
@@ -104,10 +104,9 @@ os<<"depth: "<<cd.depth<<endl;
 return os;
 }
 
-uint64 getCollisionId(uint32 id1, uint32 id2){
-profiler_snap();
+uint64 getCollisionId(uint64 id1, uint64 id2){
 const static uint32 seed=0xFFFFFFFB;
-uint32 arr[2]={id1, id2};
+uint64 arr[2]={id1, id2};
 uint64 hash=0;
 MurmurHash3_x64_128 (arr, sizeof(arr), seed, &hash);
 return hash;

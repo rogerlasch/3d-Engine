@@ -4,6 +4,7 @@
 #include<string>
 #include"types.h"
 #include"logger/gpp_exception.h"
+#include"logger/logger.h"
 #include"string_utils.h"
 
 using namespace std;
@@ -202,7 +203,7 @@ try {
     wstring_convert<codecvt_utf8_utf16<wchar_t>> myconv;
     return myconv.to_bytes(str);
 } catch(const exception& e) {
-_GEXCEPT(e.what());
+logger::fatal("{}, {}, {}.", __FILE__, __FUNCTION__, e.what());
 }
 return "";
 }
@@ -213,7 +214,7 @@ try {
 wstring_convert<codecvt_utf8_utf16<wchar_t>> myconv;
     return myconv.from_bytes(str);
 } catch(const exception& e) {
-_GEXCEPT(e.what());
+logger::fatal("{}, {}, {}.", __FILE__, __FUNCTION__, e.what());
 }
 return L"";
 }

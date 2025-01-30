@@ -1,69 +1,72 @@
 
 
-/**
-*Classe de calendário para lidar facilmente com datas.
-*Atualmente ele não lida muito bem com datas anteriores ao ano de 1970
-*Escrito por Róger (rogerlasch@gmail.com) em agosto de 2021.
-*Este arquivo faz parte da gpp_utils, uma biblioteca de utilidades. Use por sua conta e risco!
-**/
-
 #ifndef GPP_CALENDAR_H
 #define GPP_CALENDAR_H
 
-#include<string>
+#include <string>
+#include <chrono>
+#include <iomanip>
+#include <ctime>
+#include <sstream>
 
-namespace gpp
-{
-class gpp_calendar
-{
+namespace gpp {
+
+class gpp_calendar {
 private:
-int64 timestamp;
-bool getutc;
-tm current_time;
+    std::chrono::system_clock::time_point timestamp;
+    bool use_utc;
+    std::tm current_time;
+
+    void update_internal_time();
+
 public:
-gpp_calendar();
-gpp_calendar(const gpp_calendar& dc);
-gpp_calendar& operator=(const gpp_calendar& dc);
-bool operator<(const gpp_calendar& dc)const;
-bool operator<=(const gpp_calendar& dc)const;
-bool operator==(const gpp_calendar& dc)const;
-bool operator!=(const gpp_calendar& dc)const;
-bool operator>(const gpp_calendar& dc)const;
-bool operator>=(const gpp_calendar& dc)const;
-void reset();
-int32 getyear()const;
-int32 getmonth()const;
-int32 getday()const;
-int32 gethour()const;
-int32 getminute()const;
-int32 getsecond()const;
-int32 get_weekday()const;
-std::string get_weekday_name()const;
-std::string get_month_name()const;
-int64 get_unix()const;
-bool set(int32 year, int32 month, int32 day, int32 hour, int32 minute, int32 second);
-bool set_unix(int64 stime);
-void set_utc(bool getutc);
-bool leap_year()const;
-void add_years(int32 years);
-void add_months(int32 months);
-void add_days(int32 days);
-void add_hours(int32 hours);
-void add_minutes(int32 minutes);
-void add_seconds(int32 seconds);
-int32 diff_years(const gpp_calendar& dc);
-int32 diff_months(const gpp_calendar& dc);
-int32 diff_days(const gpp_calendar& dc);
-int32 diff_hours(const gpp_calendar& dc);
-int32 diff_minutes(const gpp_calendar& dc);
-int32 diff_seconds(const gpp_calendar& dc);
-std::string to_string()const;
-friend std::ostream& operator<<(std::ostream& os, const gpp_calendar& dc);
-private:
-int64 calendar_to_time_t()const;
-void adjust_internal();
+    gpp_calendar();
+    gpp_calendar(const gpp_calendar& other) = default;
+    gpp_calendar& operator=(const gpp_calendar& other) = default;
+
+    bool operator<(const gpp_calendar& other) const;
+    bool operator<=(const gpp_calendar& other) const;
+    bool operator==(const gpp_calendar& other) const;
+    bool operator!=(const gpp_calendar& other) const;
+    bool operator>(const gpp_calendar& other) const;
+    bool operator>=(const gpp_calendar& other) const;
+
+    void reset();
+    int get_year() const;
+    int get_month() const;
+    int get_day() const;
+    int get_hour() const;
+    int get_minute() const;
+    int get_second() const;
+    int get_weekday() const;
+    std::string get_weekday_name() const;
+    std::string get_month_name() const;
+    std::time_t get_unix() const;
+    
+    bool set(int year, int month, int day, int hour = 0, int minute = 0, int second = 0);
+    bool set_unix(std::time_t unix_time);
+    void set_utc(bool utc);
+
+    bool is_leap_year() const;
+    void add_years(int years);
+    void add_months(int months);
+    void add_days(int days);
+    void add_hours(int hours);
+    void add_minutes(int minutes);
+    void add_seconds(int seconds);
+
+    int diff_years(const gpp_calendar& other) const;
+    int diff_months(const gpp_calendar& other) const;
+    int diff_days(const gpp_calendar& other) const;
+    int diff_hours(const gpp_calendar& other) const;
+    int diff_minutes(const gpp_calendar& other) const;
+    int diff_seconds(const gpp_calendar& other) const;
+
+    std::string to_string() const;
+
+    friend std::ostream& operator<<(std::ostream& os, const gpp_calendar& dc);
 };
 
-std::ostream& operator<<(std::ostream& os, const gpp_calendar& dc);
-}
-#endif
+} // namespace gpp
+
+#endif // GPP_CALENDAR_H

@@ -12,6 +12,7 @@ Box3d(const vector3d& position={0.0f, 0.0f, 0.0f}, const vector3d& alf={0.0f, 0.
     virtual ~Box3d();
 virtual std::string toString() const;
 virtual bool collidingPoint(const vector3d& pt);
+virtual vector3d getSupportPoint(const vector3d& dir)const;
 virtual vector3d getClosestPoint(const vector3d& pt);
     virtual void rotate(const quaternion& q) ;
     virtual void rotate(const vector3d& origin, const quaternion& q) ;
