@@ -8,8 +8,9 @@ class LogFile : public LogItem{
 private:
 std::string filename;
 std::ofstream ofn;
+bool print;
 public:
-LogFile(const std::string& filename="");
+LogFile(const std::string& filename="", bool print=false);
 virtual ~LogFile()=default;
 
 virtual inline bool canLog()const{return ofn.is_open();}

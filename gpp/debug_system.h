@@ -12,6 +12,7 @@
 #include"logger/gpp_exception.h"
 #include"logger/logger.h"
 #include"profiler/profiler.h"
+#include"ErrorData.h"
 
 namespace gpp {
 #undef _GASSERT

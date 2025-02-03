@@ -13,11 +13,11 @@ std::atomic<uint32> HttpRequest::refcount = 0;
 HttpRequest::HttpRequest() {
     id = refcount.fetch_add(1);
     code = 0;
-    method = "get";
-    url = "";
-    body = "";
-    response = "";
-    errormsg = "";
+    method = "GET";
+    url.clear();
+    body.clear();
+    response.clear();
+    errormsg.clear();
     headers.clear();
     hstate.store(HTTPREQUEST_DEFAULT);
     hdata = new CurlData();
@@ -45,7 +45,7 @@ std::string HttpRequest::toString() const {
 
 void HttpRequest::cleanup() {
     setCode(200);
-    setMethod("get");
+    setMethod("GET");
     setUrl("");
     setBody("");
     setResponse("");

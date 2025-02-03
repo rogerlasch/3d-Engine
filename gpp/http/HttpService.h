@@ -44,5 +44,9 @@ public:
 private:
     void stopAll();
 };
+
+std::string url_encode(const std::string& s);
+std::string url_decode(const std::string& encoded);
+
 } // namespace gpp
 #endif // HTTPSERVICE_H

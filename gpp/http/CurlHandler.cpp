@@ -50,22 +50,23 @@ hrequest->setState(HTTPREQUEST_ERROR);
     }
 
     // Configurações do easy handle
-    curl_easy_setopt(hdata->handle, CURLOPT_URL, hrequest->getUrl().c_str());
+    curl_easy_setopt(hdata->handle, CURLOPT_URL, hrequest->url.c_str());
     curl_easy_setopt(hdata->handle, CURLOPT_WRITEFUNCTION, httpPushMemoryCallback);
     curl_easy_setopt(hdata->handle, CURLOPT_WRITEDATA, &hrequest->response);
-    curl_easy_setopt(hdata->handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
+    curl_easy_setopt(hdata->handle, CURLOPT_USERAGENT, "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36,gzip(gfe)");
     curl_easy_setopt(hdata->handle, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(hdata->handle, CURLOPT_TIMEOUT, 20L);
     curl_easy_setopt(hdata->handle, CURLOPT_CONNECTTIMEOUT, 5L);
-    curl_easy_setopt(hdata->handle, CURLOPT_CUSTOMREQUEST, hrequest->getMethod().c_str());
-    if (!hrequest->getBody().empty()) {
-        curl_easy_setopt(hdata->handle, CURLOPT_POSTFIELDS, hrequest->getBody().c_str());
-        curl_easy_setopt(hdata->handle, CURLOPT_POSTFIELDSIZE, hrequest->getBody().size());
-    }
+    curl_easy_setopt(hdata->handle, CURLOPT_CUSTOMREQUEST, hrequest->method.c_str());
+
+if(hrequest->body.size()>0){
+    curl_easy_setopt(hdata->handle, CURLOPT_POST, 1L);
+        curl_easy_setopt(hdata->handle, CURLOPT_POSTFIELDS, hrequest->body.c_str());
+}
 
     // Configuração de headers
-    if (!hrequest->getHeaders().empty()) {
-        for (const auto& header : hrequest->getHeaders()) {
+    if (!hrequest->headers.empty()) {
+        for (const auto& header : hrequest->headers) {
             hdata->headers = curl_slist_append(hdata->headers, header.c_str());
         }
         curl_easy_setopt(hdata->handle, CURLOPT_HTTPHEADER, hdata->headers);

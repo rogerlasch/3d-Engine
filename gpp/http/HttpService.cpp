@@ -112,4 +112,30 @@ void HttpService::stopAll() {
         removeRequest(requests.begin()->first);
     }
 }
-} // namespace gpp
+
+string url_encode(const string& s) {
+    CURL* curl = curl_easy_init();
+    if (curl) {
+        char* output = curl_easy_escape(curl, s.c_str(), s.length());
+        string encoded(output);
+        curl_free(output);
+        curl_easy_cleanup(curl);
+        return encoded;
+    }
+    return "";
+}
+
+// Função para decodificar uma string codificada de URL
+string url_decode(const string& encoded) {
+    CURL* curl = curl_easy_init();
+    if (curl) {
+        int out_length = 0;
+        char* output = curl_easy_unescape(curl, encoded.c_str(), encoded.length(), &out_length);
+        string decoded(output, out_length);
+        curl_free(output);
+        curl_easy_cleanup(curl);
+        return decoded;
+    }
+    return "";
+}
+}
