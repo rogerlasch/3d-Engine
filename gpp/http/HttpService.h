@@ -35,7 +35,7 @@ public:
     HttpService& operator=(const HttpService& hs) = delete;
     ~HttpService();
 
-    shared_HttpRequest createRequest(const std::string& method, const std::string& url,                                      const std::string& postFields,                                      const std::vector<std::string>& headers);
+    shared_HttpRequest createRequest(const std::string& method, const std::string& url,                                      const std::string& postFields="",                                      const std::vector<std::string>& headers={}, const std::string& userAgent="");
     bool pushRequest(shared_HttpRequest& hrequest);
     bool removeRequest(uint32_t id);
     void start();

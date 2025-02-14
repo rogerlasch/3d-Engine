@@ -58,7 +58,5 @@ void enablePool(bool b){hpool.enablePool(b);}
     void stop();                                     // Para as threads de processamento
     void pollEvents();                               // Processa eventos na fila
 };
-
 } // namespace gpp
-
 #endif // EVENTQUEUE_H

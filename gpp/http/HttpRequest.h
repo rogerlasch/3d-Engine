@@ -23,12 +23,13 @@ class CurlData;
 class HttpService;
 
 class HttpRequest {
-public:
+private:
     uint32 id;
     uint32 code;
     std::string method;
     std::string url;
     std::string body;
+std::string userAgent;
     std::string response;
     std::string errormsg;
     std::vector<std::string> headers;
@@ -54,20 +55,23 @@ inline     void setState(uint32 state) { this->hstate.store(state); }
 inline     uint32 getCode() const { return this->code; }
 inline     void setCode(uint32 c) { this->code = c; }
 
-inline     std::string getMethod() const { return this->method; }
-inline     void setMethod(const std::string& m) { this->method = m; }
+inline const std::string& getMethod() const { return this->method; }
+    void setMethod(const std::string& m);
 
-inline     std::string getUrl() const { return this->url; }
+inline const std::string& getUrl() const { return this->url; }
 inline     void setUrl(const std::string& url) { this->url = url; }
 
-inline     std::string getBody() const { return this->body; }
+inline const std::string& getBody() const { return this->body; }
 inline     void setBody(const std::string& body) { this->body = body; }
 
-inline     std::string getResponse() const { return this->response; }
+inline const std::string& getResponse() const { return this->response; }
 inline     void setResponse(const std::string& resp) { this->response = resp; }
 
-inline     std::string getErrorMessage() const { return this->errormsg; }
+inline const std::string& getErrorMessage() const { return this->errormsg; }
 inline     void setErrorMessage(const std::string& e) { this->errormsg = e; }
+
+inline const std::string& getUserAgent()const{return this->userAgent;}
+inline void setUserAgent(const std::string& userAgent){this->userAgent=userAgent;}
 
 inline     std::vector<std::string> getHeaders() const { return this->headers; }
 inline     void setHeaders(const std::vector<std::string>& headers) { this->headers = headers; }

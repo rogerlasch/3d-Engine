@@ -1,6 +1,7 @@
 
 #include <curl/curl.h>
 #include "../debug_system.h"
+#include"../string_utils.h"
 #include <sstream>
 #include "HttpService.h"
 #include "CurlData.h"
@@ -34,6 +35,7 @@ std::string HttpRequest::toString() const {
     std::stringstream ss;
     ss << "id=" << id << ", Method=" << method << ", Url=" << url << "\n";
     ss << "Code=" << code << ", Response=\"" << response << "\"\n";
+ss<<"UserAgent=\""<<userAgent<<"\"\n";
     ss << "Body=\"" << body << "\"\n";
     ss << "Headers={\n";
     for (const auto& it : headers) {
@@ -66,5 +68,9 @@ void HttpRequest::waitForCompletion() {
     while (getState() == HTTPREQUEST_ACTIVE) {
         std::this_thread::sleep_for(std::chrono::milliseconds(20));
     }
+}
+
+    void HttpRequest::setMethod(const std::string& m){
+this->method = string_to_upper_case(m);
 }
 } // namespace gpp

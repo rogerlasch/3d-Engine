@@ -20,7 +20,7 @@ std::unordered_map<std::string, std::shared_ptr<FileData>> hfiles;
 int64 cacheDuration;
 int64 cacheFrequence;
 int64 startFrequenceTime;
-
+uint32 errorCode;
 sqlite3* db;
 
 public:
@@ -35,21 +35,31 @@ if(cacheDuration<0)cacheDuration=0;
 }
 int64 getCacheDuration()const{return cacheDuration;}
 
+inline uint32 getErrorCode()const{return errorCode;}
 bool isOpen()const;
-void open(const std::string& filename, const std::string& key, ErrorData* error=NULL);
+void open(const std::string& filename, const std::string& key);
 void close();
-void pushFile(const std::string& filename, const std::string& internal_name, ErrorData* error=NULL);
-void extractFile(const std::string& internal_name, const std::string& filename, ErrorData* error=NULL);
-void removeFile(const std::string& filename, ErrorData* error=NULL);
+void pushFile(const std::string& filename, const std::string& internal_name);
+void extractFile(const std::string& internal_name, const std::string& filename);
+void removeFile(const std::string& filename);
 bool exists(const std::string& filename)const;
-FileDataRef getFile(const std::string& filename, ErrorData* error=NULL);
+FileDataRef getFile(const std::string& filename);
 void listFiles(std::vector<std::pair<std::string, int64>>& hlist);
 void update();
 
 private:
 
 bool existsInDb(const std::string& filename)const;
-FileDataRef getFileDb(const std::string& filename, ErrorData* error=NULL);
+FileDataRef getFileDb(const std::string& filename);
+
+template<class ...Args>
+void handleError(uint32 code, const std::string& msg, const Args&... args) {
+    this->errorCode = code;
+
+    if (this->errorCode != GERROR_OK) {
+        gpp_throw_error_internal(code, msg, args...);
+    }
+}
 };
 }
 #endif

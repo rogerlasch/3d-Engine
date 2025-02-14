@@ -16,10 +16,11 @@ HttpService::~HttpService() {
     stop();
 }
 
-shared_HttpRequest HttpService::createRequest(const string& method, const string& url,                                               const string& postFields,                                               const vector<string>& headers) {
+shared_HttpRequest HttpService::createRequest(const string& method, const string& url,                                               const string& postFields,                                               const vector<string>& headers, const string& userAgent) {
     auto request = make_shared<HttpRequest>();
     request->setMethod(method);
     request->setUrl(url);
+request->setUserAgent(userAgent);
     request->setBody(postFields);
     request->setHeaders(headers);
 

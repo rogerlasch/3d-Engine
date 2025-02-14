@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cmd_parser.cpp" />
-    <ClCompile Include="ErrorData.cpp" />
+    <ClCompile Include="ErrorSystem.cpp" />
     <ClCompile Include="event\Event.cpp" />
     <ClCompile Include="event\EventQueue.cpp" />
     <ClCompile Include="gpp_calendar.cpp" />
@@ -53,7 +53,7 @@
   <ItemGroup>
     <ClInclude Include="cmd_parser.h" />
     <ClInclude Include="debug_system.h" />
-    <ClInclude Include="ErrorData.h" />
+    <ClInclude Include="ErrorSystem.h" />
     <ClInclude Include="event\Event.h" />
     <ClInclude Include="event\EventQueue.h" />
     <ClInclude Include="gpp.h" />
@@ -176,6 +176,9 @@
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <VcpkgUseStatic>false</VcpkgUseStatic>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <VcpkgUseStatic>true</VcpkgUseStatic>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

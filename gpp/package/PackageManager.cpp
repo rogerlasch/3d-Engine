@@ -21,18 +21,18 @@ bool PackageManager::isOpen() const {
     return db != nullptr;
 }
 
-void PackageManager::open(const string& filename, const string& key, ErrorData* error) {
+void PackageManager::open(const string& filename, const string& key) {
 
-if(error) error->define(0, "Sucesso");
+handleError(GERROR_OK, "");
 
     if (isOpen()) {
-        if (error) error->define(0, "A instância já está associada a um pacote.");
+handleError(GERROR_ALREADY, "O pacote de arquivos já está aberto. Não é possível abrir outro antes de fechar novamente.");
         return;
     }
 
     int32 res = sqlite3_open(filename.c_str(), &db);
     if (res != SQLITE_OK) {
-        if (error) error->define(res, sqlite3_errmsg(db));
+handleError(GERROR_OPEN, "O banco de dados não pode ser aberto.\n{}", sqlite3_errmsg(db));
         return;
     }
 
@@ -40,7 +40,7 @@ if(error) error->define(0, "Sucesso");
     string pragma = "PRAGMA key = '" + key + "';";
     res = sqlite3_exec(db, pragma.c_str(), nullptr, nullptr, nullptr);
     if (res != SQLITE_OK) {
-        if (error) error->define(res, sqlite3_errmsg(db));
+handleError(GERROR_INVALID_OPERATION, "Falha ao definir a chave de descriptografia do banco de dados.\n{}", sqlite3_errmsg(db));
         sqlite3_close(db);
         db = nullptr;
         return;
@@ -56,7 +56,7 @@ if(error) error->define(0, "Sucesso");
     )";
     res = sqlite3_exec(db, sql.c_str(), nullptr, nullptr, nullptr);
     if (res != SQLITE_OK) {
-        if (error) error->define(res, sqlite3_errmsg(db));
+handleError(GERROR_INVALID_OPERATION, "Erro ao criar a tabela para armazenar os arquivos do pacote.\n{}", sqlite3_errmsg(db));
         sqlite3_close(db);
         db = nullptr;
         return;
@@ -65,10 +65,10 @@ if(error) error->define(0, "Sucesso");
     this->filename = filename;
     this->key = key;
 startFrequenceTime=get_timestamp_sec();
-    if (error) error->define(0, "sucesso");
 }
 
 void PackageManager::close() {
+handleError(GERROR_OK, "");
     if (isOpen()) {
         sqlite3_close(db);
         db = nullptr;
@@ -76,23 +76,23 @@ void PackageManager::close() {
     }
 }
 
-void PackageManager::pushFile(const string& filePath, const string& internal_name, ErrorData* error) {
+void PackageManager::pushFile(const string& filePath, const string& internal_name) {
 
-if(error) error->define(0, "Sucesso");
+handleError(GERROR_OK, "");
 
     if (!isOpen()) {
-        if (error) error->define(1, "Database is not open");
+handleError(GERROR_INVALID_STATE, "O banco de dados do pacote não está aberto para realizar esta operação.");
         return;
     }
 
 if(internal_name==""){
-if(error) error->define(0, "O nome interno do arquivo não foi definido.");
+handleError(GERROR_INVALID_PARAM, "O nome interno do arquivo é inválido ou não foi definido.");
 return;
 }
 
     ifstream ifs(filePath, ios::binary);
     if (!ifs.is_open()) {
-        if (error) error->define(0, "O arquivo {} não pode ser aberto.", filePath);
+handleError(GERROR_OPEN, "O arquivo {} não pode ser aberto.", filePath);
         return;
     }
 
@@ -110,7 +110,7 @@ ifs.close();
     sqlite3_stmt* stmt;
     int res = sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
     if (res != SQLITE_OK) {
-        if (error) error->define(res, sqlite3_errmsg(db));
+handleError(GERROR_INVALID_OPERATION, "Erro ao preparar o arquivo {} para o pacote. Erro:\n{}", filePath, sqlite3_errmsg(db));
         return;
     }
 
@@ -120,26 +120,27 @@ ifs.close();
 
     res = sqlite3_step(stmt);
     if (res != SQLITE_DONE) {
-        if (error) error->define(res, sqlite3_errmsg(db));
+handleError(GERROR_INVALID_OPERATION, "Erro ao adicionar o arquivo {} para o pacote. Erro:\n{}", filePath, sqlite3_errmsg(db));
     }
 
     sqlite3_finalize(stmt);
 }
 
-void PackageManager::extractFile(const string& internal_name, const string& filename, ErrorData* error){
+void PackageManager::extractFile(const string& internal_name, const string& filename){
 
-if(error) error->define(0, "Sucesso");
+handleError(GERROR_OK, "");
 
-auto hfile=getFile(internal_name, error);
+auto hfile=getFile(internal_name);
 
 if(hfile==NULL){
+handleError(GERROR_NOTFOUND, "Erro ao buscar o arquivo interno {}. Ele não existe!", internal_name);
 return;
 }
 
 ofstream ofn(filename, ios::binary);
 
 if(!ofn.is_open()){
-if(error) error->define(0, "Erro ao abrir o arquivo {}.", filename);
+handleError(GERROR_OPEN, "Erro ao abrir o arquivo {} para gravação.", filename);
 return;
 }
 
@@ -148,12 +149,12 @@ ofn.close();
 
 }
 
-void PackageManager::removeFile(const string& filename, ErrorData* error) {
+void PackageManager::removeFile(const string& filename) {
 
-if(error) error->define(0, "Sucesso");
+handleError(GERROR_OK, "");
 
     if (!isOpen()) {
-        if (error) error->define(1, "Database is not open");
+handleError(GERROR_INVALID_STATE, "O banco de dados do pacote não está aberto para realizar esta operação.");
         return;
     }
 
@@ -161,15 +162,15 @@ if(error) error->define(0, "Sucesso");
     sqlite3_stmt* stmt;
     int res = sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
     if (res != SQLITE_OK) {
-        if (error) error->define(res, sqlite3_errmsg(db));
+handleError(GERROR_INVALID_OPERATION, "Erro ao excluir o arquivo {} do pacote.\n{}", filename, sqlite3_errmsg(db));
         return;
     }
 
     sqlite3_bind_text(stmt, 1, filename.c_str(), -1, SQLITE_STATIC);
 
     res = sqlite3_step(stmt);
-    if (res != SQLITE_DONE) {
-        if (error) error->define(res, sqlite3_errmsg(db));
+    if (res != SQLITE_OK) {
+handleError(GERROR_INVALID_OPERATION, "Erro ao excluir o arquivo {} do pacote.\n{}", filename, sqlite3_errmsg(db));
     }
 
     sqlite3_finalize(stmt);
@@ -179,20 +180,23 @@ bool PackageManager::exists(const string& filename) const {
     return hfiles.find(filename) != hfiles.end() || existsInDb(filename);
 }
 
-FileDataRef PackageManager::getFile(const string& filename, ErrorData* error) {
+FileDataRef PackageManager::getFile(const string& filename) {
 
-if(error) error->define(0, "Sucesso");
+handleError(GERROR_OK, "");
 
     auto it = hfiles.find(filename);
     if (it != hfiles.end()) {
         return it->second->getReference();
     }
 
-return getFileDb(filename, error);
+return getFileDb(filename);
 }
 
 void PackageManager::listFiles(vector<pair<string, int64>>& hlist) {
-    if (!isOpen()) return;
+    if (!isOpen()) {
+handleError(GERROR_INVALID_STATE, "O banco de dados do pacote não está aberto para realizar esta operação.");
+return;
+}
 
     const char* sql = "SELECT filename, size FROM files;";
     sqlite3_stmt* stmt;
@@ -262,14 +266,14 @@ bool PackageManager::existsInDb(const string& filename)const {
     return exists;
 }
 
-FileDataRef PackageManager::getFileDb(const string& filename, ErrorData* error) {
+FileDataRef PackageManager::getFileDb(const string& filename) {
     if (!isOpen()) return nullptr;
 
     const char* sql = "SELECT data FROM files WHERE filename = ?;";
     sqlite3_stmt* stmt;
     int32 res = sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
     if (res != SQLITE_OK) {
-        if (error) error->define(res, sqlite3_errmsg(db));
+handleError(GERROR_INVALID_OPERATION, "{}", sqlite3_errmsg(db));
         return nullptr;
     }
 
