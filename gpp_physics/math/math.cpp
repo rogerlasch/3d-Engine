@@ -105,7 +105,7 @@ decimal ClosestPtPointSegment(const vector3d& c, const vector3d& a, const vector
             }
 }
 vector3d dist=d-c;
-return dist*dist;
+return vector3d::dot(dist, dist);
 }
 
                  decimal SqDistPointSegment(const vector3d& a, const vector3d& b, const vector3d& c)

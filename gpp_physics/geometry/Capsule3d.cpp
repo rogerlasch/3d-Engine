@@ -1,106 +1,262 @@
-#include "geometry.h"
+
+#include<algorithm>
+#include<numeric>
+#include"geometry.h"
 
 using namespace std;
 
-namespace gpp{
-Capsule3d::Capsule3d(const vector3d& p1, const vector3d& p2, decimal radius, const quaternion& orientation) :
-    GeometricShape(GTYPE_CAPSULE, {0.0f, 0.0f, 0.0f}, orientation) {
-this->radius=radius;
-position=(p1+p2)*0.5f;
-length=(p2-p1).length();
-axis=(p2-p1).normalize();
-}
+namespace gpp {
 
-Capsule3d::~Capsule3d() {
+Capsule3d::Capsule3d(const vector3d& startPoint, const vector3d& endPoint, decimal radius, const Transform& transform)
+    : GeometricShape(GTYPE_CAPSULE, transform), radius(radius){
+vector3d pos=(startPoint+endPoint)*0.5f;
+
+this->transform.setPosition(pos);
+this->axis=(endPoint-startPoint).normalize();
+this->eight=(endPoint-startPoint).length();
 }
 
 string Capsule3d::toString() const {
-    vector3d m1, m2;
-vector3d p1, p2;
-    getAABB(m1, m2);
-getSegment(p1, p2);
-    string axis = "XYZ";
     stringstream ss;
     ss << fixed;
     ss.precision(2);
-    ss << "Type=" << getType() << "(Cápsula), Radius=" <<radius<<", Length="<<length<< endl;
-    ss << "Position=" << position << endl;
-    ss << "AABB={" << endl;
-    for (uint32_t i = 0; i < 3; i++) {
-        ss << axis[i] << "=" << m1[i] << ", " << m2[i] << endl;
-    }
-    ss << "}";
+
+    quaternion q = transform.getOrientation();
+    AABB ab = getAABB();
+vector3d tstart, tend;
+getSegment(tstart, tend);
+
+    ss << "Type=" << type << " Capsule3d, radius=" << radius << endl;
+ss<<"axis="<<axis<<endl;
+    ss << "Start Point=" <<tstart<<endl;
+    ss << "End Point=" <<tend<<endl;
+    ss << "Position=" << transform.getPosition() << endl;
+    ss << "Scale=" << transform.getScale() << endl;
+    ss << "Orientation Euler=" << quaternion_extract_euler_angles(q) << endl;
+    ss << "Orientation=" << q << endl;
+    ss << ab.toString();
+
     return ss.str();
 }
 
-bool Capsule3d::collidingPoint(const vector3d& pt) {
-decimal t=0.0f;
-vector3d p1, p2, closestPoint;
-getSegment(p1, p2);
-ClosestPtPointSegment(pt, p1, p2, t, closestPoint);
-vector3d v=closestPoint-pt;
-t=vector3d::dot(v, v);
-return t<=(radius*radius);
+void Capsule3d::getSegment(vector3d& tstart, vector3d& tend)const {
+decimal alf=eight*0.5;
+vector3d position=transform.getPosition();
+tstart=position-(axis*alf);
+tend=position+(axis*alf);
 }
 
-vector3d Capsule3d::getSupportPoint(const vector3d& dir)const{
-vector3d a=position-(axis*length*0.5f);
-vector3d b=position+(axis*length*0.5f);
-vector3d ab=b-a;
+vector3d Capsule3d::getClosestPoint(const vector3d& pt) const {
+vector3d tstart, tend;
+getSegment(tstart, tend);
+    vector3d segment = tend-tstart;
+    vector3d toPt = pt - tstart;
+    decimal t = vector3d::dot(toPt, segment) / segment.lengthSquared();
 
-decimal d=dir*ab;
+    // Limita t ao intervalo [0, 1] para garantir que o ponto esteja no segmento
+    t = std::max(0.0, std::min(1.0, t));
 
-if(d>0.0){
-return b+(dir*radius);
-} else if(d<0.0f){
-return a+(dir*radius);
-}
-return position+(dir*radius);
-}
+    // Ponto mais próximo no segmento
+    vector3d closestOnSegment = tstart+ segment * t;
 
-vector3d Capsule3d::getClosestPoint(const vector3d& pt) {
-vector3d closestPoint, p1, p2, vdir;
-decimal t=0.0f;
-getSegment(p1, p2);
-ClosestPtPointSegment(pt, p1, p2, t, closestPoint);
-vdir=(pt-closestPoint).normalize();
-closestPoint=closestPoint+(vdir*radius);
-return closestPoint;
+    // Direção do ponto mais próximo no segmento para o ponto dado
+    vector3d direction = (pt - closestOnSegment).normalize();
+
+    // Ponto mais próximo na superfície da cápsula
+    return closestOnSegment + direction * radius;
 }
 
-void Capsule3d::rotate(const quaternion& q) {
-    this->orientation =this->orientation*  q;
-    this->orientation.normalize();
-position=quaternion_vector_rotate(q, position);
-axis=quaternion_vector_rotate(q, axis);
+bool Capsule3d::contains(const vector3d& pt) const {
+
+vector3d startPoint, endPoint;
+getSegment(startPoint, endPoint);
+
+    vector3d segment = endPoint - startPoint;
+    vector3d toPt = pt - startPoint;
+    decimal t = vector3d::dot(toPt, segment) / segment.lengthSquared();
+
+    // Limita t ao intervalo [0, 1]
+    t = std::max(0.0, std::min(1.0, t));
+
+    // Ponto mais próximo no segmento
+    vector3d closestOnSegment = startPoint + segment * t;
+
+    // Verifica se a distância ao ponto mais próximo é menor ou igual ao raio
+    return (pt - closestOnSegment).lengthSquared() <= radius * radius;
 }
 
-void Capsule3d::rotate(const vector3d& origin, const quaternion& q) {
-    position -= origin;
-    position = quaternion_vector_rotate(q, position) + origin;
-axis = quaternion_vector_rotate(q, axis);
-    orientation =orientation  * q;
-    orientation.normalize();
+bool Capsule3d::rayCast(RayInfo* info) const {
+
+//Função lambda...
+
+auto raySphereAux=[this] (const vector3d& origin, const vector3d& dir, const vector3d& center, decimal radius, decimal& tMin, decimal& tMax)->bool{
+    vector3d CO = origin - center;
+    decimal a = vector3d::dot(dir, dir);
+    decimal b = 2.0f * vector3d::dot(CO, dir);
+    decimal c = vector3d::dot(CO, CO) - (radius * radius);
+    decimal discriminant = b * b - 4.0f * a * c;
+
+    if (discriminant < 0.0f) {
+        return false; // Nenhuma interseção
+    }
+
+    tMin = (-b - std::sqrt(discriminant)) / (2.0f * a);
+    tMax = (-b + std::sqrt(discriminant)) / (2.0f * a);
+    if (tMin > tMax) std::swap(tMin, tMax);
+
+    return true;
+};
+
+    // Pontos extremos da cápsula
+vector3d startPoint, endPoint;
+getSegment(startPoint, endPoint);
+
+    vector3d cMA = startPoint;
+    vector3d cMB = endPoint;
+
+    // Vetor AB (direção da cápsula) e comprimento
+    vector3d AB = cMB - cMA;
+    decimal lengthAB = AB.length();
+    AB.normalize();
+
+    // Origem e direção do raio
+    vector3d origin = info->origin;
+    vector3d dir = info->dir;
+
+    // Vetor AO (origem do raio para o ponto inicial da cápsula)
+    vector3d AO = origin - cMA;
+
+    // Cálculos intermediários
+    decimal AB_dot_d = vector3d::dot(AB, dir);
+    decimal AB_dot_AO = vector3d::dot(AB, AO);
+    decimal AB_dot_AB = vector3d::dot(AB, AB);
+    decimal m = AB_dot_d / AB_dot_AB;
+    decimal n = AB_dot_AO / AB_dot_AB;
+
+    // Vetores Q e R
+    vector3d Q = dir - (AB * m);
+    vector3d R = AO - (AB * n);
+
+    // Coeficientes da equação quadrática
+    decimal a = vector3d::dot(Q, Q);
+    decimal b = 2.0f * vector3d::dot(Q, R);
+    decimal c = vector3d::dot(R, R) - (radius * radius);
+
+    // Caso especial: AB e direção do raio são paralelos
+    if (a == 0.0f) {
+        decimal atmin, atmax, btmin, btmax;
+        if (!raySphereAux(origin, dir, cMA, radius, atmin, atmax) ||
+            !raySphereAux(origin, dir, cMB, radius, btmin, btmax)) {
+            return false; // Nenhuma interseção
+        }
+
+        // Determina os pontos de entrada e saída
+        info->enterDist = std::min(atmin, btmin);
+        info->outDist = std::max(atmax, btmax);
+        info->enterPoint = origin + dir * info->enterDist;
+        info->outPoint = origin + dir * info->outDist;
+        info->colliding = true;
+        return true;
+    }
+
+    // Discriminante da equação quadrática
+    decimal discriminant = b * b - 4.0f * a * c;
+    if (discriminant < 0.0f) {
+        return false; // Nenhuma interseção
+    }
+
+    // Soluções da equação quadrática
+    decimal tmin = (-b - std::sqrt(discriminant)) / (2.0f * a);
+    decimal tmax = (-b + std::sqrt(discriminant)) / (2.0f * a);
+    if (tmin > tmax) std::swap(tmin, tmax);
+
+    // Verifica se as interseções estão dentro do segmento da cápsula
+    decimal t_k1 = tmin * m + n;
+    decimal t_k2 = tmax * m + n;
+
+    // Ponto de entrada
+    if (t_k1 < 0.0f) {
+        // Interseção com a esfera em cMA
+        decimal stmin, stmax;
+        if (!raySphereAux(origin, dir, cMA, radius, stmin, stmax)) {
+            return false;
+        }
+        info->enterDist = stmin;
+        info->enterPoint = origin + dir * stmin;
+    } else if (t_k1 > 1.0f) {
+        // Interseção com a esfera em cMB
+        decimal stmin, stmax;
+        if (!raySphereAux(origin, dir, cMB, radius, stmin, stmax)) {
+            return false;
+        }
+        info->enterDist = stmin;
+        info->enterPoint = origin + dir * stmin;
+    } else {
+        // Interseção com o cilindro
+        info->enterDist = tmin;
+        info->enterPoint = origin + dir * tmin;
+    }
+
+    // Ponto de saída
+    if (t_k2 < 0.0f) {
+        // Interseção com a esfera em cMA
+        decimal stmin, stmax;
+        if (!raySphereAux(origin, dir, cMA, radius, stmin, stmax)) {
+            return false;
+        }
+        info->outDist = stmax;
+        info->outPoint = origin + dir * stmax;
+    } else if (t_k2 > 1.0f) {
+        // Interseção com a esfera em cMB
+        decimal stmin, stmax;
+        if (!raySphereAux(origin, dir, cMB, radius, stmin, stmax)) {
+            return false;
+        }
+        info->outDist = stmax;
+        info->outPoint = origin + dir * stmax;
+    } else {
+        // Interseção com o cilindro
+        info->outDist = tmax;
+        info->outPoint = origin + dir * tmax;
+    }
+
+    info->colliding = true;
+    return true;
 }
 
-void Capsule3d::translate(const vector3d& ts) {
-setLastPosition(position);
-    this->position += ts;
-}
+AABB Capsule3d::getAABB() const {
+vector3d tmin, tmax;
+getSegment(tmin, tmax);
 
-void Capsule3d::getAABB(vector3d& tMin, vector3d& tMax)const {
-tMin=position-(axis*(length*0.5f));
-tMax=position+(axis*(length*0.5f));
 for(uint32 i=0; i<3; i++){
-if(tMin[i]>tMax[i])swap(tMin[i], tMax[i]);
-}
-tMin-=radius;
-tMax+=radius;
+if(tmin[i]>tmax[i]) std::swap(tmin[i], tmax[i]);
 }
 
-void Capsule3d::getSegment(vector3d& p1, vector3d& p2)const{
-decimal alf=length*0.5f;
-p1=position-(axis*alf);
-p2=position+(axis*alf);
+return AABB(tmin-radius, tmax+radius);
 }
+
+decimal Capsule3d::getVolume() const {
+    decimal cylinderVolume = GPP_PI * radius * radius * eight;
+    decimal sphereVolume = (4.0f / 3.0f) * GPP_PI * radius * radius * radius;
+    return cylinderVolume + sphereVolume;
 }
+
+decimal Capsule3d::getSurfaceArea() const {
+    decimal cylinderArea = 2 * GPP_PI * radius * eight;
+    decimal sphereArea = 4 * GPP_PI * radius * radius;
+    return cylinderArea + sphereArea;
+}
+
+matrix3x3 Capsule3d::getInertiaTensor(decimal mass) const {
+    // Tensor de inércia aproximado para uma cápsula
+    decimal Ixx = (1.0f / 12.0f) * mass * (3 * radius * radius + eight * eight);
+    decimal Iyy = Ixx;
+    decimal Izz = 0.5f * mass * radius * radius;
+    return matrix3x3().setDiagonal({Ixx, Iyy, Izz});
+}
+
+void Capsule3d::rotate(const quaternion& q){
+transform.rotate(q);
+axis=quaternion_vector_rotate(transform.getOrientation(), axis);
+}
+} // namespace gpp

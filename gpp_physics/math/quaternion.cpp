@@ -156,14 +156,16 @@ return quaternion(-x, -y, -z, w);
 
 quaternion& quaternion::normalize()
 {
-    decimal len=this->length();
-    if (len > 1.0f) {
-x/=len;
-y/=len;
-z/=len;
-w/=len;
-    }
-return *this;
+    decimal len = this->length();
+    if (len < 1e-8) return *this; // Evitar divisão por zero
+
+    decimal invLen = 1.0f / len;
+    x *= invLen;
+    y *= invLen;
+    z *= invLen;
+    w *= invLen;
+
+    return *this;
 }
 
 quaternion& quaternion::setIdentity()
@@ -200,44 +202,115 @@ result<<x<<", "<<y<<", "<<z<<":"<<w;
 }
 
 matrix3x3 quaternion::toMatrix3x3()const {
-        decimal yy = y*y;
-        decimal zz = z*z;
-        decimal xy = x*y;
-        decimal zw = z*w;
-        decimal xz = x*z;
-        decimal yw = y*w;
-        decimal xx = x*x;
-        decimal yz = y*z;
-        decimal xw = x*w;
 
-matrix3x3 mat;
+    quaternion normQ = *this;
+    normQ.normalize();
 
-        mat.e11 = 1 - 2 * yy - 2 * zz;
-        mat.e12 = 2 * xy + 2 * zw;
-        mat.e13 = 2 * xz - 2 * yw;
+    decimal xx = normQ.x * normQ.x;
+    decimal xy = normQ.x * normQ.y;
+    decimal xz = normQ.x * normQ.z;
+    decimal xw = normQ.x * normQ.w;
 
-        mat.e21 = 2 * xy - 2 * zw;
-        mat.e22 = 1 - 2 * xx - 2 * zz;
-        mat.e23 = 2 * yz + 2 * xw;
+    decimal yy = normQ.y * normQ.y;
+    decimal yz = normQ.y * normQ.z;
+    decimal yw = normQ.y * normQ.w;
 
-        mat.e31 = 2 * xz + 2 * yw;
-        mat.e32 = 2 * yz - 2 * xw;
-        mat.e33 = 1 - 2 * xx - 2 * yy;
-return mat;
+    decimal zz = normQ.z * normQ.z;
+    decimal zw = normQ.z * normQ.w;
+
+    return matrix3x3{
+{        1 - 2*(yy + zz), 2*(xy - zw),     2*(xz + yw)},
+{        2*(xy + zw),     1 - 2*(xx + zz), 2*(yz - xw)},
+{        2*(xz - yw),     2*(yz + xw),     1 - 2*(xx + yy)}
+    };
 }
 
+matrix4x4 quaternion::toMatrix4x4() const {
+    // Normaliza o quaternion para garantir que ele seja unitário
+    quaternion normQ = *this;
+    normQ.normalize();
+
+    // Extrai os componentes do quaternion
+    decimal x = normQ.x;
+    decimal y = normQ.y;
+    decimal z = normQ.z;
+    decimal w = normQ.w;
+
+    // Calcula os elementos da matriz 4x4
+    decimal xx = x * x;
+    decimal xy = x * y;
+    decimal xz = x * z;
+    decimal xw = x * w;
+
+    decimal yy = y * y;
+    decimal yz = y * z;
+    decimal yw = y * w;
+
+    decimal zz = z * z;
+    decimal zw = z * w;
+
+    // Constrói a matriz 4x4
+    return matrix4x4{
+        {1 - 2 * (yy + zz), 2 * (xy - zw),     2 * (xz + yw),     0},
+        {2 * (xy + zw),     1 - 2 * (xx + zz), 2 * (yz - xw),     0},
+        {2 * (xz - yw),     2 * (yz + xw),     1 - 2 * (xx + yy), 0},
+        {0,                 0,                 0,                 1}
+    };
+}
+
+quaternion quaternion::slerp(const quaternion& q1, const quaternion& q2, decimal t){
+
+        // Garantir quaternions unitários
+        quaternion from = quaternion::normalize(q1);
+        quaternion to = quaternion::normalize(q2);
+
+        decimal cosTheta = from.x*to.x + from.y*to.y + from.z*to.z + from.w*to.w;
+
+        // Escolher o caminho mais curto
+        if (cosTheta < 0.0f) {
+            to = ~to;
+            cosTheta = -cosTheta;
+        }
+
+        const decimal EPSILON = 1e-6f;
+        if (cosTheta > 1.0f - EPSILON) {
+            // Caso quase paralelo: usar LERP
+            return lerp(from, to, t);
+        }
+
+        decimal theta = acos(cosTheta);
+        decimal sinTheta = sin(theta);
+        decimal a = sin((1 - t)*theta) / sinTheta;
+        decimal b = sin(t*theta) / sinTheta;
+
+        return from*a + to*b;
+
+}
+
+quaternion quaternion::lerp(const quaternion& q1, const quaternion& q2, decimal t) {
+        return (q1*(1 - t) + q2*t).normalize();
+    }
+
  quaternion quaternion::fromAxis(const vector3d& axis, decimal w){
-decimal       s = std::sin(w / 360.0f * GPP_PI);
-vector3d v=vector3d::normalize(axis);
-return quaternion(v*s, sqrt(1.0f - s * s));
+
+    decimal halfAngle = w * 0.5f;
+    decimal s = sin(halfAngle);
+    vector3d normAxis = vector3d::normalize(axis);
+
+    return quaternion(
+        normAxis.x * s,
+        normAxis.y * s,
+        normAxis.z * s,
+        cos(halfAngle)
+    ).normalize();
 }
 
  quaternion quaternion::fromEuler(decimal x, decimal y, decimal z){
-             decimal roll = degrees_to_radians(x);
-             decimal pitch = degrees_to_radians(y);
-             decimal yaw = degrees_to_radians(z);
-decimal            cyaw, cpitch, croll, syaw, spitch, sroll;
-decimal            cyawcpitch, syawspitch, cyawspitch, syawcpitch;
+             double roll = degrees_to_radians(x);
+             double pitch = degrees_to_radians(y);
+             double yaw = degrees_to_radians(z);
+double            cyaw, cpitch, croll, syaw, spitch, sroll;
+double            cyawcpitch, syawspitch, cyawspitch, syawcpitch;
 
 cyaw = cos(0.5f * yaw);
 cpitch = cos(0.5f * pitch);
@@ -256,6 +329,19 @@ decimal qy = (decimal) (cyawspitch * croll + syawcpitch * sroll);
 decimal qz = (decimal) (syawcpitch * croll - cyawspitch * sroll);
 decimal qw = (decimal) (cyawcpitch * croll + syawspitch * sroll);
              return quaternion(qx, qy, qz, qw);
+}
+
+quaternion quaternion::normalize(const quaternion& q) {
+    decimal len = q.length();
+    if (len < 1e-8) return q; // Evitar divisão por zero
+
+    decimal invLen = 1.0f / len;
+return quaternion(q.x * invLen,
+    q.y * invLen,
+    q.z * invLen,
+    q.w * invLen);
+
+    return q;
 }
 
 //Overloads
@@ -318,8 +404,7 @@ quaternion operator-(const quaternion& q1, const quaternion& q2)
 return quaternion(q1.x-q2.x, q1.y-q2.y, q1.z-q2.z, q1.w-q2.w);
 }
 
-quaternion operator*(const quaternion& q1, const quaternion& q2)
-{
+quaternion operator*(const quaternion& q1, const quaternion& q2) {
   decimal w = q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z;
   decimal x = q1.w * q2.x + q1.x * q2.w + q1.y * q2.z - q1.z * q2.y;
   decimal y = q1.w * q2.y - q1.x * q2.z + q1.y * q2.w + q1.z * q2.x;
@@ -350,16 +435,20 @@ decimal w=-(q.x*v.x + q.y*v.y + q.z*v.z);
 return quaternion(x, y, z, w);
 }
 
-quaternion quaternion_rotate(const quaternion& q1, const quaternion& q2)
-{
+quaternion quaternion_rotate(const quaternion& q1, const quaternion& q2) {
 return (q1*q2*(~q1));
 }
 
-vector3d quaternion_vector_rotate(const quaternion& q, const vector3d& v)
-{
+vector3d quaternion_vector_rotate(const quaternion& q, const vector3d& v) {
+/*
 quaternion t;
 t=((q*v)*~q);
 return vector3d(t.x, t.y, t.z);
+*/
+    quaternion p(v.x, v.y, v.z, 0);
+    quaternion result = q * p * q.conjugate();
+    return vector3d(result.x, result.y, result.z);
+
 }
 
 quaternion quaternion_from_euler_angles(decimal x, decimal y, decimal z)
@@ -391,6 +480,7 @@ decimal qw = (decimal) (cyawcpitch * croll + syawspitch * sroll);
 
 vector3d quaternion_extract_euler_angles(const quaternion& q)
 {
+
              double r11, r21, r31, r32, r33, r12, r13=0.00;
              double q00, q11, q22, q33=0.0;
              double tmp=0.00;
@@ -427,6 +517,29 @@ u.y = radians_to_degrees((decimal) asin(-r31));  // pitch
 u.z = radians_to_degrees((decimal) atan2(r21, r11)); // yaw
 
 return u;
+
+/*
+    vector3d angles;
+
+    // Roll (x)
+    decimal sinr_cosp = 2 * (q.w * q.x + q.y * q.z);
+    decimal cosr_cosp = 1 - 2 * (q.x * q.x + q.y * q.y);
+    angles.x = radians_to_degrees(std::atan2(sinr_cosp, cosr_cosp));
+
+    // Pitch (y)
+    decimal sinp = 2 * (q.w * q.y - q.z * q.x);
+    if (std::abs(sinp) >= 1)
+        angles.y = std::copysign(GPP_PI / 2, sinp);
+    else
+        angles.y = radians_to_degrees(std::asin(sinp));
+
+    // Yaw (z)
+    decimal siny_cosp = 2 * (q.w * q.z + q.x * q.y);
+    decimal cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z);
+    angles.z =radians_to_degrees( std::atan2(siny_cosp, cosy_cosp));
+
+    return angles;
+*/
 }
 
 quaternion quaternion_align_axis(const vector3d& v1, const vector3d& v2){

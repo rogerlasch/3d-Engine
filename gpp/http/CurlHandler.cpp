@@ -9,7 +9,6 @@ using namespace std;
 namespace gpp {
 
 atomic<uint32> CurlHandler::refcount = 0;
-// Construtor
 CurlHandler::CurlHandler() {
     refcount.fetch_add(1);
     if (refcount.load() == 1) {
@@ -20,7 +19,7 @@ CurlHandler::CurlHandler() {
     }
     handle = curl_multi_init();
     if (!handle) {
-        throw runtime_error("Erro ao inicializar CURLM");
+        throw runtime_error("Erro ao inicializar CURL_MULTI_HANDLE");
     }
 }
 
@@ -48,7 +47,6 @@ hrequest->setState(HTTPREQUEST_ERROR);
         return false;
     }
 
-    // Configurações do easy handle
     curl_easy_setopt(hdata->handle, CURLOPT_URL, hrequest->getUrl().c_str());
     curl_easy_setopt(hdata->handle, CURLOPT_WRITEFUNCTION, httpPushMemoryCallback);
     curl_easy_setopt(hdata->handle, CURLOPT_WRITEDATA, &hrequest->response);
@@ -63,13 +61,19 @@ else{
     curl_easy_setopt(hdata->handle, CURLOPT_TIMEOUT, 20L);
     curl_easy_setopt(hdata->handle, CURLOPT_CONNECTTIMEOUT, 5L);
     curl_easy_setopt(hdata->handle, CURLOPT_CUSTOMREQUEST, hrequest->getMethod().c_str());
+curl_easy_setopt(hdata->handle, CURLOPT_SSL_OPTIONS, CURLSSLOPT_NO_REVOKE);
+
+hrequest->errorBuffer.resize(CURL_ERROR_SIZE);
+curl_easy_setopt(hdata->handle, CURLOPT_ERRORBUFFER, (char*)hrequest->errorBuffer.c_str());
+curl_easy_setopt(hdata->handle, CURLOPT_DEBUGDATA, (void*)&hrequest->debug_buffer);
+curl_easy_setopt(hdata->handle, CURLOPT_DEBUGFUNCTION, debug_callback);
+    curl_easy_setopt(hdata->handle, CURLOPT_VERBOSE, 1L);
 
 if(hrequest->getBody().size()>0){
     curl_easy_setopt(hdata->handle, CURLOPT_POST, 1L);
-        curl_easy_setopt(hdata->handle, CURLOPT_POSTFIELDS, hrequest->getBody().c_str());
+        curl_easy_setopt(hdata->handle, CURLOPT_COPYPOSTFIELDS, hrequest->getBody().c_str());
 }
 
-    // Configuração de headers
     if (!hrequest->getHeaders().empty()) {
         for (const auto& header : hrequest->getHeaders()) {
             hdata->headers = curl_slist_append(hdata->headers, header.c_str());
@@ -77,14 +81,13 @@ if(hrequest->getBody().size()>0){
         curl_easy_setopt(hdata->handle, CURLOPT_HTTPHEADER, hdata->headers);
     }
 
-    // Adiciona o handle ao multi handle
 try     {
         lock_guard<mutex> lock(mtx);
 
         CURLMcode res = curl_multi_add_handle(handle, hdata->handle);
         if (res != CURLM_OK) {
 hrequest->setState(HTTPREQUEST_ERROR);
-            hrequest->setErrorMessage("Erro ao adicionar handle ao CURLM");
+            hrequest->setErrorMessage(hrequest->errorBuffer);
             cleanupRequest(hdata);
             return false;
         }
@@ -92,15 +95,16 @@ hrequest->setState(HTTPREQUEST_ERROR);
         hrequests[hdata->handle] = hrequest;
 hrequest->setState(HTTPREQUEST_ACTIVE);
     } catch(const exception& e){
-logger::info("Exception in {}.\nError: {}.\nStackTrace:\n{}", __FUNCTION__, e.what(), getStackTrace());
+string msg=safe_format("Exception in {}.\nError: {}.\nStackTrace:\n{}", __FUNCTION__, e.what(), getStackTrace());
+logger::info(msg);
 hrequest->setState(HTTPREQUEST_ERROR);
+hrequest->setErrorMessage(msg);
 cleanupRequest(hrequest->hdata);
 return false;
 }
     return true;
 }
 
-// Remove uma requisição do CURLM
 void CurlHandler::removeRequest(shared_HttpRequest& hrequest) {
     lock_guard<mutex> lck(mtx);
 
@@ -109,12 +113,12 @@ void CurlHandler::removeRequest(shared_HttpRequest& hrequest) {
         cleanupRequest(hrequest->hdata);
         if (hrequest->getState() != HTTPREQUEST_FINISHED) {
             hrequest->setState(HTTPREQUEST_CANCELED);
+hrequest->setErrorMessage("A requisição foi cancelada.");
         }
         hrequests.erase(it);
     }
 }
 
-// Atualiza o estado das requisições
 void CurlHandler::update() {
 
 try {
@@ -143,8 +147,9 @@ lock_guard<mutex> lck(mtx);
                 }
 
                 cleanupRequest(hrequest->hdata);
-                hrequest->setState(HTTPREQUEST_FINISHED);
                 hrequests.erase(it);
+                hrequest->setState(HTTPREQUEST_FINISHED);
+hrequest->executeCallback();
             }
         }
     }
@@ -168,7 +173,6 @@ void CurlHandler::cleanupRequest(CurlData* hdata) {
     }
 }
 
-// Para todas as requisições ativas
 void CurlHandler::stopAll() {
 try{
     lock_guard<mutex> lock(mtx);
@@ -177,6 +181,7 @@ try{
         cleanupRequest(pair.second->hdata);
         if (pair.second->getState() != HTTPREQUEST_FINISHED) {
             pair.second->setState(HTTPREQUEST_CANCELED);
+pair.second->setErrorMessage("A requisição foi cancelada pois stopAll foi chamado.");
         }
     }
 
@@ -192,4 +197,44 @@ size_t CurlHandler::httpPushMemoryCallback(void* ptr, size_t size, size_t nmemb,
     response->append(static_cast<char*>(ptr), size * nmemb);
     return  nmemb;
 }
-} // namespace gpp
+
+int32 CurlHandler::debug_callback(CURL *handle,                   curl_infotype type,                   char *data,                   size_t size,                   void *userptr){
+    std::stringstream *ss = static_cast<std::stringstream *>(userptr);
+    switch (type) {
+        case CURLINFO_TEXT:
+            *ss << "[INFO] " << std::string(data, size);
+            break;
+
+        case CURLINFO_HEADER_IN:
+            *ss << "[HEADER IN] " << std::string(data, size);
+            break;
+
+        case CURLINFO_HEADER_OUT:
+            *ss << "[HEADER OUT] " << std::string(data, size);
+            break;
+
+        case CURLINFO_DATA_IN:
+            *ss << "[DATA IN] " << size << " bytes recebidos" << std::endl;
+//            *ss << std::string(data, size) << std::endl;  // Dados recebidos
+            break;
+
+        case CURLINFO_DATA_OUT:
+            *ss << "[DATA OUT] " << size << " bytes enviados" << std::endl;
+//            *ss << std::string(data, size) << std::endl;  // Dados enviados
+            break;
+
+        case CURLINFO_SSL_DATA_IN:
+            *ss << "[SSL DATA IN] " << size << " bytes recebidos (SSL)" << std::endl;
+            break;
+
+        case CURLINFO_SSL_DATA_OUT:
+            *ss << "[SSL DATA OUT] " << size << " bytes enviados (SSL)" << std::endl;
+            break;
+
+        default:
+            *ss << "[UNKNOWN] Tipo desconhecido: " << type << std::endl;
+            break;
+    }
+return 0;
+}
+}

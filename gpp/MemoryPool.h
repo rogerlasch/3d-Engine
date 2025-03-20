@@ -7,51 +7,55 @@
 #include <atomic>
 #include <string>
 #include <sstream>
-#include"types.h"
+#include "types.h"
 
-namespace gpp{
+namespace gpp {
 
 template <class T>
 class MemoryPool {
 private:
-    std::atomic<uint64> newObjects{0};     // Contador de objetos criados
-    std::atomic<uint64> deletedObjects{0}; // Contador de objetos deletados
-    bool usePool{true};                      // Indica se o pool está habilitado
-    std::queue<T*> items;                    // Fila de objetos disponíveis
-    std::mutex mtx;                          // Mutex para acesso seguro ao pool
+     std::atomic<uint64> newObjects{0};
+     std::atomic<uint64> deletedObjects{0};
+    bool usePool{true};
+    std::queue<T*> items;
+    std::mutex mtx;
 
 public:
-    explicit MemoryPool(uint32 initialItems = 32, bool usePool=true);
+    explicit MemoryPool(uint32 initialItems = 32, bool usePool = true);
     MemoryPool(const MemoryPool& mp) = delete;
     MemoryPool& operator=(const MemoryPool& mp) = delete;
     ~MemoryPool();
 
     std::string toString() const;
     void cleanup();
-void cleanupObjects();
+    void cleanupObjects();
     void reserve(uint32 n);
     void enablePool(bool b);
     bool isPoolEnabled() const;
     T* getNewObject();
     void releaseObject(T* obj);
+void releaseObjects(const std::vector<T*>& objs);
 };
+}
+#endif
 
-// Implementação do construtor
+#ifndef GPP_MEMORYPOOL_CPP
+#define GPP_MEMORYPOOL_CPP
+
+namespace gpp{
 template <class T>
 MemoryPool<T>::MemoryPool(uint32 initialItems, bool usePool) {
-this->usePool=usePool;
-if(usePool){
-    reserve(initialItems);
-}
+    this->usePool = usePool;
+    if (usePool) {
+        reserve(initialItems);
+    }
 }
 
-// Implementação do destrutor
 template <class T>
 MemoryPool<T>::~MemoryPool() {
     cleanup();
 }
 
-// Método para criar ou reutilizar um objeto do pool
 template <class T>
 T* MemoryPool<T>::getNewObject() {
     std::lock_guard<std::mutex> lock(mtx);
@@ -62,73 +66,78 @@ T* MemoryPool<T>::getNewObject() {
     }
 
     newObjects++;
-    return new T(); // Cria um novo objeto se o pool estiver vazio ou desativado
+    return new T();
 }
 
-// Método para liberar um objeto de volta ao pool
 template <class T>
 void MemoryPool<T>::releaseObject(T* obj) {
-    if (!obj) return; // Evita adicionar objetos nulos
+    if (!obj) return;
     std::lock_guard<std::mutex> lock(mtx);
     if (usePool) {
         items.push(obj);
     } else {
         deletedObjects++;
-        delete obj; // Deleta o objeto se o pool estiver desativado
+delete obj;
     }
 }
 
-// Método para limpar todo o pool
-template <class T>
-void MemoryPool<T>::cleanup() {
-cleanupObjects();
-newObjects.store(0);
-deletedObjects.store(0);
+template<class T>
+void MemoryPool<T>::releaseObjects(const std::vector<T*>& objs){
+if(objs.empty()) return;
+
+    std::lock_guard<std::mutex> lock(mtx);
+for(auto& it : objs){
+    if (usePool) {
+        items.push(it);
+    } else {
+        deletedObjects++;
+delete it;
+    }
+}
 }
 
-// Método para limpar todos objetos do pool.
+template <class T>
+void MemoryPool<T>::cleanup() {
+    cleanupObjects();
+    newObjects.store(0);
+    deletedObjects.store(0);
+}
+
 template <class T>
 void MemoryPool<T>::cleanupObjects() {
     std::lock_guard<std::mutex> lock(mtx);
     while (!items.empty()) {
         T* obj = items.front();
         items.pop();
-        delete obj;
+delete obj;
         deletedObjects++;
     }
 }
 
-// Método para reservar espaço no pool
 template <class T>
 void MemoryPool<T>::reserve(uint32 n) {
-if(n==0)return;
+    if (n == 0) return;
 
     std::lock_guard<std::mutex> lock(mtx);
-
     for (uint32 i = 0; i < n; ++i) {
         items.push(new T());
     }
-
     newObjects += n;
 }
 
-// Método para ativar ou desativar o uso do pool
 template <class T>
 void MemoryPool<T>::enablePool(bool b) {
     usePool = b;
-
-if(!usePool){
-cleanupObjects();
+    if (!usePool) {
+        cleanupObjects();
+    }
 }
-}
 
-// Método para verificar se o pool está habilitado
 template <class T>
 bool MemoryPool<T>::isPoolEnabled() const {
     return usePool;
 }
 
-// Método para obter uma representação em string do estado do pool
 template <class T>
 std::string MemoryPool<T>::toString() const {
     std::ostringstream oss;
@@ -140,4 +149,4 @@ std::string MemoryPool<T>::toString() const {
     return oss.str();
 }
 }
-#endif // GPP_MEMORYPOOL_H
+#endif

@@ -19,8 +19,11 @@ HttpRequest::HttpRequest() {
     body.clear();
     response.clear();
     errormsg.clear();
+errorBuffer.clear();
     headers.clear();
+debug_buffer.str().clear();
     hstate.store(HTTPREQUEST_DEFAULT);
+hcall=NULL;
     hdata = new CurlData();
     hservice = nullptr;
 }
@@ -54,6 +57,9 @@ void HttpRequest::cleanup() {
     setErrorMessage("");
     setHeaders({});
     setState(HTTPREQUEST_DEFAULT);
+hcall=NULL;
+errorBuffer.clear();
+debug_buffer.str().clear();
     release();
 }
 
@@ -73,4 +79,10 @@ void HttpRequest::waitForCompletion() {
     void HttpRequest::setMethod(const std::string& m){
 this->method = string_to_upper_case(m);
 }
-} // namespace gpp
+
+void HttpRequest::executeCallback(){
+if(this->hcall){
+hcall(this);
+}
+}
+}

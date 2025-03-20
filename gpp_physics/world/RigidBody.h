@@ -5,144 +5,107 @@
 
 namespace gpp {
 
-class octreenode;
-class WorldInfo;
-class CollisionInfo;
-
 class RigidBody {
-public:
-    uint32 id;
-    uint32 rbflags;
+private:
 
+uint32 id;
+void* userData;
+
+    // Propriedades físicas
     decimal mass;
-decimal invMass;
-    decimal restitution;
-    decimal staticFriction;
-    decimal dynamicFriction;
-decimal linearDamping;
-decimal angularDamping;
-
+    decimal inverseMass;
+    matrix3x3 inertia;
+    matrix3x3 inverseInertia;
     vector3d linearVelocity;
     vector3d angularVelocity;
-    vector3d forces;
+    vector3d force;
     vector3d torque;
 
-    matrix3x3 inertia;
-    matrix3x3 invInertia;
-
+    // Propriedades de estado
     GeometricShape* hbody;
-    void* userData;
-    octreenode* hnode;
 
-    RigidBody();
-    virtual ~RigidBody();
+    // Propriedades de colisão
+    decimal restitution;
+    decimal friction;
 
-    // Remover cópia
-    RigidBody(const RigidBody& rb) = delete;
-    RigidBody& operator=(const RigidBody& rb) = delete;
+    // Flags e controles
+    bool isStatic;
+    bool useGravity;
+    decimal linearDamping;
+    decimal angularDamping;
 
-    // Getters e Setters essenciais
-    void setUserData(void* userdata) { this->userData = userdata; }
-    void* getUserData() const { return this->userData; }
+RigidBody* hparent;
+std::unordered_set<RigidBody*> childs;
 
-    void setId(uint32 id) { this->id = id; }
-    uint32 getId() const { return this->id; }
+public:
+    // Construtor e destrutor
+    RigidBody(RigidBody* hparent, decimal mass = 1.0f, GeometricShape* shape = nullptr);
+    RigidBody(const RigidBody&) = delete;
+    RigidBody& operator=(const RigidBody&) = delete;
+    ~RigidBody();
 
-    void setMass(decimal mass) {
-this->mass = mass;
-if(mass>0.0f){
-setInvMass(1/mass);
-}
-}
+std::string toString()const;
 
-    decimal getMass() const { return this->mass; }
+void setId(uint32 id){this->id=id;}
+uint32 getId()const{return this->id;}
 
-void setInvMass(decimal invMass){this->invMass=invMass;}
-decimal getInvMass()const{return this->invMass;}
+void setUserData(void* userData){this->userData=userData;}
+void* getUserData()const{return this->userData;}
 
-    void setRestitution(decimal restitution) { this->restitution = restitution; }
-    decimal getRestitution() const { return this->restitution; }
+    // Aplicação de forças e torques
+    void applyForce(const vector3d& force);
+    void applyForceAtPoint(const vector3d& force, const vector3d& point);
+    void applyTorque(const vector3d& torque);
+    void clearForces();
 
-    void setStaticFriction(decimal sf) { this->staticFriction = sf; }
-    decimal getStaticFriction() const { return this->staticFriction; }
+    // Getters e Setters
+    decimal getMass() const { return mass; }
+    void setMass(decimal m);
 
-    void setDynamicFriction(decimal df) { this->dynamicFriction = df; }
-    decimal getDynamicFriction() const { return this->dynamicFriction; }
+decimal getFriction()const{return this->friction;}
+void setFriction(decimal friction){this->friction=friction;}
 
-    void setLinearDamping(decimal df) { this->linearDamping = df; }
-    decimal getLinearDamping() const { return this->linearDamping; }
+    const vector3d& getLinearVelocity() const { return linearVelocity; }
+    void setLinearVelocity(const vector3d& velocity) { linearVelocity = velocity; }
 
-    void setAngularDamping(decimal df) { this->angularDamping = df; }
-    decimal getAngularDamping() const { return this->angularDamping; }
+    const vector3d& getAngularVelocity() const { return angularVelocity; }
+    void setAngularVelocity(const vector3d& velocity) { angularVelocity = velocity; }
 
-    vector3d getPosition() const { return (hbody ? hbody->position : vector3d()); }
+Transform* getTransform() const { return hbody->getTransform();}
+    void setTransform(const Transform& t){hbody->setTransform(t);}
 
-    void setLinearVelocity(const vector3d& vel) { this->linearVelocity = vel; }
-    vector3d getLinearVelocity() const { return this->linearVelocity; }
+    GeometricShape* getShape() const { return this->hbody;}
+    void setShape(GeometricShape* s);
 
-    void setAngularVelocity(const vector3d& angVel) { this->angularVelocity = angVel; }
-    vector3d getAngularVelocity() const { return this->angularVelocity; }
+    bool getIsStatic() const { return isStatic; }
+    void setIsStatic(bool staticFlag) { isStatic = staticFlag; }
 
-    void setForces(const vector3d& f) { this->forces = f; }
-    vector3d getForces() const { return this->forces; }
+    bool getUseGravity() const { return useGravity; }
+    void setUseGravity(bool gravityFlag) { useGravity = gravityFlag; }
 
-    void setTorque(const vector3d& t) { this->torque = t; }
-    vector3d getTorque() const { return this->torque; }
+    // Utilidades
+    matrix4x4 getWorldTransform() const;
+    vector3d getVelocityAtPoint(const vector3d& point) const;
 
-    void setInertia(const matrix3x3& inertia) { this->inertia = inertia; }
-    matrix3x3 getInertia() const { return this->inertia; }
+    // Colisão
+    void update(decimal deltaTime);
+    void resolveCollision(RigidBody* other, CollisionInfo* info);
 
-    void setInvInertia(const matrix3x3& invInertia) { this->invInertia = invInertia; }
-    matrix3x3 getInvInertia() const { return this->invInertia; }
+void rotate(decimal x, decimal y, decimal z);
+void rotate(const quaternion& q);
+void translate(const vector3d& translation);
 
-    void setOrientation(const quaternion& orientation) {
-        if (hbody) hbody->setOrientation(orientation);
-    }
-    quaternion getOrientation() const {
-        return (hbody ? hbody->getOrientation() : quaternion());
-    }
+RigidBody* getParent()const{return this->hparent;}
+void setParent(RigidBody* rb){this->hparent=rb;}
 
-    // GeometricShape
-    void setGeometricShape(GeometricShape* shape) {
-        if (hbody) delete hbody;
-        this->hbody = shape;
-    }
-    GeometricShape* getGeometricShape() const { return this->hbody; }
+void pushBody(RigidBody* rb);
+void removeBody(RigidBody* rb);
+void removeAllBodies();
 
-    // Octree node
-    void setOctreeNode(octreenode* node) { this->hnode = node; }
-    octreenode* getOctreeNode() const { return this->hnode; }
+private:
 
-    // Métodos para aplicar forças
-    void addForce(const vector3d& force) {
-        if (mass > 0.0f) this->forces += force;
-    }
-
-    void addTorque(const vector3d& torque) {
-        if (mass > 0.0f) this->torque += torque;
-    }
-
-    // Transformações e simulação
-    virtual void translate(const vector3d& translation);
-    virtual void rotate(const quaternion& orientation);
-    virtual void rotate(const vector3d& origin, const quaternion& orientation);
-
-    virtual bool preStep(WorldInfo* props);
-    virtual void step(decimal dt);
-virtual void solveCollision(RigidBody* r2, CollisionInfo* info);
-    virtual void onLoop();
-
-    // Métodos de contato (virtuals para polimorfismo)
-    virtual void beginContact(RigidBody* other);
-    virtual void updateContact(RigidBody* other);
-    virtual void endContact(RigidBody* other);
-
-    virtual void cleanup();
-    virtual std::string toString() const;
-
-static vector3d computeFriction(const vector3d& normal, const vector3d& relativeVel, decimal staticFriction, decimal dynamicFriction);
+    // Métodos internos
+    void updateInertia();
 };
-
 } // namespace gpp
-
 #endif // RIGIDBODY_H

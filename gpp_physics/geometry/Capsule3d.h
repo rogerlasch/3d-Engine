@@ -5,21 +5,35 @@
 namespace gpp {
 
 class Capsule3d : public GeometricShape {
-public:
-decimal radius;
-decimal length;
+private:
+    decimal radius;       // Raio da cápsula
+decimal eight;
 vector3d axis;
-Capsule3d(const vector3d& p1={0.0f, 0.0f, 0.0f}, const vector3d& p2={0.0f, 0.0f, 0.0f}, decimal radius=0.1f, const quaternion& orientation=quaternion());
-    virtual ~Capsule3d();
-virtual std::string toString() const;
-virtual bool collidingPoint(const vector3d& pt);
-virtual vector3d getSupportPoint(const vector3d& dir)const;
-virtual vector3d getClosestPoint(const vector3d& pt);
-    virtual void rotate(const quaternion& q) ;
-    virtual void rotate(const vector3d& origin, const quaternion& q) ;
-    virtual void translate(const vector3d& ts) ;
-    virtual void getAABB(vector3d& tMin, vector3d& tMax)const;
-virtual void getSegment(vector3d& p1, vector3d& p2)const;
+
+public:
+    // Construtor
+    Capsule3d(const vector3d& startPoint, const vector3d& endPoint, decimal radius, const Transform& transform = Transform());
+
+    // Destrutor
+    ~Capsule3d() override = default;
+
+    // Getters e Setters
+
+decimal getEight()const{return this->eight;}
+vector3d getAxis()const{return this->axis;}
+    decimal getRadius() const { return radius; }
+    void setRadius(decimal r) { radius = r; }
+
+void getSegment(vector3d& tstart, vector3d& tend)const;
+    std::string toString() const override;
+    vector3d getClosestPoint(const vector3d& pt) const override;
+    bool contains(const vector3d& pt) const override;
+    bool rayCast(RayInfo* info) const override;
+    AABB getAABB() const override;
+    decimal getVolume() const override;
+    decimal getSurfaceArea() const override;
+    matrix3x3 getInertiaTensor(decimal mass) const override;
+void rotate(const quaternion& q) override ;
 };
-}
-#endif
+} // namespace gpp
+#endif // CAPSULE3D_H

@@ -20,6 +20,7 @@ normal.zero();
 lastNormal.zero();
 depth=0.0f;
 lastDepth=0.0f;
+
 r1=NULL;
 r2=NULL;
 }
@@ -70,16 +71,16 @@ r1=NULL;
 r2=NULL;
 }
 
-string CollisionInfo::toString()const
-{
-stringstream ss;
-ss<<fixed;
-ss.precision(2);
-ss<<"Id="<<id<<", Type="<<type<<endl;
-ss<<"lastPoint="<<lastPoint<<", Point="<<point<<endl;
-ss<<"lastNormal="<<lastNormal<<", Normal="<<normal<<endl;
-ss<<"lastDepth="<<lastDepth<<", Depth="<<depth<<endl;
-return ss.str();
+std::string CollisionInfo::toString() const {
+    std::stringstream ss;
+    ss << std::fixed;
+    ss.precision(2);
+    ss << "CollisionInfo:" << std::endl;
+    ss << "Id=" << id << ", Type=" << type << std::endl;
+    ss << "Point=" << point << ", lastPoint=" << lastPoint << std::endl;
+    ss << "Normal=" << normal << ", lastNormal=" << lastNormal << std::endl;
+    ss << "Depth=" << depth << ", lastDepth=" << lastDepth << std::endl;
+    return ss.str();
 }
 
 void CollisionInfo::backup(){

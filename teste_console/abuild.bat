@@ -29,7 +29,7 @@ if "%MODE%"=="debug" (
 ) else (
     echo "Compilando em modo release..."
     cl /MD /Zi /nologo /EHsc /std:c++latest /I ..\..\ /I ..\dependencies /I D:\github\vcpkg\installed\x64-windows\include /c /MP ..\main.cpp
-    link /nologo /INCREMENTAL:NO /out:"..\main.exe" /libpath:"..\..\dependencies\libs" /LIBPATH:"D:\github\vcpkg\installed\x64-windows\lib" /MACHINE:X64 /MANIFEST:NO *.obj gpp.lib GameNetworkingSockets.lib enet.lib libcurl.lib libcrypto.lib
+    link /nologo /INCREMENTAL:NO /out:"..\main.exe" /libpath:"..\..\dependencies\libs" /LIBPATH:"D:\github\vcpkg\installed\x64-windows\lib" /MACHINE:X64 /MANIFEST:NO *.obj gpp.lib gpp_physics.lib GameNetworkingSockets.lib enet.lib libcurl.lib libcrypto.lib
 )
 cd ..
 del *.exp

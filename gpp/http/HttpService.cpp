@@ -16,8 +16,12 @@ HttpService::~HttpService() {
     stop();
 }
 
+shared_HttpRequest HttpService::createNewRequest(){
+return make_shared<HttpRequest>();
+}
+
 shared_HttpRequest HttpService::createRequest(const string& method, const string& url,                                               const string& postFields,                                               const vector<string>& headers, const string& userAgent) {
-    auto request = make_shared<HttpRequest>();
+    auto request = createNewRequest();
     request->setMethod(method);
     request->setUrl(url);
 request->setUserAgent(userAgent);
@@ -34,6 +38,7 @@ request->setUserAgent(userAgent);
 bool HttpService::pushRequest(shared_HttpRequest& hrequest) {
     try {
         scoped_lock lck(mtx, hrequest->mtx);
+
         if (hcurl->pushRequest(hrequest)) {
             hrequest->setService(this);
             requests[hrequest->getId()] = hrequest;
@@ -73,7 +78,7 @@ void HttpService::start() {
                 hstate.store(HTTPSERVICE_ACTIVE);
 
                 while (hstate.load() == HTTPSERVICE_ACTIVE) {
-                    this_thread::sleep_for(chrono::milliseconds(5));
+                    this_thread::sleep_for(chrono::milliseconds(100));
                     if (token.stop_requested()) {
                         break;
                     }

@@ -16,7 +16,7 @@ COL_CONTINUOUS,
 COL_END
 };
 
-class RigidBody;
+class GeometricShape;
 class CollisionInfo
 {
 public:
@@ -29,8 +29,8 @@ vector3d normal;
 vector3d lastNormal;
 decimal depth;
 decimal lastDepth;
-RigidBody* r1;
-RigidBody* r2;
+GeometricShape* r1;
+GeometricShape* r2;
 CollisionInfo();
 CollisionInfo(const CollisionInfo& c);
 CollisionInfo& operator=(const CollisionInfo& c);

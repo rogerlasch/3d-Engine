@@ -8,20 +8,20 @@
 #include<initializer_list>
 #include <array>
 #include<vector>
+#include <numbers> //C++20...
 #include"../types.h"
 #include"vector3d.h"
 #include"matrix3x3.h"
 #include"matrix4x4.h"
 #include"quaternion.h"
-#include"RayInfo.h"
-#include"ray.h"
+#include"Transform.h"
 #include<format>
 #include"format_math_overloads.h"
 
 
 namespace gpp{
 
-#define GPP_PI 3.1415926f
+#define GPP_PI std::numbers::pi
 #define GPP_EPSILON 0.00001f
 #define GPP_DISTANCE_TOLERANCE 0.01f
 

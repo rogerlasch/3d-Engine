@@ -55,9 +55,13 @@ decimal getAngle()const;
 vector3d getAxis()const;
 std::string toString()const;
 matrix3x3 toMatrix3x3()const;
+matrix4x4 toMatrix4x4() const;
 
+    static quaternion slerp(const quaternion& q1, const quaternion& q2, decimal t);
+    static quaternion lerp(const quaternion& q1, const quaternion& q2, decimal t);
 static quaternion fromAxis(const vector3d& axis, decimal w);
 static quaternion fromEuler(decimal x, decimal y, decimal z);
+static quaternion normalize(const quaternion& q);
 };
 
 //Sobrecarga dos operadores do quatérnion...

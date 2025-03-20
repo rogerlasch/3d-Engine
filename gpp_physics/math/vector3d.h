@@ -68,6 +68,8 @@ static vector3d inverse(const vector3d& v);
 static decimal dot(const vector3d& v1, const vector3d& v2);
 static vector3d cross(const vector3d& v1, const vector3d& v2);
 static decimal triple(const vector3d& v1, const vector3d& v2, const vector3d& v3);
+static vector3d lerp(const vector3d& v1, const vector3d& v2, decimal t);
+static vector3d slerp(const vector3d& v1, const vector3d& v2, decimal t);
 std::string toString()const;
 };
 
@@ -86,10 +88,8 @@ vector3d operator/(decimal s, const vector3d& v);
 
 vector3d operator+(const vector3d& v1, const vector3d& v2);
 vector3d operator-(const vector3d& v1, const vector3d& v2);
-decimal operator*(const vector3d& v1, const vector3d& v2);
-vector3d multiVec(const vector3d& v1, const vector3d& v2);
+vector3d operator*(const vector3d& v1, const vector3d& v2);
 vector3d operator/(const vector3d& v1, const vector3d& v2);
-vector3d operator^(const vector3d& v1, const vector3d& v2);
 bool vector3dIsEqual(const vector3d& v1, const vector3d& v2, decimal tol=0.1f);
 }
 

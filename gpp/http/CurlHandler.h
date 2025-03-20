@@ -42,6 +42,7 @@ private:
 
     // Callback para processar dados recebidos
     static size_t httpPushMemoryCallback(void* ptr, size_t size, size_t nmemb, void* userp);
+static int32 debug_callback(CURL *handle,                   curl_infotype type,                   char *data,                   size_t size,                   void *userptr);
 };
 } // namespace gpp
 #endif // CURLHANDLER_H

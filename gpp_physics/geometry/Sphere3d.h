@@ -5,20 +5,24 @@
 namespace gpp {
 
 class Sphere3d : public GeometricShape {
+private:
+    decimal radius;
+
 public:
-decimal radius;
+    Sphere3d(decimal radius, const Transform& transform = Transform());
+    ~Sphere3d() override = default;
 
-Sphere3d(const vector3d& position={0.0f, 0.0f, 0.0f}, decimal radius=0.5f, const quaternion& orientation=quaternion());
-    virtual ~Sphere3d();
+    decimal getRadius() const{return radius;}
+    void setRadius(decimal r){this->radius=r;}
 
-virtual std::string toString() const;
-virtual bool collidingPoint(const vector3d& pt);
-virtual vector3d getSupportPoint(const vector3d& dir)const;
-virtual vector3d getClosestPoint(const vector3d& pt);
-    virtual void rotate(const quaternion& q) ;
-    virtual void rotate(const vector3d& origin, const quaternion& q) ;
-    virtual void translate(const vector3d& ts) ;
-    virtual void getAABB(vector3d& tMin, vector3d& tMax)const;
+    std::string toString() const override;
+    vector3d getClosestPoint(const vector3d& pt) const override;
+    bool contains(const vector3d& pt) const override;
+    bool rayCast(RayInfo* info) const override;
+    AABB getAABB() const override;
+    decimal getVolume() const override;
+    decimal getSurfaceArea() const override;
+    matrix3x3 getInertiaTensor(decimal mass) const override;
 };
-}
-#endif
+} // namespace gpp
+#endif // SPHERE3D_H

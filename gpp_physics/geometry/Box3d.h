@@ -5,21 +5,30 @@
 namespace gpp {
 
 class Box3d : public GeometricShape {
+private:
+    vector3d extents;  // Metade das dimensões da caixa (largura, altura, profundidade)
+
 public:
-vector3d alf;
-std::array<vector3d, 3> axis;
-Box3d(const vector3d& position={0.0f, 0.0f, 0.0f}, const vector3d& alf={0.0f, 0.0f, 0.0f}, const quaternion& orientation=quaternion());
-    virtual ~Box3d();
-virtual std::string toString() const;
-virtual bool collidingPoint(const vector3d& pt);
-virtual vector3d getSupportPoint(const vector3d& dir)const;
-virtual vector3d getClosestPoint(const vector3d& pt);
-    virtual void rotate(const quaternion& q) ;
-    virtual void rotate(const vector3d& origin, const quaternion& q) ;
-    virtual void translate(const vector3d& ts) ;
-    virtual void getAABB(vector3d& tMin, vector3d& tMax)const;
-inline virtual void getLocalAxis(std::array<vector3d, 3>& axis){axis=this->axis;}
-virtual void getVertices(std::vector<vector3d>& vertices)const;
+    // Construtor
+    Box3d(const vector3d& extents = vector3d(1.0f, 1.0f, 1.0f), const Transform& transform = Transform());
+
+    // Destrutor
+    ~Box3d() override = default;
+
+    // Getters e Setters
+    vector3d getExtents() const { return extents; }
+    void setExtents(const vector3d& e) { extents = e; }
+
+    // Métodos da interface GeometricShape
+    std::string toString() const override;
+    vector3d getClosestPoint(const vector3d& pt) const override;
+    bool contains(const vector3d& pt) const override;
+    bool rayCast(RayInfo* info) const override;
+    AABB getAABB() const override;
+    decimal getVolume() const override;
+    decimal getSurfaceArea() const override;
+    matrix3x3 getInertiaTensor(decimal mass) const override;
+void getVertices(std::vector<vector3d>& vertices)const;
 };
-}
-#endif
+} // namespace gpp
+#endif // BOX3D_H

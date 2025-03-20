@@ -6,6 +6,7 @@
 #include <memory>
 #include <mutex>
 #include <string>
+#include<sstream>
 #include <vector>
 
 namespace gpp {
@@ -18,11 +19,13 @@ enum HTTPREQUEST_STATUS {
     HTTPREQUEST_FINISHED
 };
 
+
 class CurlHandler;
 class CurlData;
 class HttpService;
 
 class HttpRequest {
+typedef std::function<void(HttpRequest*)> HTTPREQUESTCALLBACK;
 private:
     uint32 id;
     uint32 code;
@@ -35,6 +38,9 @@ std::string userAgent;
     std::vector<std::string> headers;
 
 private:
+std::string errorBuffer;
+std::stringstream debug_buffer;
+HTTPREQUESTCALLBACK hcall;
     CurlData* hdata;
     std::atomic<uint32> hstate;
     HttpService* hservice;
@@ -76,6 +82,10 @@ inline void setUserAgent(const std::string& userAgent){this->userAgent=userAgent
 inline     std::vector<std::string> getHeaders() const { return this->headers; }
 inline     void setHeaders(const std::vector<std::string>& headers) { this->headers = headers; }
 
+inline HTTPREQUESTCALLBACK getCallback()const{return hcall;}
+inline void setCallback(HTTPREQUESTCALLBACK hcall){this->hcall=hcall;}
+std::string getDebugData()const{return debug_buffer.str();}
+
 inline     HttpService* getService() const { return this->hservice; }
 inline     void setService(HttpService* service) { this->hservice = service; }
 
@@ -83,6 +93,7 @@ inline     void setService(HttpService* service) { this->hservice = service; }
     void cleanup();
     void release();
     void waitForCompletion();
+void executeCallback();
 
 private:
     friend class HttpService;

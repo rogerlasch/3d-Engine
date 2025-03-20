@@ -55,9 +55,12 @@ throw runtime_error("Invalid axis on vector3d");
 
 vector3d& vector3d::operator=(const vector3d& dv)
 {
+if(this!=&dv){
 this->x=dv.x;
 this->y=dv.y;
 this->z=dv.z;
+}
+
 return *this;
 }
 
@@ -260,10 +263,51 @@ v.z= v1.x*v2.y - v1.y*v2.x;
 return v;
 }
 
-decimal vector3d::triple(const vector3d& a, const vector3d& b, const vector3d& c)
-{
+decimal vector3d::triple(const vector3d& a, const vector3d& b, const vector3d& c) {
 //return a.x * (b.y * c.z - c.y * b.z) - a.y * (b.x * c.z - c.x * b.z) + a.z * (b.x * c.y - c.x * b.y);
 return dot(cross(a, b), c);
+}
+
+vector3d vector3d::lerp(const vector3d& v1, const vector3d& v2, decimal t){
+return v1 + (v2 - v1) * t;
+}
+
+vector3d vector3d::slerp(const vector3d& v1, const vector3d& v2, decimal t){
+    // Normaliza os vetores para garantir que sejam unitários
+    vector3d from = normalize(v1);
+    vector3d to = normalize(v2);
+
+    // Calcula o cosseno do ângulo entre os vetores
+    decimal cosTheta = dot(from, to);
+
+    // Se os vetores estão na mesma direção, retorna o lerp
+    if (cosTheta > 0.9999f) {
+        return lerp(v1, v2, t);
+    }
+
+    // Se os vetores estão em direções opostas, o slerp não é bem definido
+    if (cosTheta < -0.9999f) {
+        // Escolhe um vetor perpendicular arbitrário
+        vector3d perpendicular(-from.y, from.x, 0);
+        if (perpendicular.length() < 1e-6f) {
+            perpendicular = vector3d(-from.z, 0, from.x);
+        }
+        perpendicular.normalize();
+
+        // Interpola entre os vetores perpendiculares
+        decimal angle = GPP_PI * t;
+        return from * cos(angle) + perpendicular * sin(angle);
+    }
+
+    // Calcula o ângulo entre os vetores
+    decimal theta = acos(cosTheta);
+
+    // Aplica a fórmula do slerp
+    decimal sinTheta = sin(theta);
+    decimal a = sin((1 - t) * theta) / sinTheta;
+    decimal b = sin(t * theta) / sinTheta;
+
+    return from * a + to * b;
 }
 
 string vector3d::toString()const
@@ -312,7 +356,7 @@ return vector3d(v.x*s, v.y*s, v.z*s);
 
 vector3d operator*(decimal s, const vector3d& v)
 {
-return vector3d(v.x*s, v.y*s, v.z*s);
+return vector3d(s*v.x, s*v.y, s*v.z);
 }
 
 vector3d operator/(const vector3d& v, decimal s)
@@ -342,23 +386,13 @@ vector3d multiVec(const vector3d& v1, const vector3d& v2)
 return vector3d(v1.x*v2.x, v1.y*v2.y, v1.z*v2.z);
 }
 
-decimal operator*(const vector3d& v1, const vector3d& v2)
-{
-return((v1.x*v2.x)+(v1.y*v2.y)+(v1.z*v2.z));
+vector3d operator*(const vector3d& v1, const vector3d& v2) {
+return vector3d(v1.x*v2.x, v1.y*v2.y, v1.z*v2.z);
 }
 
 vector3d operator/(const vector3d& v1, const vector3d& v2)
 {
 return vector3d(v1.x/((v2.x!=0) ? v2.x : 1.0f), v1.y/((v2.y!=0) ? v2.y : 1.0f), v1.z/((v2.z!=0) ? v2.z : 1.0f));
-}
-
-vector3d operator^(const vector3d& v1, const vector3d& v2)
-{
-vector3d v;
-v.x=v1.y*v2.z - v1.z*v2.y;
-v.y=-v1.x*v2.z + v1.z*v2.x;
-v.z= v1.x*v2.y - v1.y*v2.x;
-return v;
 }
 
 bool vector3dIsEqual(const vector3d& v1, const vector3d& v2, decimal tol){
