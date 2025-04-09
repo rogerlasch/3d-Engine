@@ -19,7 +19,6 @@ public:
     int64 maxTime;
     int64 executions;
 std::string name;
-mutable std::mutex mtx;
     ProfilerData();
     ProfilerData(const ProfilerData& pf);
     ProfilerData& operator=(const ProfilerData& pf);

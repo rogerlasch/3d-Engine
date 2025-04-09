@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="collision\collision.h" />
     <ClInclude Include="collision\CollisionInfo.h" />
+    <ClInclude Include="collision\CollisionTracker.h" />
     <ClInclude Include="collision\MurmurHash3.h" />
     <ClInclude Include="geometry\AABB.h" />
     <ClInclude Include="geometry\Box3d.h" />
@@ -36,11 +37,18 @@
     <ClInclude Include="math\Transform.h" />
     <ClInclude Include="math\vector3d.h" />
     <ClInclude Include="types.h" />
+    <ClInclude Include="world\Constraint.h" />
+    <ClInclude Include="world\gpp_world.h" />
+    <ClInclude Include="world\HingeJoint.h" />
     <ClInclude Include="world\RigidBody.h" />
+    <ClInclude Include="world\RodConstraint.h" />
+    <ClInclude Include="world\SpatialOctree.h" />
+    <ClInclude Include="world\SpringConstraint.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="collision\collision.cpp" />
     <ClCompile Include="collision\CollisionInfo.cpp" />
+    <ClCompile Include="collision\CollisionTracker.cpp" />
     <ClCompile Include="collision\MurmurHash3.cpp" />
     <ClCompile Include="geometry\AABB.cpp" />
     <ClCompile Include="geometry\Box3d.cpp" />
@@ -54,7 +62,13 @@
     <ClCompile Include="math\quaternion.cpp" />
     <ClCompile Include="math\Transform.cpp" />
     <ClCompile Include="math\vector3d.cpp" />
+    <ClCompile Include="world\Constraint.cpp" />
+    <ClCompile Include="world\gpp_world.cpp" />
+    <ClCompile Include="world\HingeJoint.cpp" />
     <ClCompile Include="world\RigidBody.cpp" />
+    <ClCompile Include="world\RodConstraint.cpp" />
+    <ClCompile Include="world\SpatialOctree.cpp" />
+    <ClCompile Include="world\SpringConstraint.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

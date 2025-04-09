@@ -1,109 +1,91 @@
 
 #define GPP_DOUBLE_PRECISION
+#include<execution>
 #include <iostream>
 #include <gpp/gpp.h>
 #include<gpp_physics/gpp_physics.h>
 #include"g_start.h"
-#include"teste.h"
+#include"BodyManager.h"
 
-using namespace gpp;
 using namespace std;
-
-
 using namespace gpp;
-
-void testApplyForceAtPoint() {
-    // Cria um cubo (Box3d) com dimensões 2x2x2
-    Box3d* cubeShape = new Box3d(vector3d(1.0f, 1.0f, 1.0f));
-
-    // Cria um corpo rígido para o cubo
-    RigidBody cube(NULL, 1.0f, cubeShape); // Massa = 1.0
-
-    // Define um ponto de aplicação da força (um canto do cubo)
-    vector3d forcePoint = vector3d(1.0f, 1.0f, 1.0f); // Canto superior direito
-
-    // Aplica uma força para cima no canto do cubo
-    vector3d force = vector3d(0, 10.0f, 0); // Força de 10 unidades para cima
-    cube.applyForceAtPoint(force, forcePoint);
-
-    // Simula a física por alguns passos
-    for (int i = 0; i < 10; ++i) {
-        cube.update(0.1f); // Atualiza a física com deltaTime = 0.1 segundos
-        cout << "Posição: " << cube.getTransform()->getPosition() << endl;
-        cout << "Orientação: " << quaternion_extract_euler_angles(cube.getTransform()->getOrientation()).toString() << endl;
-    }
-cout<<cube.toString();
-}
-
-void testCollision() {
-    // Cria duas esferas
-    Sphere3d* sphereA = new Sphere3d(1.5f);
-    Sphere3d* sphereB = new Sphere3d(1.5f);
-sphereB->translate({2.5,0,0});
-    // Cria dois corpos rígidos
-    RigidBody bodyA(NULL, 1.5f, sphereA);
-    RigidBody bodyB(NULL, 1.5f, sphereB);
-
-    // Define velocidades iniciais
-    bodyA.setLinearVelocity(vector3d(1, 0, 0));
-    bodyB.setLinearVelocity(vector3d(-1, 0, 0));
-
-    // Simula uma colisão
-    CollisionInfo info;
-    info.normal = vector3d(1, 0, 0);
-    info.point = vector3d(1.5, 0, 0);
-    info.depth = 0.5f;
-
-    // Resolve a colisão
-    bodyA.resolveCollision(&bodyB, &info);
-
-    // Exibe os resultados
-    cout << "Body A Velocity: " << bodyA.getLinearVelocity() << endl;
-    cout << "Body B Velocity: " << bodyB.getLinearVelocity() << endl;
-logger::info("bodyA=\n{}", bodyA.toString());
-logger::info("bodyB=\n{}", bodyB.toString());
-
-}
 
 int main() {
 try{
 G_STARTER gst;
 
+vector3d vmin={-10000,-10000,-10000};
+vector3d vmax={10000,10000,10000};
+gpp_world game(AABB(vmin, vmax));
 
-Sphere3d* sphere=new Sphere3d(2.5f);
-RigidBody rb(NULL, 5.0f, sphere);
-rb.setFriction(0.5f);
-sphere->translate({0,0, 12.5f});
-
-Box3d* box=new Box3d({500000, 500000, 10});
-RigidBody ground(NULL, 0.0f, box);
-ground.setFriction(0.05f);
-
-vector3d gravity={0,0, -9.81f};
-
-int x=0;
-
-decimal dt=1/5.0f;
-while(x<5000){
-x++;
-rb.applyForce(gravity*rb.getMass());
-if(rb.getTransform()->getPosition().x<500){
-rb.applyForce({300, 0, 0});
+RigidBody* s=createBodySphere({0,0,2.5f}, 2.5f, {0,0,0},50.0f);
+s->setId(1);
+s->registerCollisionCallback(COL_END, [&](RigidBody* r1, RigidBody* r2, CollisionInfo* info){
+if(r2->getId()==2){
+logger::info("vel={}", r1->getLinearVelocity().toString());
 }
-rb.update(dt);
-//logger::info("{:.2f}", rb.getTransform()->getPosition().z);
+});
 
+//RigidBody* s2=createBodyCapsule({50, 0, -25}, {50, 0, 25}, 25.0f, {0,0,0}, 0.0f);
+//s2->rotate(quaternion::fromEuler(-90, 0, 0));
+//s2->translate({0,0,-15});
+//s2->setId(2);
+
+vector3d alf=(vmax-vmin)*0.5f;
+alf.z*=0.5f;
+RigidBody* ground=createBodyBox({0,0,-alf.z}, alf, {0,0,0}, 0.0f);
+ground->setId(3);
+
+game.addRigidBody(ground);
+//game.addRigidBody(s2);
+game.addRigidBody(s);
+
+/*
+for(uint32 i=0; i<10000; i++){
+vector3d pos=vector3d::random(vmin.x, vmax.x, vmin.y, vmax.y, 0, vmax.z);
+RigidBody* rb=createBodySphere(pos, 2.5f);
+game.addRigidBody(rb);
+}
+*/
+
+s->applyForce({9.81f*s->getMass(), 0, 0});
+for(uint32 i=0; i<12500; i++){
+if(s->getTransform()->getPosition().x<5.0f){
+s->applyForce({9.81f*s->getMass(), 0, 0});
+}
+game.update(0.2f);
+vector3d pos=s->getTransform()->getPosition();
+logger::info("{:.2f}, {:.2f}", pos.x, pos.z);
+}
+
+game.printState();
+/*
+Sphere3d* s=new Sphere3d(2.5f);
+s->translate({0,0,2.5f});
+
+Sphere3d* c=new Sphere3d(25.0f);
+c->translate({50, 0, -15});
+
+RigidBody r1(NULL, 0, 5.0f, s);
+RigidBody r2(NULL, BF_STATIC, 0, c);
+
+//logger::info("{}\n{}", s->toString(), c->toString());
+
+for(uint32 i=0; i<250; i++){
+r1.applyForce({20, 0,0});
+r1.update(0.2f);
+
+logger::info("{}", r1.getTransform()->getPosition().toString());
 CollisionInfo info;
-if(checkBoxSphereCollision(box, sphere, &info)){
-//logger::info("{}", info.toString());
-ground.resolveCollision(&rb, &info);
+if(detectCollisionWith(&r1, &r2, &info)){
+logger::info("col={}", info.toString());
+info.r1->resolveCollision(info.r2, &info);
 }
-logger::info("p={:.2f}, {:.2f}", rb.getTransform()->getPosition().x, rb.getTransform()->getPosition().z);
-logger::info("v={}", rb.getLinearVelocity().toString());
 }
 
-logger::info("Fim da simulação.\n{}", rb.toString());
-
+logger::info("Fim da simulação.");
+logger::info("{}\n{}", r1.toString(), r2.toString());
+*/
 } catch(const exception& e){
 logger::info("Exception:\n{}", e.what());
 }

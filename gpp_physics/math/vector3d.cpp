@@ -2,6 +2,7 @@
 #include<sstream>
 #include<vector>
 #include"math.h"
+#include<gpp/time.h>
 #include"vector3d.h"
 
 
@@ -209,6 +210,13 @@ vector3d vector3d::cross(const vector3d& v)const{
 return vector3d::cross(*this, v);
 }
 
+vector3d& vector3d::abs(){
+this->x=fabs(x);
+this->y=fabs(y);
+this->z=fabs(z);
+return *this;
+}
+
 vector3d& vector3d::normalize()
 {
 decimal len=sqrt(x*x+y*y+z*z);
@@ -234,6 +242,10 @@ return *this;
 vector3d vector3d::inverse(const vector3d& v)
 {
 return vector3d(-v.x, -v.y, -v.z);
+}
+
+vector3d vector3d::random(decimal minX, decimal maxX, decimal minY, decimal maxY, decimal minZ, decimal maxZ){
+return vector3d(random_float(minX, maxX), random_float(minY, maxY), random_float(minZ, maxZ));
 }
 
 //Útil quando precisamos manter o original intácto.

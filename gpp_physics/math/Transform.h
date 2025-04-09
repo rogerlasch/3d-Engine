@@ -21,10 +21,10 @@ public:
 
     // Construtores
     Transform();
-    Transform(const vector3d& scale, const vector3d& angles={0,0,0}, const vector3d& translation={0,0,0});
-    Transform(Transform* hparent, const vector3d& scale, const vector3d& angles={0,0,0}, const vector3d& translation={0,0,0});
-    Transform(const Transform& tr);
-    Transform& operator=(const Transform& tr);
+    Transform(const vector3d& translation, const vector3d& angles=vector3d(0,0,0), const vector3d& scale=vector3d(1,1,1));
+    Transform(Transform* hparent, const vector3d& translation, const vector3d& angles=vector3d(0,0,0), const vector3d& scale=vector3d(1,1,1));
+    Transform(const Transform& tr)=delete;
+    Transform& operator=(const Transform& tr)=delete;
 ~Transform();
 
 bool getNeedUpdate()const{return this->needUpdate;}

@@ -2,38 +2,32 @@
 #include"../types.h"
 #include <chrono>
 #include "ProfilerObject.h"
-#include "ProfilerManager.h"
+#include"profiler.h"#include "ProfilerManager.h"
 
 using namespace std;
 
 namespace gpp {
 
 ProfilerObject::ProfilerObject(const std::string& name, ProfilerManager* gm)
-    : name(name), handle(gm), tstart(0), tend(0), active(false) {}
+    : name(name), handle(gm), tstart(0), tend(0){
+if(handle==nullptr){
+handle=gpp_profiler::profilerInstance.get();
+}
+
+if(handle!=nullptr){
+handle->pushObject(this);
+}
+
+        tstart = chrono::duration_cast<chrono::nanoseconds>(                      chrono::high_resolution_clock::now().time_since_epoch())                      .count();
+}
 
 ProfilerObject::~ProfilerObject() {
-    if (active) {
-        stop(); // Garante que o cronômetro seja interrompido.
-    }
-    release(); // Libera o objeto do ProfilerManager.
-}
 
-void ProfilerObject::start() {
-    if (!active) {
-        active = true;
-        tstart = chrono::duration_cast<chrono::nanoseconds>(                      chrono::high_resolution_clock::now().time_since_epoch())                      .count();     }
-}
-
-void ProfilerObject::stop() {
-    if (active) {
         tend = chrono::duration_cast<chrono::nanoseconds>(                    chrono::high_resolution_clock::now().time_since_epoch())                    .count();
-        active = false;
-
         if (handle != nullptr) {
             int64 duration = tend - tstart;
-            handle->registreProfile(name, duration);
+            handle->registreProfile(this, name, duration);
         }
-    }
 }
 
 void ProfilerObject::release() {

@@ -3,7 +3,6 @@
 #define PROFILERMANAGER_H
 
 #include <string>
-#include<mutex>
 #include <unordered_map>
 #include <unordered_set>
 #include <memory>
@@ -29,12 +28,12 @@ public:
 inline void setResolution(uint32 resolution){this->resolution=resolution;}
 inline uint32 getResolution()const{return resolution;}
 
-    std::shared_ptr<ProfilerObject> createProfilerObject(const std::string& name);
 std::string dump()const;
     void dumpToFile();
 
 private:
-void registreProfile(const std::string& name, int64 ts);
+void registreProfile(ProfilerObject* obj, const std::string& name, int64 ts);
+void pushObject(ProfilerObject* obj);
 void removeObject(ProfilerObject* obj);
 
 friend class ProfilerObject;

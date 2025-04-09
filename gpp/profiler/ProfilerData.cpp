@@ -4,7 +4,6 @@
 #include<limits>
 #include <sstream>
 #include <iomanip>
-#include<mutex>
 #include "ProfilerData.h"
 
 using namespace std;
@@ -38,7 +37,7 @@ this->name=pf.name;
 
 string ProfilerData::dump(uint32 resolution) const {
 ostringstream oss;
-    oss << std::fixed << std::setprecision(3);
+    oss << std::fixed << std::setprecision(2);
 oss<<"Name: "<<name<<", ";
 oss << "Executions: " << executions << ", ";
 oss<<"Average Time: "<<format_time((totalTime/executions), resolution)<<", ";

@@ -14,6 +14,7 @@ setlocale(LC_ALL, "Portuguese");
 logger::open(new LogFile(F_NAME), LG_ALL);
 std::cout<<std::fixed;
 std::cout.precision(2);
+gpp_profiler::start(PF_NANO, "main_profiler.txt");
 }
 ~G_STARTER(){
 }

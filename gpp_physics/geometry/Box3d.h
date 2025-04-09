@@ -10,7 +10,7 @@ private:
 
 public:
     // Construtor
-    Box3d(const vector3d& extents = vector3d(1.0f, 1.0f, 1.0f), const Transform& transform = Transform());
+    Box3d(const vector3d& extents = vector3d(1.0f, 1.0f, 1.0f), Transform* transform=NULL);
 
     // Destrutor
     ~Box3d() override = default;
@@ -21,10 +21,12 @@ public:
 
     // Métodos da interface GeometricShape
     std::string toString() const override;
+std::string getShortDescription()const override;
+vector3d getNormal(const vector3d& pt)const;
     vector3d getClosestPoint(const vector3d& pt) const override;
     bool contains(const vector3d& pt) const override;
     bool rayCast(RayInfo* info) const override;
-    AABB getAABB() const override;
+    void getAABB(AABB* ab) const override;
     decimal getVolume() const override;
     decimal getSurfaceArea() const override;
     matrix3x3 getInertiaTensor(decimal mass) const override;

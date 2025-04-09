@@ -7,11 +7,11 @@ using namespace std;
 
 namespace gpp {
 
-Capsule3d::Capsule3d(const vector3d& startPoint, const vector3d& endPoint, decimal radius, const Transform& transform)
+Capsule3d::Capsule3d(const vector3d& startPoint, const vector3d& endPoint, decimal radius, Transform* transform)
     : GeometricShape(GTYPE_CAPSULE, transform), radius(radius){
 vector3d pos=(startPoint+endPoint)*0.5f;
 
-this->transform.setPosition(pos);
+this->transform->setPosition(pos);
 this->axis=(endPoint-startPoint).normalize();
 this->eight=(endPoint-startPoint).length();
 }
@@ -21,8 +21,9 @@ string Capsule3d::toString() const {
     ss << fixed;
     ss.precision(2);
 
-    quaternion q = transform.getOrientation();
-    AABB ab = getAABB();
+    quaternion q = transform->getOrientation();
+    AABB ab;
+getAABB(&ab);
 vector3d tstart, tend;
 getSegment(tstart, tend);
 
@@ -30,8 +31,8 @@ getSegment(tstart, tend);
 ss<<"axis="<<axis<<endl;
     ss << "Start Point=" <<tstart<<endl;
     ss << "End Point=" <<tend<<endl;
-    ss << "Position=" << transform.getPosition() << endl;
-    ss << "Scale=" << transform.getScale() << endl;
+    ss << "Position=" << transform->getPosition() << endl;
+    ss << "Scale=" << transform->getScale() << endl;
     ss << "Orientation Euler=" << quaternion_extract_euler_angles(q) << endl;
     ss << "Orientation=" << q << endl;
     ss << ab.toString();
@@ -39,9 +40,18 @@ ss<<"axis="<<axis<<endl;
     return ss.str();
 }
 
+string Capsule3d::getShortDescription()const{
+stringstream ss;
+ss<<fixed;
+ss.precision(2);
+
+ss<<"Type=Capsule3d, Axis="<<axis<<", Radius="<<radius<<", Height="<<eight;
+return ss.str();
+}
+
 void Capsule3d::getSegment(vector3d& tstart, vector3d& tend)const {
 decimal alf=eight*0.5;
-vector3d position=transform.getPosition();
+vector3d position=transform->getPosition();
 tstart=position-(axis*alf);
 tend=position+(axis*alf);
 }
@@ -64,6 +74,15 @@ getSegment(tstart, tend);
 
     // Ponto mais próximo na superfície da cápsula
     return closestOnSegment + direction * radius;
+}
+
+vector3d Capsule3d::getNormal(const vector3d& pt)const{
+decimal t=0.0f;
+vector3d p1, p2, closestPoint;
+getSegment(p1, p2);
+ClosestPtPointSegment(pt, p1, p2, t, closestPoint);
+
+return (pt-closestPoint).normalize();
 }
 
 bool Capsule3d::contains(const vector3d& pt) const {
@@ -224,7 +243,7 @@ getSegment(startPoint, endPoint);
     return true;
 }
 
-AABB Capsule3d::getAABB() const {
+void Capsule3d::getAABB(AABB* ab) const {
 vector3d tmin, tmax;
 getSegment(tmin, tmax);
 
@@ -232,7 +251,8 @@ for(uint32 i=0; i<3; i++){
 if(tmin[i]>tmax[i]) std::swap(tmin[i], tmax[i]);
 }
 
-return AABB(tmin-radius, tmax+radius);
+ab->min=tmin-radius;
+ab->max=tmax+radius;
 }
 
 decimal Capsule3d::getVolume() const {
@@ -256,7 +276,7 @@ matrix3x3 Capsule3d::getInertiaTensor(decimal mass) const {
 }
 
 void Capsule3d::rotate(const quaternion& q){
-transform.rotate(q);
-axis=quaternion_vector_rotate(transform.getOrientation(), axis);
+transform->rotate(q);
+axis=quaternion_vector_rotate(transform->getOrientation(), axis);
 }
 } // namespace gpp

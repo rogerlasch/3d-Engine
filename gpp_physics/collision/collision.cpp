@@ -2,6 +2,7 @@
 
 #include"../geometry/geometry.h"
 #include"collision.h"
+#include"../world/RigidBody.h"
 
 using namespace std;
 
@@ -23,12 +24,11 @@ bool checkSphereSphereCollision(Sphere3d* sphereA, Sphere3d* sphereB, CollisionI
 
 if(distance<=0.000001){
 
-    info->id = getCollisionId((uint64)sphereA, (uint64)sphereB);
+if(info!=NULL){
 info->normal={0,0,1};
 info->point=sphereA->getTransform()->getPosition()+(info->normal*sphereA->getRadius());
 info->depth=sphereA->getRadius()+sphereB->getRadius();
-info->r1=sphereA;
-info->r2=sphereB;
+}
 
 return true;
 }
@@ -42,13 +42,11 @@ return true;
     }
 
     // Preenche as informações da colisão
-    info->id = getCollisionId((uint64)sphereA, (uint64)sphereB);
+if(info!=NULL){
     info->point = centerA + delta.normalize() * sphereA->getRadius();
     info->normal = delta.normalize();
     info->depth = radiusSum - distance;
-    info->r1 =sphereA; // Remove o const para compatibilidade
-    info->r2 =sphereB; // Remove o const para compatibilidade
-
+}
     return true;
 }
 
@@ -78,12 +76,11 @@ capsuleB->getSegment(startB, endB);
     }
 
     // Preenche as informações da colisão
-    info->id = getCollisionId((uint64)capsuleA, (uint64)capsuleB);
+if(info!=NULL){
     info->normal = (closestPointB - closestPointA).normalize();
     info->point = closestPointA+(info->normal*capsuleA->getRadius());
     info->depth = radiusSum - std::sqrt(distanceSq);
-    info->r1 = capsuleA;
-    info->r2 = capsuleB;
+}
 
     return true;
 }
@@ -101,26 +98,36 @@ capsule->getSegment(capsuleStart, capsuleEnd);
     // Calcula o ponto mais próximo na cápsula ao centro da esfera
     decimal param;
     vector3d closestPointOnCapsule;
-    decimal distanceSq = ClosestPtPointSegment(sphereCenter, capsuleStart, capsuleEnd, param, closestPointOnCapsule);
+    decimal distance = sqrt(ClosestPtPointSegment(sphereCenter, capsuleStart, capsuleEnd, param, closestPointOnCapsule));
 
     // Soma dos raios da esfera e da cápsula
     decimal radiusSum = sphere->getRadius() + capsule->getRadius();
-    decimal radiusSumSq = radiusSum * radiusSum;
+
+if(distance<=0.000001){
+
+if(info!=NULL){
+info->normal={0,0,1};
+info->point=sphere->getTransform()->getPosition()+(info->normal*sphere->getRadius());
+info->depth=sphere->getRadius()+capsule->getRadius();
+}
+
+return true;
+}
 
     // Verifica se há colisão
-    if (distanceSq > radiusSumSq) {
+    if (distance > radiusSum) {
         return false; // Nenhuma colisão
     }
 
     // Preenche as informações da colisão
-    info->id = getCollisionId((uint64)sphere, (uint64)capsule);
-    info->normal = (sphereCenter -closestPointOnCapsule).normalize();
-    info->point = closestPointOnCapsule+(info->normal*capsule->getRadius());
-    info->depth = radiusSum - std::sqrt(distanceSq);
-    info->r1 = sphere;
-    info->r2 = capsule;
-
+if(info!=NULL){
+vector3d normal=vector3d::normalize(closestPointOnCapsule-sphere->getPosition());
+    info->point = sphere->getPosition()+ normal * sphere->getRadius();
+    info->normal = normal;
+    info->depth = radiusSum - distance;
+}
     return true;
+
 }
 
 bool checkBoxSphereCollision(Box3d* box, Sphere3d* sphere, CollisionInfo* info) {
@@ -152,15 +159,11 @@ bool checkBoxSphereCollision(Box3d* box, Sphere3d* sphere, CollisionInfo* info) 
         return false; // Nenhuma colisão
     }
 
-
-info->id = getCollisionId((uint64)box, (uint64)sphere);
-info->r1=box;
-info->r2=sphere;
-
+if(info!=NULL){
 //Tratar o caso de quando o centro da esfera estiver na caixa.
 if(distanceSq<=0.00001){
 
-info->normal=box->getTransform()->toLocal(sphere->getTransform()->getDirectionMovement().inverse());
+info->normal=vector3d::normalize(box->getTransform()->toLocal(sphere->getTransform()->getDirectionMovement().inverse()));
 RayInfo rinfo;
 rinfo.origin=sphere->getTransform()->getPosition();
 rinfo.dir=info->normal;
@@ -173,6 +176,8 @@ info->normal=(sphereCenter-closestPoint).normalize();
 info->point=box->getTransform()->toGlobal(closestPoint);
 info->depth=radius-sqrt(distanceSq);
 }
+}
+
     return true;
 }
 
@@ -213,14 +218,11 @@ capsuleEnd = box->getTransform()->toLocal(capsuleEnd);
         return false; // Nenhuma colisão
     }
 
-info->id = getCollisionId((uint64)box, (uint64)capsule);
-info->r1=box;
-info->r2=capsule;
-
+if(info!=NULL){
 //Tratar o caso de quando o centro da esfera estiver na caixa.
 if(distanceSq<=0.00001){
 
-info->normal=box->getTransform()->toLocal(capsule->getTransform()->getDirectionMovement().inverse());
+info->normal=vector3d::normalize(box->getTransform()->toLocal(capsule->getTransform()->getDirectionMovement().inverse()));
 RayInfo rinfo;
 rinfo.origin=box->getTransform()->toGlobal(closestPointOnCapsule );
 rinfo.dir=info->normal;
@@ -232,6 +234,7 @@ else{
 info->normal=delta.normalize();
 info->point=box->getTransform()->toGlobal(closestPointOnBox);
 info->depth=radius-sqrt(distanceSq);
+}
 }
 
     return true;
@@ -302,13 +305,11 @@ Transform* transformB = boxB->getTransform();
     }
 
     // Se nenhum eixo de separação foi encontrado, as caixas estão colidindo
-    info->id = getCollisionId((uint64)boxA, (uint64)boxB);
-    info->type = COL_BEGIN; // Ou COL_CONTINUOUS, dependendo da lógica do seu sistema
+if(info!=NULL){
     info->point = centerA + delta * 0.5f; // Ponto médio entre os centros
     info->normal = delta.normalize(); // Normal apontando de A para B
     info->depth = computePenetrationDepth(delta, axesA, extentsA, axesB, extentsB);
-    info->r1 = boxA;
-    info->r2 = boxB;
+}
 
     return true;
 }
@@ -372,4 +373,89 @@ decimal computePenetrationDepth(const vector3d& delta, const vector3d axesA[3], 
     return minDepth;
 }
 
+bool detectCollisionWith(RigidBody* r1, RigidBody* r2, CollisionInfo* info) {
+    GeometricShape* s1 = r1->getShape();
+    GeometricShape* s2 = r2->getShape();
+
+if(info!=NULL){
+info->r1=r1;
+info->r2=r2;
+}
+
+bool hasCollision=false, inverseBodies=false;
+
+    // Detecta colisões com base nos tipos das formas geométricas
+    switch (s1->getType() | s2->getType()) {
+        case GTYPE_SPHERE: // Esfera x Esfera
+                hasCollision=checkSphereSphereCollision(
+                    static_cast<Sphere3d*>(s1),
+                    static_cast<Sphere3d*>(s2),
+                    info
+                );
+            break;
+
+        case GTYPE_BOX: // Caixa x Caixa
+                hasCollision=checkBoxBoxCollision(
+                    static_cast<Box3d*>(s1),
+                    static_cast<Box3d*>(s2),
+                    info
+                );
+            break;
+
+        case GTYPE_CAPSULE: // Cápsula x Cápsula
+                hasCollision=checkCapsuleCapsuleCollision(
+                    static_cast<Capsule3d*>(s1),
+                    static_cast<Capsule3d*>(s2),
+                    info
+                );
+            break;
+
+        case GTYPE_SPHERE | GTYPE_BOX: // Esfera x Caixa
+
+inverseBodies=s1->getType()!=GTYPE_BOX;
+if(inverseBodies) std::swap(s1, s2);
+
+                hasCollision=checkBoxSphereCollision(
+                    static_cast<Box3d*>(s1),
+static_cast<Sphere3d*>(s2),
+                    info
+                );
+            break;
+
+        case GTYPE_SPHERE | GTYPE_CAPSULE: // Esfera x Cápsula
+
+inverseBodies=s1->getType()!=GTYPE_SPHERE;
+if(inverseBodies) std::swap(s1, s2);
+
+                hasCollision=checkSphereCapsuleCollision(
+                    static_cast<Sphere3d*>(s1),
+                    static_cast<Capsule3d*>(s2),
+                    info
+                );
+            break;
+
+        case GTYPE_BOX | GTYPE_CAPSULE: // Caixa x Cápsula
+inverseBodies=s1->getType()!=GTYPE_BOX;
+if(inverseBodies) std::swap(s1, s2);
+
+                hasCollision=checkBoxCapsuleCollision(
+                    static_cast<Box3d*>(s1),
+                    static_cast<Capsule3d*>(s2),
+                    info
+                );
+            break;
+
+        default:
+            // Caso não haja colisão ou o tipo de colisão não seja suportado
+return false;
+    }
+
+if(inverseBodies){
+if(info!=NULL){
+std::swap(info->r1, info->r2);
+}
+}
+
+return hasCollision;
+}
 }

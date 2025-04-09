@@ -12,7 +12,7 @@ vector3d axis;
 
 public:
     // Construtor
-    Capsule3d(const vector3d& startPoint, const vector3d& endPoint, decimal radius, const Transform& transform = Transform());
+    Capsule3d(const vector3d& startPoint, const vector3d& endPoint, decimal radius, Transform* transform=NULL );
 
     // Destrutor
     ~Capsule3d() override = default;
@@ -26,10 +26,12 @@ vector3d getAxis()const{return this->axis;}
 
 void getSegment(vector3d& tstart, vector3d& tend)const;
     std::string toString() const override;
+std::string getShortDescription()const override;
+vector3d getNormal(const vector3d& pt)const;
     vector3d getClosestPoint(const vector3d& pt) const override;
     bool contains(const vector3d& pt) const override;
     bool rayCast(RayInfo* info) const override;
-    AABB getAABB() const override;
+    void getAABB(AABB* ab) const override;
     decimal getVolume() const override;
     decimal getSurfaceArea() const override;
     matrix3x3 getInertiaTensor(decimal mass) const override;

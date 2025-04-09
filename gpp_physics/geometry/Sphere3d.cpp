@@ -6,36 +6,50 @@ using namespace std;
 
 namespace gpp {
 
-Sphere3d::Sphere3d(decimal radius, const Transform& transform)
+Sphere3d::Sphere3d(decimal radius, Transform* transform)
     : GeometricShape(GTYPE_SPHERE, transform), radius(radius) {}
 
 string Sphere3d::toString() const {
 stringstream ss;
 ss<<fixed;
 ss.precision(2);
-quaternion q=transform.getOrientation();
-AABB ab=getAABB();
+quaternion q=transform->getOrientation();
+AABB ab;
+getAABB(&ab);
 ss<<"Type="<<type<<" Sphere3d, Radius="<<radius<<endl;
-ss<<"Position="<<transform.getPosition()<<endl;
-ss<<"Scale="<<transform.getScale()<<endl;
+ss<<"Position="<<transform->getPosition()<<endl;
+ss<<"Scale="<<transform->getScale()<<endl;
 ss<<"Orientation Euler="<<quaternion_extract_euler_angles(q)<<endl;
 ss<<"Orientation="<<q<<endl;
 ss<<ab.toString();
 return ss.str();
 }
 
+string Sphere3d::getShortDescription()const{
+stringstream ss;
+ss<<fixed;
+ss.precision(2);
+
+ss<<"Type=Sphere3d, Radius="<<radius;
+return ss.str();
+}
+
+vector3d Sphere3d::getNormal(const vector3d& pt)const{
+return (pt-transform->getPosition()).normalize();
+}
+
 vector3d Sphere3d::getClosestPoint(const vector3d& pt) const {
-    vector3d center = transform.getPosition();
+    vector3d center = transform->getPosition();
     vector3d direction = (pt - center).normalize();
     return center + direction * radius;
 }
 
 bool Sphere3d::contains(const vector3d& pt) const {
-    return (pt - transform.getPosition()).lengthSquared() <= radius * radius;
+    return (pt - transform->getPosition()).lengthSquared() <= radius * radius;
 }
 
 bool Sphere3d::rayCast(RayInfo* info) const {
-    vector3d center = transform.getPosition();
+    vector3d center = transform->getPosition();
     vector3d oc = info->origin - center;
     decimal a = info->dir.lengthSquared();
     decimal b = 2.0f * vector3d::dot(oc, info->dir);
@@ -69,10 +83,10 @@ bool Sphere3d::rayCast(RayInfo* info) const {
     }
 }
 
-AABB Sphere3d::getAABB() const {
-    vector3d center = transform.getPosition();
-    return AABB(center - vector3d(radius, radius, radius),
-                center + vector3d(radius, radius, radius));
+void Sphere3d::getAABB(AABB* ab)const{
+    vector3d center = transform->getPosition();
+ab->min=center - vector3d(radius, radius, radius);
+ab->max=center + vector3d(radius, radius, radius);
 }
 
 decimal Sphere3d::getVolume() const {

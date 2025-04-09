@@ -11,18 +11,15 @@ private:
 std::string name;
 int64 tstart;
 int64 tend;
-bool active;
 ProfilerManager* handle;
 
 public:
 
-ProfilerObject(const std::string& name, ProfilerManager* gm);
+ProfilerObject(const std::string& name, ProfilerManager* gm=nullptr);
 ProfilerObject(const ProfilerObject& gm)=delete;
 ProfilerObject& operator=(const ProfilerObject& gm)=delete;
 ~ProfilerObject();
 
-void start();
-void stop();
 void release();
 };
 }

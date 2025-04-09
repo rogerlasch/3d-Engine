@@ -3,6 +3,7 @@
 #ifndef GPP_SAFE_FORMAT_H
 #define GPP_SAFE_FORMAT_H
 
+#pragma warning(disable: 4834)
 #include<format>
 #include<string>
 

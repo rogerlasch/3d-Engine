@@ -1,6 +1,7 @@
 
 #include <algorithm>
 #include"../types.h"
+#include<gpp/debug_system.h>
 #include"math.h"
 #include "Transform.h"
 
@@ -20,7 +21,7 @@ updateLocalMatrix();
 }
 
 // Construtor com escala, ângulos e translação
-Transform::Transform(const vector3d& scale, const vector3d& angles, const vector3d& translation) {
+Transform::Transform(const vector3d& translation, const vector3d& angles, const vector3d& scale) {
 lastPosition=translation;
 this->position=translation;
 this->scale=scale;
@@ -31,23 +32,23 @@ updateLocalMatrix();
 }
 
 // Construtor com pai, escala, ângulos e translação
-Transform::Transform(Transform* hparent, const vector3d& scale, const vector3d& angles, const vector3d& translation) {
+Transform::Transform(Transform* hparent, const vector3d& translation, const vector3d& angles, const vector3d& scale) {
 this->lastPosition=translation;
 this->position=translation;
 this->scale=scale;
 this->orientation=quaternion::fromEuler(angles.x, angles.y, angles.z);
 this->hparent=NULL;
-this->hparent=hparent;
+this->hparent=NULL;
 
     if (hparent) {
-        hparent->pushTransform(this);
+hparent->pushTransform(this);
     }
 
 setNeedUpdate(true);
 updateLocalMatrix();
 }
 
-// Construtor de cópia
+/*
 Transform::Transform(const Transform& tr) {
 *this=tr;
 }
@@ -55,6 +56,7 @@ Transform::Transform(const Transform& tr) {
 // Operador de atribuição
 Transform& Transform::operator=(const Transform& tr) {
     if (this != &tr) {
+logger::info("uma cópia profunda está sendo feita.");
 this->lastPosition=tr.lastPosition;
         this->position = tr.position;
         this->scale = tr.scale;
@@ -65,8 +67,10 @@ setNeedUpdate(true);
     }
     return *this;
 }
+*/
 
 Transform::~Transform(){
+logger::info("destruindo meu");
 if(hparent){
 hparent->removeTransform(this);
 }
@@ -116,6 +120,7 @@ setNeedUpdate(true);
 
 // Remove um filho da lista de filhos
 void Transform::removeTransform(Transform* child) {
+logger::info("Removendo alguma coisa");
     if (childs.find(child)!=childs.end()){
         childs.erase(child);
 child->setParent(NULL);
@@ -125,16 +130,11 @@ child->setParent(NULL);
 // Adiciona um filho à lista de filhos
 void Transform::pushTransform(Transform* child) {
 if(child->getParent()!=NULL){
-if(child->getParent()!=this){
 child->getParent()->removeTransform(child);
-child->setParent(this);
-}
-}
-else{
-child->setParent(this);
 }
 
 if(childs.find(child)==childs.end()){
+child->setParent(this);
     childs.insert(child);
 child->setNeedUpdate(true);
 }
@@ -215,13 +215,22 @@ this->rotate(q);
     void Transform::rotate(const quaternion& rotation){
 orientation=rotation*orientation;
 orientation.normalize();
+
+for(auto& it : childs){
+it->rotate(rotation);
+}
+
 setNeedUpdate(true);
 }
 
     void Transform::translate(const vector3d& translation){
 lastPosition=position;
 position+=translation;
-setNeedUpdate(true);
+
+for(auto& it : childs){
+it->translate(translation);
 }
 
+setNeedUpdate(true);
+}
 }

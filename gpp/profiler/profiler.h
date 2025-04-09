@@ -1,19 +1,24 @@
 
-
 #ifndef GPP_PROFILER_H
 #define GPP_PROFILER_H
 
-#include"ProfilerManager.h"
-namespace gpp{
+#include <memory>
+#include <string>
+#include "ProfilerManager.h"
 
-void profiler_start(uint32 resolution, const std::string& filename);
-std::string profiler_dump_string();
-void profiler_dump_to_file();
-std::shared_ptr<ProfilerObject> profiler_create_object(const std::string& filename);
+namespace gpp {
 
-#define _PROFILER_SNAP() auto _QLZ=profiler_create_object(__FUNCTION__);\
-_QLZ->start()
+class gpp_profiler {
+public:
+    static void start(uint32 resolution, const std::string& filename);
+    static std::string dump_string();
+    static void dump_to_file();
 
+private:
+    static std::unique_ptr<ProfilerManager> profilerInstance;
+friend class ProfilerObject;
+};
+
+#define _PROFILER_SNAP() ProfilerObject _QLZ(__FUNCTION__)
 }
 #endif
-

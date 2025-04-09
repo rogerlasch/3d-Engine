@@ -22,12 +22,6 @@ ProfilerManager::~ProfilerManager() {
     dumpToFile();
 }
 
-shared_ptr<ProfilerObject> ProfilerManager::createProfilerObject(const string& name) {
-    auto obj = make_shared<ProfilerObject>(name, this);
-    activeProfilers.insert(obj.get());
-    return obj;
-}
-
 string ProfilerManager::dump() const {
     stringstream ss;
     for (const auto& it : hdata) {
@@ -47,7 +41,7 @@ if(final.size()>0){
 }
 }
 
-void ProfilerManager::registreProfile(const string& name, int64 ts) {
+void ProfilerManager::registreProfile(ProfilerObject* obj, const string& name, int64 ts) {
     auto it = hdata.find(name);
 
     if (it == hdata.end()) {
@@ -59,13 +53,20 @@ void ProfilerManager::registreProfile(const string& name, int64 ts) {
 data.name=name;
         hdata[name] = data;
     } else {
-lock_guard<mutex> lck(it->second.mtx);
         auto& data = it->second;
         data.executions += 1;
         data.minTime = std::min(ts, data.minTime);
         data.maxTime = std::max(ts, data.maxTime);
         data.totalTime += ts;
     }
+
+removeObject(obj);
+}
+
+void ProfilerManager::pushObject(ProfilerObject* obj){
+if(obj){
+activeProfilers.insert(obj);
+}
 }
 
 void ProfilerManager::removeObject(ProfilerObject* obj) {

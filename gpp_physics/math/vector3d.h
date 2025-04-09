@@ -53,6 +53,7 @@ vector3d& operator/=(const vector3d& v);
 void zero();
 decimal length()const;
 decimal lengthSquared()const;
+vector3d& abs();
 vector3d& normalize();
 vector3d& inverse();
 
@@ -63,6 +64,7 @@ vector3d cross(const vector3d& v)const;
 //Usado para operações com mais de um vetor.
 //Operações como produto escalar, produto cruzado e triplo produto escalar.
 
+static vector3d random(decimal minX, decimal maxX, decimal minY, decimal maxY, decimal minZ, decimal maxZ);
 static vector3d normalize(const vector3d& v);
 static vector3d inverse(const vector3d& v);
 static decimal dot(const vector3d& v1, const vector3d& v2);

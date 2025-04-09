@@ -1,5 +1,4 @@
 
-
 #include"geometry.h"
 
 using namespace std;
@@ -40,6 +39,20 @@ ss<<"}";
     return ss.str();
 }
 
+string AABB::getShortDescription()const{
+stringstream ss;
+ss<<fixed;
+ss.precision(2);
+
+ss<<"AABB={"<<endl;
+string s="XYZ";
+for(uint32 i=0; i<3; i++){
+ss<<s[i]<<": "<<min[i]<<", "<<max[i]<<endl;
+}
+ss<<"}";
+return ss.str();
+}
+
 vector3d AABB::getCenter() const {
     return (min + max) * 0.5f;
 }
@@ -58,6 +71,28 @@ bool AABB::intersects(const AABB& ab) const {
     return (min.x <= ab.max.x && max.x >= ab.min.x) &&
            (min.y <= ab.max.y && max.y >= ab.min.y) &&
            (min.z <= ab.max.z && max.z >= ab.min.z);
+}
+
+vector3d AABB::getDisplacement(const AABB& hother)const {
+    vector3d displacement(0, 0, 0);
+
+    // Para cada eixo, calcular o deslocamento necessário
+    for (int i = 0; i < 3; i++) {
+        if (hother.min[i] < min[i]) {
+            displacement[i] = min[i] - hother.min[i]; // Empurra para a direita
+        } else if (hother.max[i] > max[i]) {
+            displacement[i] = max[i] - hother.max[i]; // Empurra para a esquerda
+        }
+    }
+
+    return displacement;
+}
+
+bool AABB::contains(const AABB& ab){
+
+return ab.min.x>=min.x&&ab.max.x<=max.x&&
+ab.min.y>=min.y&&ab.max.y<=max.y&&
+ab.min.z>=min.z&&ab.max.z<=max.z;
 }
 
 void AABB::addAABB(const AABB& ab) {
@@ -105,5 +140,38 @@ bool AABB::rayCast(RayInfo* info) const {
     info->outPoint = info->origin + info->dir * tmax;
 
     return true;
+}
+
+bool AABB::computedRayCast(const vector3d& origin, const vector3d& invDir,                        const int32 dirIsNeg[3], decimal& tMin, decimal& tMax) const {
+    // Calcula os parâmetros t para cada eixo
+    decimal txMin = (min.x - origin.x) * invDir.x;
+    decimal txMax = (max.x - origin.x) * invDir.x;
+
+    // Ajusta a ordem baseado na direção do raio
+    if (dirIsNeg[0]) std::swap(txMin, txMax);
+
+    decimal tyMin = (min.y - origin.y) * invDir.y;
+    decimal tyMax = (max.y - origin.y) * invDir.y;
+
+    if (dirIsNeg[1]) std::swap(tyMin, tyMax);
+
+    // Early-out: verifica interseção nos primeiros eixos
+    tMin = std::max(txMin, tyMin);
+    tMax = std::min(txMax, tyMax);
+
+    if (tMax < tMin) return false;
+
+    // Processa o terceiro eixo
+    decimal tzMin = (min.z - origin.z) * invDir.z;
+    decimal tzMax = (max.z - origin.z) * invDir.z;
+
+    if (dirIsNeg[2]) std::swap(tzMin, tzMax);
+
+    // Atualiza os valores finais
+    tMin = std::max(tMin, tzMin);
+    tMax = std::min(tMax, tzMax);
+
+    // Retorna true se houver interseção válida (tMax >= 0 e tMin <= tMax)
+    return (tMax >= 0) && (tMin <= tMax);
 }
 } // namespace gpp

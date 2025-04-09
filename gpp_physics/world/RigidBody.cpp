@@ -9,23 +9,28 @@
 using namespace std;
 
 namespace gpp{
-RigidBody::RigidBody(RigidBody* hparent, decimal mass, GeometricShape* shape) {
+RigidBody::RigidBody(RigidBody* hparent, uint32 bFlags, decimal mass, GeometricShape* shape) {
+this->hworld=NULL;
+this->hparent=hparent;
 this->id=0;
+this->bFlags=bFlags;
 this->mass=mass;
 this->hbody=shape;
-this->isStatic=false;
-this->useGravity=true;
 this->linearDamping=0.99f;
 this->angularDamping=0.99f;
 this->restitution=0.5f;
-this->friction=0.5f;
+this->staticFriction=0.5f;
+this->dynamicFriction=0.4f;
 
     setMass(mass); // Atualiza massa e inércia
     linearVelocity = vector3d(0, 0, 0);
     angularVelocity = vector3d(0, 0, 0);
     force = vector3d(0, 0, 0);
     torque = vector3d(0, 0, 0);
-pushBody(hparent);
+
+if(hparent){
+hparent->pushBody(this);
+}
 }
 
 RigidBody::~RigidBody(){
@@ -50,15 +55,20 @@ stringstream ss;
 ss<<fixed;
 ss.precision(2);
 
-ss<<"id="<<id<<endl;
+AABB ab;
+getAABB(&ab);
+
+ss<<"RigidBody: "<<"id="<<id<<", ParentId="<<((hparent==NULL) ? 0 : hparent->getId())<<endl;
+ss<<hbody->getShortDescription()<<endl;
 ss<<"mass="<<mass<<", inverseMass="<<inverseMass<<endl;
+ss<<"Position="<<hbody->getPosition()<<", Scale="<<hbody->getTransform()->getScale()<<endl;
+ss<<"Orientation Euler="<<quaternion_extract_euler_angles(hbody->getTransform()->getOrientation())<<", Orientation="<<hbody->getTransform()->getOrientation()<<endl;
 ss<<"LinearVelocity="<<linearVelocity<<endl;
 ss<<"angularVelocity="<<angularVelocity<<endl;
-ss<<"restitution="<<restitution<<", friction="<<friction<<endl;
+ss<<"restitution="<<restitution<<", staticFriction="<<staticFriction<<", dynamicFriction="<<dynamicFriction<<endl;
 ss<<"linearDamping="<<linearDamping<<", angularDamping="<<angularDamping<<endl;
-ss<<"isStatic="<<boolalpha<<isStatic<<", useGravity="<<boolalpha<<useGravity<<endl;
 ss<<"hparent="<<boolalpha<<(hparent!=NULL)<<", childs.size="<<childs.size()<<endl;
-ss<<hbody->toString()<<endl;
+ss<<"aabb="<<ab.getShortDescription()<<endl;
 if(childs.size()>0){
 ss<<"childs={"<<endl;
 for(auto& it : childs){
@@ -73,8 +83,8 @@ return ss.str();
 void RigidBody::setMass(decimal m) {
     mass = m;
     inverseMass = (m > 0) ? 1.0f / m : 0.0f;
-isStatic=((m>0) ? false : true);
     updateInertia();
+enableFlag(BF_STATIC, mass<0.00001f);
 }
 
 void RigidBody::setShape(GeometricShape* s){
@@ -84,6 +94,46 @@ this->hbody=NULL;
 }
 
 this->hbody=s;
+}
+
+bool RigidBody::rayCast(RayInfo* info){
+return hbody->rayCast(info);
+}
+
+bool RigidBody::rayCast(const vector3d& origin, const vector3d& dir, std::vector<RayInfo>& infos){
+
+RayInfo info;
+
+info.origin=origin;
+info.dir=dir;
+
+if(this->rayCast(&info)){
+infos.push_back(info);
+}
+
+for(auto& it : childs){
+it->rayCast(origin, dir, infos);
+}
+
+return infos.size()>0;
+}
+
+void RigidBody::calculateForces(const vector3d& gravity) {
+    if(hasFlag(BF_STATIC)) return;
+
+    vector3d accForces;
+
+    if(hasFlag(BF_GRAVITY)) {
+//        accForces += gravity * mass;
+    }
+
+    // Verificação de repouso mais robusta
+    if(!hasFlag(BF_SLEEPING)) {
+    }
+
+    if(accForces.lengthSquared() >= 1.0f) {
+        applyForce(accForces);
+    }
 }
 
 void RigidBody::updateInertia() {
@@ -96,17 +146,47 @@ void RigidBody::updateInertia() {
     }
 }
 
+void RigidBody::enableFlag(uint32 hFlag, bool b){
+
+if(b){
+if((bFlags&hFlag)==0){
+bFlags|=hFlag;
+}
+}
+else{
+if((bFlags&hFlag)==hFlag){
+bFlags^=hFlag;
+}
+}
+}
+
+bool RigidBody::hasFlag(uint32 hFlags)const{
+return (bFlags&hFlags)>0;
+}
+
 void RigidBody::applyForce(const vector3d& f) {
+
+if(!hasFlag(BF_STATIC)){
     force += f;
+enableFlag(BF_SLEEPING, false);
+}
 }
 
 void RigidBody::applyForceAtPoint(const vector3d& f, const vector3d& point) {
+
+if(!hasFlag(BF_STATIC)){
     force += f;
     torque += (point - hbody->getPosition()).cross(f);
+enableFlag(BF_SLEEPING, false);
+}
 }
 
 void RigidBody::applyTorque(const vector3d& t) {
+
+if(!hasFlag(BF_STATIC)){
     torque += t;
+}
+
 }
 
 void RigidBody::clearForces() {
@@ -124,130 +204,139 @@ vector3d RigidBody::getVelocityAtPoint(const vector3d& point) const {
 }
 
 void RigidBody::update(decimal deltaTime) {
-    if (isStatic) return;
 
+if(!hasFlag(BF_STATIC|BF_SLEEPING)){
     // Integração da velocidade linear
     linearVelocity += (force * inverseMass) * deltaTime;
-hbody->translate(linearVelocity * deltaTime);
+this->translate(linearVelocity * deltaTime);
 
     // Integração da velocidade angular
     angularVelocity += (inverseInertia * torque) * deltaTime;
-//    quaternion angularDelta(angularVelocity * deltaTime, 0.0);
-vector3d rotationVector = angularVelocity * deltaTime;
-decimal angle = rotationVector.length();
-vector3d axis = rotationVector.normalize();
 
-// Para rotações pequenas, w ˜ 1.0
-quaternion angularDelta(axis * (angle * 0.5), 1.0);
-
-hbody->rotate(angularDelta);
+if (angularVelocity.lengthSquared() > 1e-12f) {
+    vector3d axis = angularVelocity.normalize();
+    decimal angle = angularVelocity.length() * deltaTime;
+    quaternion angularDelta(axis * std::sin(angle/2), std::cos(angle/2));
+    this->rotate(angularDelta);
+updateInertia();
+}
 
     // Aplicar damping
     linearVelocity *= linearDamping;
     angularVelocity *= angularDamping;
-
     // Limpar forças e torques
     clearForces();
+
+}
+
+
+if(childs.size()>0){
+for(auto& it : childs){
+it->update(deltaTime);
+}
+}
 }
 
 void RigidBody::resolveCollision(RigidBody* other, CollisionInfo* info) {
-    if (isStatic && other->isStatic) return; // Corpos estáticos não se movem
-
-    // Vetor normal da colisão (aponta de A para B)
+    uint32 dontFlags = BF_STATIC|BF_SENSOR|BF_REGION;
+    if((hasFlag(dontFlags))&&(other->hasFlag(dontFlags))){
+        return;
+    }
+    dontFlags ^= BF_STATIC;
+    if(hasFlag(dontFlags)){
+        return;
+    }
+    // 1. Preparação dos dados da colisão
     vector3d normal = info->normal;
-
-    // Ponto de colisão no espaço global
     vector3d collisionPoint = info->point;
-
-    // Velocidades no ponto de colisão
+    // 2. Velocidades no ponto de contato
     vector3d velocityA = getVelocityAtPoint(collisionPoint);
     vector3d velocityB = other->getVelocityAtPoint(collisionPoint);
-
-    // Velocidade relativa
     vector3d relativeVelocity = velocityB - velocityA;
-
-    // Componente da velocidade relativa na direção da normal
+    // 3. Componente normal da velocidade relativa
     decimal velocityAlongNormal = relativeVelocity.dot(normal);
-
-    // Se os corpos já estão se afastando, não há necessidade de resolver a colisão
+    // 4. Se os objetos estão se separando, não resolva
     if (velocityAlongNormal > 0) return;
-
-    // Coeficiente de restituição (usamos o mínimo dos dois corpos)
+    // 5. Coeficiente de restituição combinado
     decimal e = std::min(restitution, other->restitution);
-
-    // Calcula o impulso
+    // 6. Vetores do centro de massa ao ponto de contato
     vector3d rA = collisionPoint - getTransform()->getPosition();
     vector3d rB = collisionPoint - other->getTransform()->getPosition();
-
+    // 7. Termos de inércia
     vector3d rACrossN = rA.cross(normal);
     vector3d rBCrossN = rB.cross(normal);
-
-    decimal invMassA = inverseMass;
-    decimal invMassB = other->inverseMass;
-
-    decimal invInertiaA = (inverseInertia * rACrossN).cross(rA).dot(normal);
-    decimal invInertiaB = (other->inverseInertia * rBCrossN).cross(rB).dot(normal);
-
-    // Denominador do cálculo do impulso
-    decimal denominator = invMassA + invMassB + invInertiaA + invInertiaB;
-
-    // Impulso escalar
-    decimal j = -(1 + e) * velocityAlongNormal / denominator;
-
-    // Impulso vetorial
+    // 8. Denominador para cálculo do impulso
+    decimal denominator = inverseMass + other->inverseMass;
+    denominator += (inverseInertia * rACrossN).cross(rA).dot(normal);
+    denominator += (other->inverseInertia * rBCrossN).cross(rB).dot(normal);
+    // 9. Impulso normal
+    decimal j = -(1 + e) * velocityAlongNormal;
+    j /= denominator;
     vector3d impulse = normal * j;
-
-    // Aplica o impulso aos corpos
-    if (!isStatic) {
-        linearVelocity -= impulse * invMassA;
-        angularVelocity -= (inverseInertia * rA.cross(impulse));
+    // 10. Aplicação do impulso normal
+    if (!hasFlag(BF_STATIC)) {
+        linearVelocity -= impulse * inverseMass;
+        angularVelocity -= inverseInertia * rA.cross(impulse);
     }
-
-    if (!other->isStatic) {
-        other->linearVelocity += impulse * invMassB;
-        other->angularVelocity += (other->inverseInertia * rB.cross(impulse));
+    if (!other->hasFlag(BF_STATIC)) {
+        other->linearVelocity += impulse * other->inverseMass;
+        other->angularVelocity += other->inverseInertia * rB.cross(impulse);
     }
-
-/*
-    // Aplicar atrito (após o impulso normal)
+    // --------------------------------------------------
+    // PARTE DE ATRITO - IMPLEMENTAÇÃO COMPLETA
+    // --------------------------------------------------
+    // 11. Recalcular velocidades após impulso normal
+    velocityA = getVelocityAtPoint(collisionPoint);
+    velocityB = other->getVelocityAtPoint(collisionPoint);
+    relativeVelocity = velocityB - velocityA;
+    // 12. Componente tangencial da velocidade
     vector3d tangent = relativeVelocity - normal * relativeVelocity.dot(normal);
-    if (tangent.length() > 0) {
-        tangent = tangent.normalize();
-
-        // Calcula o impulso de atrito
-        decimal jt = -relativeVelocity.dot(tangent);
+    // 13. Se houver movimento tangencial significativo
+    if (tangent.lengthSquared() > 1e-8f) {
+        tangent.normalize();
+        // 14. Coeficientes de atrito combinados
+        decimal staticMu = std::sqrt(
+            staticFriction * staticFriction +
+            other->staticFriction * other->staticFriction
+        );
+        decimal dynamicMu = std::sqrt(
+            dynamicFriction * dynamicFriction +
+            other->dynamicFriction * other->dynamicFriction
+        );
+        // 15. Magnitude da velocidade tangencial
+        decimal tangentSpeed = relativeVelocity.dot(tangent);
+        // 16. Impulso tangencial necessário para parar o movimento
+        decimal jt = -tangentSpeed*2.0f;
         jt /= denominator;
-
-        // Limita o impulso de atrito usando a lei de Coulomb (friction)
-        decimal mu = std::min(friction, other->friction);
-        vector3d frictionImpulse = tangent * std::min(jt, j * mu);
-
-        // Aplica o impulso de atrito
-        if (!isStatic) {
-            linearVelocity -= frictionImpulse * invMassA;
-            angularVelocity -= (inverseInertia * rA.cross(frictionImpulse));
+        // 17. Lei de Coulomb - escolhe entre atrito estático e dinâmico
+        vector3d frictionImpulse;
+        if (std::abs(jt) < j * staticMu) {
+            // Atrito estático - impede o início do deslizamento
+            frictionImpulse = tangent * jt;
+        } else {
+            // Atrito dinâmico - reduz a velocidade de deslizamento
+            frictionImpulse = tangent * (-j * dynamicMu);
         }
-
-        if (!other->isStatic) {
-            other->linearVelocity += frictionImpulse * invMassB;
-            other->angularVelocity += (other->inverseInertia * rB.cross(frictionImpulse));
+        // 18. Aplicação do atrito
+        if (!hasFlag(BF_STATIC)) {
+            linearVelocity -= frictionImpulse * inverseMass;
+            angularVelocity -= inverseInertia * rA.cross(frictionImpulse);
+        }
+        if (!other->hasFlag(BF_STATIC)) {
+            other->linearVelocity += frictionImpulse * other->inverseMass;
+            other->angularVelocity += other->inverseInertia * rB.cross(frictionImpulse);
         }
     }
-*/
-
-    // Correção de penetração (opcional, para evitar sobreposição)
-    const decimal penetrationSlop = 0.01f; // Tolerância de penetração
-    const decimal percent = 0.99f; // Percentual de correção
-
-    if (info->depth > 0) {
-        vector3d correction = normal * (std::max(info->depth - penetrationSlop, 0.0) / (invMassA + invMassB)) * percent;
-
-        if (!isStatic) {
-            hbody->translate(-correction * invMassA);
+    // 19. Correção de penetração (opcional)
+    const decimal penetrationSlop = 0.01f;
+const decimal percent=0.85;
+    if (info->depth > penetrationSlop) {
+        vector3d correction = normal * (info->depth - penetrationSlop) / (inverseMass + other->inverseMass) * percent;
+        if (!hasFlag(BF_STATIC)) {
+            translate(-correction * inverseMass);
         }
-
-        if (!other->isStatic) {
-            other->hbody->translate(correction * invMassB);
+        if (!other->hasFlag(BF_STATIC)) {
+            other->translate(correction * other->inverseMass);
         }
     }
 }
@@ -262,6 +351,18 @@ hbody->rotate(q);
 
 void RigidBody::translate(const vector3d& translation){
 hbody->translate(translation);
+}
+
+void RigidBody::getAABB(AABB* ab)const{
+hbody->getAABB(ab);
+
+if(childs.size()>0){
+AABB ab2;
+for(auto& it : childs){
+it->getAABB(&ab2);
+ab->addAABB(ab2);
+}
+}
 }
 
 void RigidBody::pushBody(RigidBody* rb){
@@ -296,5 +397,25 @@ removeBody(*childs.begin());
 }
 
 childs.clear();
+}
+
+void RigidBody::registerCollisionCallback(uint32 type, COLLISIONNOTIFICATIONCALLBACK hcall){
+CollisionNotifications[type]=hcall;
+}
+
+void RigidBody::removeCollisionCallback(uint32 type){
+auto it=CollisionNotifications.find(type);
+if(it!=CollisionNotifications.end()){
+CollisionNotifications.erase(type);
+}
+}
+
+void RigidBody::executeCollisionCallback(uint32 type, RigidBody* rb, CollisionInfo* info){
+
+auto it=CollisionNotifications.find(type);
+
+if(it!=CollisionNotifications.end()){
+it->second(this, rb, info);
+}
 }
 }

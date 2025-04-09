@@ -16,26 +16,26 @@ enum GEOMETRICTYPE {
 class GeometricShape {
 protected:
     uint32 type;          // Tipo da forma geométrica
-mutable     Transform transform;  // Transformação associada à forma (composição)
+mutable     Transform* transform;  // Transformação associada à forma (composição)
 
 public:
-    GeometricShape(uint32 type, const Transform& transform = Transform());
+    GeometricShape(uint32 type, Transform* transform);
     virtual ~GeometricShape();
 
     uint32 getType() const { return type; }  // Retorna o tipo da forma
     // Métodos para manipulação da transformação
-    void setTransform(const Transform& transform){this->transform=transform;}
-//    Transform& getTransform(){return this->transform;}
-Transform* getTransform() const { return &transform; }
+Transform* getTransform() const { return transform; }
 
-vector3d getPosition()const{return transform.getPosition();}
+vector3d getPosition()const{return transform->getPosition();}
 
     // Métodos para manipulação da forma geométrica
     virtual std::string toString() const ;  // Descrição textual da forma
-    virtual vector3d getClosestPoint(const vector3d& pt) const {return transform.getPosition();}  // Ponto mais próximo
+virtual std::string getShortDescription()const;
+virtual vector3d getNormal(const vector3d& pt)const{return vector3d::normalize(transform->getPosition());}
+    virtual vector3d getClosestPoint(const vector3d& pt) const {return transform->getPosition();}  // Ponto mais próximo
     virtual bool contains(const vector3d& pt) const {return false;}  // Verifica se o ponto está dentro
     virtual bool rayCast(RayInfo* info) const {return false;}  // Interseção com raio
-    virtual AABB getAABB() const {return AABB();}  // Retorna a AABB da forma
+    virtual void getAABB(AABB* ab) const{}
     virtual decimal getVolume() const {return 0.0f;}  // Volume da forma
     virtual decimal getSurfaceArea() const {return 0.0f;}  // Área da superfície
     virtual matrix3x3 getInertiaTensor(decimal mass) const {return matrix3x3().identity();}  // Tensor de inércia (com massa)

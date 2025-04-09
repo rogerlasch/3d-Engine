@@ -13,14 +13,13 @@ CollisionInfo::CollisionInfo()
 {
 id=0;
 type=COL_NONE;
-frames=0;
+lastType=COL_NONE;
 point.zero();
 lastPoint.zero();
 normal.zero();
 lastNormal.zero();
 depth=0.0f;
 lastDepth=0.0f;
-
 r1=NULL;
 r2=NULL;
 }
@@ -34,7 +33,7 @@ CollisionInfo& CollisionInfo::operator=(const CollisionInfo& c)
 {
 this->id=c.id;
 this->type=c.type;
-this->frames=c.frames;
+this->lastType=c.lastType;
 this->point=c.point;
 this->lastPoint=c.lastPoint;
 this->normal=c.normal;
@@ -47,8 +46,8 @@ return *this;
 }
 
 bool CollisionInfo::operator<(const CollisionInfo& info)const{
-uint64 a1=getCollisionId((uint64)r1, (uint64)r2);
-uint64 a2=getCollisionId((uint64)info.r1, (uint64)info.r2);
+uint64 a1=((id==0) ? getCollisionId((uint64)r1, (uint64)r2) : id);
+uint64 a2=((info.id==0) ? getCollisionId((uint64)info.r1, (uint64)info.r2) : info.id);
 return a1 < a2;
 }
 
@@ -56,11 +55,16 @@ uint64 CollisionInfo::getId()const{
 return this->id;
 }
 
+uint64 CollisionInfo::generateId(){
+this->id=getCollisionId((uint64)r1, (uint64)r2);
+return id;
+}
+
 void CollisionInfo::reset()
 {
 id=0;
 type=COL_NONE;
-frames=0;
+lastType=COL_NONE;
 point.zero();
 lastPoint.zero();
 normal.zero();
@@ -84,6 +88,7 @@ std::string CollisionInfo::toString() const {
 }
 
 void CollisionInfo::backup(){
+this->lastType=type;
 this->lastPoint=point;
 this->lastNormal=normal;
 this->lastDepth=depth;
@@ -94,6 +99,9 @@ this->backup();
 this->point=info->point;
 this->normal=info->normal;
 this->depth=info->depth;
+if((type==COL_BEGIN)&&(info->type==COL_BEGIN)){
+this->type=COL_CONTINUOUS;
+}
 }
 
 ostream& operator<<(ostream& os, const CollisionInfo& cd)
